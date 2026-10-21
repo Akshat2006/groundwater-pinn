@@ -7,7 +7,6 @@ import torch
 from src.physics.pde import PhysScales, derivatives, pde_residual
 from src.utils.scalers import MinMaxScaler, StandardScaler
 
-torch.set_default_dtype(torch.float64)
 XS, YS, TS = MinMaxScaler(0.0, 60_000.0), MinMaxScaler(-5_000.0, 45_000.0), MinMaxScaler(0.0, 3650.0)
 HS = StandardScaler(225.0, 4.0)
 SC = PhysScales(XS.half, YS.half, TS.half, HS.mean, HS.std, flux_scale_m_per_day=0.25 / 365.25)
@@ -68,7 +67,10 @@ def test_residual_terms_returned():
     assert set(terms) >= {"storage", "lateral", "h_t", "h_xx", "h_yy"}
 
 
-@pytest.fixture(autouse=True, scope="module")
-def _restore_dtype():
+@pytest.fixture(autouse=True)
+def _float64():
+    """Exact-solution checks need double precision; restore the default afterwards."""
+    old = torch.get_default_dtype()
+    torch.set_default_dtype(torch.float64)
     yield
-    torch.set_default_dtype(torch.float32)
+    torch.set_default_dtype(old)

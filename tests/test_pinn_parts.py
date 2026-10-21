@@ -57,6 +57,40 @@ def test_qnet_nonnegative_and_restricted_ignores_location():
     torch.testing.assert_close(Q, Q[:1].expand_as(Q))          # same land use + time -> same Q anywhere
 
 
+def test_calendar_month():
+    from src.models.pinn import calendar_month
+    t = torch.tensor([0.5, 31.5, 190.0, 364.0, 365.25 + 200.0, 3650.0 + 15])
+    assert calendar_month(t).tolist() == [0, 1, 6, 11, 6, 0]
+    assert calendar_month(torch.tensor([0.5]), doy_at_t0=181.0).tolist() == [5]   # record starting 1 July
+
+
+def test_month_season_features_change_pumping_by_month():
+    cfg = load_config(REPO_ROOT / "configs" / "pinn.yaml", overrides={"q_net": {"season_features": "month"}})
+    norm = Normaliser(MinMaxScaler(0, 20_000), MinMaxScaler(0, 20_000), MinMaxScaler(0, 730),
+                      StandardScaler(220.0, 2.0), 1e-3)
+    x = np.arange(500.0, 20_000, 1000)
+    model = ZonePINN(cfg, norm, GridField(np.full((20, 20), 0.5), x, x), 0.12, 1500.0)
+    same_month = norm.to_norm(torch.tensor([5e3, 5e3]), torch.tensor([5e3, 5e3]), torch.tensor([190.0, 200.0]))
+    q = model.pumping(same_month)
+    assert model.q_net.net[0].in_features == 13
+    torch.testing.assert_close(q[0], q[1] * torch.exp(model.q_net.trend * (same_month[0, 2] - same_month[1, 2])))
+
+
+def test_pumping_window_mean_matches_manual_average():
+    cfg = load_config(REPO_ROOT / "configs" / "pinn.yaml",
+                      overrides={"q_net": {"season_features": "month", "smooth_days": 31, "smooth_points": 5}})
+    norm = Normaliser(MinMaxScaler(0, 20_000), MinMaxScaler(0, 20_000), MinMaxScaler(0, 730),
+                      StandardScaler(220.0, 2.0), 1e-3)
+    x = np.arange(500.0, 20_000, 1000)
+    model = ZonePINN(cfg, norm, GridField(np.linspace(0, 1, 400).reshape(20, 20), x, x), 0.12, 1500.0)
+    pts = norm.to_norm(torch.tensor([3e3, 9e3]), torch.tensor([4e3, 15e3]), torch.tensor([170.0, 300.0]))
+    manual = torch.stack([model.pumping(pts + torch.tensor([0.0, 0.0, d / norm.t.half]))
+                          for d in (-15.0, -7.5, 0.0, 7.5, 15.0)]).mean(0)
+    torch.testing.assert_close(model.pumping_window_mean(pts), manual)
+    model.q_smooth_days = 1
+    torch.testing.assert_close(model.pumping_window_mean(pts), model.pumping(pts))
+
+
 @pytest.mark.slow
 def test_smoke_train_small_synthetic_case():
     """300 steps on a tiny case on the CPU: loss falls, nothing becomes NaN, S and T stay finite."""

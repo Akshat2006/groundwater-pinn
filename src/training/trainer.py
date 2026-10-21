@@ -3,7 +3,8 @@
 Stages:
 1. data_only:      fit h_net to the well readings
 2. physics_frozen: add the PDE loss; S, T held at their starting values; q_net and h_net learn
-3. joint:          everything learns, including S and T, with a decaying learning rate
+3. joint:          everything learns, including S and T, with a decaying learning rate (S and T can
+                   ramp up over `param_warmup` steps so they don't jump while the networks catch up)
 4. lbfgs:          optional L-BFGS polish (fixed collocation set), 0 steps = off
 
 Loss in stages 2–4: L_pde + λ·L_data (+ censored + prior). λ comes from the gradient-size rule in
@@ -130,8 +131,9 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
         base_lrs = [g["lr"] for g in opt.param_groups]
         for i in range(n_steps):
             if name == "joint":
-                for g, lr0 in zip(opt.param_groups, base_lrs):
-                    g["lr"] = lr0 * decay**i
+                warm = min(1.0, (i + 1) / max(tcfg.get("param_warmup", 0), 1))   # S, T ramp up gently
+                for k, (g, lr0) in enumerate(zip(opt.param_groups, base_lrs)):
+                    g["lr"] = lr0 * decay**i * (warm if k == 1 else 1.0)
             opt.zero_grad(set_to_none=True)
             L = losses(physics)
             if physics:
