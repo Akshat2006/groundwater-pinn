@@ -13,7 +13,7 @@
 - T
 - pumping per season
 
-**Gate status: PASSED.**
+**Gate status: passed on 1 of 2 runs with the final settings (same settings, different random seed and well layout).**
 
 Errors are the PINN estimate relative to the truth (−34% = 34% too low). Full runs have 20k or 40k joint steps;
 8k runs were quick comparisons.
@@ -21,10 +21,20 @@ Errors are the PINN estimate relative to the truth (−34% = 34% too low). Full 
 | Run | Settings | S | T | Pumping, seasons (mean abs) | Pumping, total | Hidden-well level error | Gate |
 |---|---|---|---|---|---|---|---|
 | run1 | default, 20k joint steps | -48% | -30% | 25% | -20% | 0.39 m | ❌ |
+| run1 | seed1, 40k joint steps | -5% | -1% | 15% | -2% | 0.07 m | ❌ |
+| run2 | default, 40k joint steps | -57% | -45% | 24% | -21% | 0.14 m | n/a |
 | run1 | w10, 8k joint steps | -42% | -14% | 33% | -16% | 0.23 m | ❌ |
 | run1 | w100, 8k joint steps | -34% | -7% | 31% | -13% | 0.15 m | ❌ |
+| run3 | default, 40k joint steps | -37% | -79% | 46% | -19% | 0.15 m | n/a |
+| run4 | default, 40k joint steps | -97% | -100% | 41% | -43% | 1.57 m | n/a |
+| run6 | default, 40k joint steps | -51% | -96% | 44% | -36% | 0.19 m | n/a |
+| run9 | default, 40k joint steps | -43% | -100% | 41% | -18% | 0.66 m | n/a |
+| run5 | default, 40k joint steps | -38% | -100% | 52% | -20% | 1.83 m | n/a |
+| run7 | default, 40k joint steps | -25% | -78% | 52% | -3% | 0.16 m | n/a |
 | run1 | a4_month, 20k joint steps | -3% | -3% | 57% | -1% | 0.11 m | ❌ |
+| run8 | default, 40k joint steps | -38% | -100% | 47% | -20% | 0.34 m | n/a |
 | run1 | a5_month_fastparams, 20k joint steps | -2% | -2% | 59% | -0% | 0.10 m | ❌ |
+| run10 | default, 40k joint steps | -53% | -100% | 37% | -35% | 0.56 m | n/a |
 | run1 | a_smooth1, 20k joint steps | -50% | -8% | 19% | -18% | 0.16 m | ❌ |
 | run1 | a_smooth7, 20k joint steps | -29% | -5% | 36% | -10% | 0.13 m | ❌ |
 | run1 | a6_matched_smoothing, 20k joint steps | -19% | -3% | 15% | -7% | 0.11 m | ❌ |
@@ -52,6 +62,41 @@ Errors are the PINN estimate relative to the truth (−34% = 34% too low). Full 
 Judged season by season instead, the low-pumping shoulder months ('other': Apr, May, Oct; about a tenth of yearly pumping) are overestimated. This is a **known limitation** to state in the paper.
 
 Likely cause: the 31-day time window still mixes May with the start of paddy pumping in June.
+
+### Does the pass repeat? (final settings, different seeds)
+
+| Run | S | T | Pumping, seasons | Pumping, total | S change, last 4k Adam steps | Gate |
+|---|---|---|---|---|---|---|
+| seed1 | -5% | -1% | 15% (worst 56%) | -2% | +0% | ❌ |
+| a9_a7_plus_lbfgs | -5% | +2% | 9% (worst 42%) | -1% | +1% | ✅ |
+
+The *S change* column shows how much S changed over the last 4,000 Adam steps before L-BFGS. A large value means S was still
+climbing when training stopped, so the final value depends on how long training ran rather than on a settled answer.
+
+## Run matrix (M2-B realistic cases and M2-D mismatched case: reported, not gated)
+
+Same settings as the gate run. Cases A and D have 30 wells (run8: 15) read four times a year, like CGWB.
+
+| Run | What it tests | S | T | Pumping, seasons | Pumping, total | Hidden-well level error | S change, last 4k Adam steps |
+|---|---|---|---|---|---|---|---|
+| run2 | q_net decision: full (brief's) form | -57% | -45% | 24% | -21% | 0.14 m | +2% |
+| run3 | realistic sampling, clean | -37% | -79% | 46% | -19% | 0.15 m | +0% |
+| run4 | 0.3 m measurement noise | -97% | -100% | 41% | -43% | 1.57 m | +1% |
+| run5 | 2 m per-well offset | -38% | -100% | 52% | -20% | 1.83 m | +0% |
+| run6 | recharge told 20% too low | -51% | -96% | 44% | -36% | 0.19 m | +2% |
+| run7 | recharge told 20% too high | -25% | -78% | 52% | -3% | 0.16 m | +0% |
+| run8 | only 15 wells | -38% | -100% | 47% | -20% | 0.34 m | +1% |
+| run9 | mismatched truth (reported, not gated) | -43% | -100% | 41% | -18% | 0.66 m | +1% |
+| run10 | mismatched truth, R x0.8 | -53% | -100% | 37% | -35% | 0.56 m | -1% |
+
+### Recharge sensitivity (runs 6 and 7 compared with run 3)
+
+If recharge R is wrong by a factor, theory (PLAN.md §2.1) says S and pumping should come out wrong by the same factor.
+
+| Recharge given to the PINN | S ratio | Pumping ratio | Theory |
+|---|---|---|---|
+| R × 0.8 (run6) | 0.77 | 0.79 | 0.80 |
+| R × 1.2 (run7) | 1.18 | 1.20 | 1.20 |
 
 ## What the metrics mean
 

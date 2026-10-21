@@ -39,6 +39,17 @@ def style(ax):
     ax.set_axisbelow(True)
 
 
+def s_drift(history: Path, last_steps: int) -> float:
+    """Relative change of S over the last `last_steps` Adam steps: is S still moving when training stops?"""
+    h = pd.read_csv(history)
+    adam = h[h.stage == "joint"]
+    if adam.empty:
+        return float("nan")
+    end = adam.iloc[-1]
+    before = adam[adam.step <= end.step - last_steps]
+    return float(end.S / before.iloc[-1].S - 1) if len(before) else float("nan")
+
+
 def collect() -> pd.DataFrame:
     rows = []
     for d in sorted(runs_dir().glob("*_m2_*")):
@@ -50,6 +61,8 @@ def collect() -> pd.DataFrame:
         import yaml
         stages = yaml.safe_load((d / "config.yaml").read_text())["training"]["stages"]
         r["joint_steps"] = stages.get("joint", 0)
+        r["lbfgs_steps"] = stages.get("lbfgs", 0)
+        r["S_drift"] = s_drift(d / "history.csv", 4000)
         rows.append(r)
     df = pd.DataFrame(rows)
     if df.empty:
@@ -150,6 +163,31 @@ def main() -> None:
                      f"{100 * r.Q_net_season_mean_abs_err:.0f}% | {pct(r.Q_net_total_rel_err)} | "
                      f"{r.head_rmse_test_m:.2f} m | {gate_txt} |")
     passed = bool(gate.gate_pass.any())
+    final = gate[gate.lbfgs_steps > 0]
+    status = (f"passed on {int(final.gate_pass.sum())} of {len(final)} runs with the final settings "
+              f"(same settings, different random seed and well layout)" if len(final)
+              else ("PASSED" if passed else "NOT PASSED YET"))
+
+    matrix = df[df.run != "run1"].copy()
+    matrix["order"] = matrix.run.str[3:].astype(int)
+    mlines = ["| Run | What it tests | S | T | Pumping, seasons | Pumping, total | Hidden-well level error | S change, last 4k Adam steps |",
+              "|---|---|---|---|---|---|---|---|"]
+    for _, r in matrix.sort_values("order").iterrows():
+        mlines.append(f"| {r.run} | {r.note} | {pct(r.S_rel_err)} | {pct(r.T_rel_err)} | "
+                      f"{100 * r.Q_net_season_mean_abs_err:.0f}% | {pct(r.Q_net_total_rel_err)} | "
+                      f"{r.head_rmse_test_m:.2f} m | {pct(r.S_drift)} |")
+    by_run = matrix.drop_duplicates("run", keep="last").set_index("run")
+    r_sens = []
+    if {"run3", "run6", "run7"} <= set(by_run.index):
+        base = by_run.loc["run3"]
+        for run, factor in (("run6", 0.8), ("run7", 1.2)):
+            r = by_run.loc[run]
+            r_sens.append(f"| R × {factor} ({run}) | {r.S / base.S:.2f} | "
+                          f"{r.Q_model_mean_m_per_year / base.Q_model_mean_m_per_year:.2f} | {factor:.2f} |")
+    seed_lines = [f"| {r['tag'] or 'attempt 1'} | {pct(r.S_rel_err)} | {pct(r.T_rel_err)} | "
+                  f"{100 * r.Q_net_season_mean_abs_err:.0f}% (worst {100 * r.Q_net_season_max_abs_err:.0f}%) | "
+                  f"{pct(r.Q_net_total_rel_err)} | {pct(r.S_drift)} | {'✅' if r.gate_pass else '❌'} |"
+                  for _, r in final.iterrows()]
     md = [
         "# M2 report: single-zone PINN on synthetic aquifers",
         "",
@@ -166,7 +204,7 @@ def main() -> None:
         "- T",
         "- pumping per season",
         "",
-        f"**Gate status: {'PASSED' if passed else 'NOT PASSED YET'}.**",
+        f"**Gate status: {status}.**",
         "",
         "Errors are the PINN estimate relative to the truth (−34% = 34% too low). Full runs have 20k or 40k joint steps;",
         "8k runs were quick comparisons.",
@@ -194,6 +232,29 @@ def main() -> None:
         "",
         "Likely cause: the 31-day time window still mixes May with the start of paddy pumping in June.",
         "",
+        "### Does the pass repeat? (final settings, different seeds)",
+        "",
+        "| Run | S | T | Pumping, seasons | Pumping, total | S change, last 4k Adam steps | Gate |",
+        "|---|---|---|---|---|---|---|",
+        *seed_lines,
+        "",
+        "The *S change* column shows how much S changed over the last 4,000 Adam steps before L-BFGS. A large value means S was still",
+        "climbing when training stopped, so the final value depends on how long training ran rather than on a settled answer.",
+        "",
+        "## Run matrix (M2-B realistic cases and M2-D mismatched case: reported, not gated)",
+        "",
+        "Same settings as the gate run. Cases A and D have 30 wells (run8: 15) read four times a year, like CGWB.",
+        "",
+        *mlines,
+        "",
+        *(["### Recharge sensitivity (runs 6 and 7 compared with run 3)",
+           "",
+           "If recharge R is wrong by a factor, theory (PLAN.md §2.1) says S and pumping should come out wrong by the same factor.",
+           "",
+           "| Recharge given to the PINN | S ratio | Pumping ratio | Theory |",
+           "|---|---|---|---|",
+           *r_sens,
+           ""] if r_sens else []),
         "## What the metrics mean",
         "",
         "- **S, T:** relative error of the recovered storage and ease of flow.",
@@ -202,7 +263,7 @@ def main() -> None:
         "- **Hidden-well level error:** typical water-level error (RMSE) at 30 wells the PINN never saw.",
     ]
     (ROOT / "reports" / "m2_synthetic.md").write_text("\n".join(md) + "\n", encoding="utf-8")
-    print(f"gate {'PASSED' if passed else 'not passed'}; best attempt {label}: "
+    print(f"gate {status}; best attempt {label}: "
           f"S {pct(best.S_rel_err)}, T {pct(best.T_rel_err)}, Q seasons {100 * best.Q_net_season_mean_abs_err:.0f}%")
     print("wrote reports/m2_synthetic.md")
 
