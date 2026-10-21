@@ -115,3 +115,25 @@ def test_smoke_train_small_synthetic_case():
         assert np.isfinite(h[col]).all(), col
     assert np.isfinite(h["pde"].dropna()).all() and h["pde"].notna().any()     # NaN only in data-only rows
     assert np.isfinite([res.info["S"], res.info["T"]]).all() and res.info["S"] > 0
+
+
+def test_fix_T_holds_T_and_prior_runs_through_lbfgs():
+    """training.fix_T keeps T at its starting value through Adam and L-BFGS; the prior term runs in both."""
+    from synthetic.generate import build_case
+    from synthetic.pinn_data import zone_from_synthetic
+    from synthetic.sample_wells import sample_wells
+    from src.training.trainer import train_zone
+
+    small = {"grid": {"nx": 12, "ny": 12, "dx_m": 1000.0, "dy_m": 1000.0},
+             "time": {"spinup_days": 30, "record_start": "2000-01-01", "record_end": "2000-12-31"}}
+    ds = build_case(load_config(REPO_ROOT / "configs" / "synthetic" / "case_A.yaml", overrides=small))
+    wells = sample_wells(ds, 8, "monthly", seed=0, n_hidden=0, margin_m=1500)
+    zone = zone_from_synthetic(ds, wells, 0.2, 2000.0, S_prior=0.15, T_prior=2000.0)
+    cfg = load_config(REPO_ROOT / "configs" / "pinn.yaml", overrides={
+        "h_net": {"width": 16, "depth": 2},
+        "training": {"n_colloc": 128, "lbfgs_colloc": 128, "fix_T": True, "prior": {"weight": 0.1, "sigma_log": 0.5},
+                     "stages": {"data_only": 20, "physics_frozen": 10, "joint": 60, "lbfgs": 5}, "log_every": 20}})
+    res = train_zone(cfg, zone, seed=0, device="cpu", verbose=False)
+    assert res.info["T"] == pytest.approx(2000.0, rel=1e-5)
+    assert res.info["S"] != pytest.approx(0.2, rel=1e-6)          # S still learns
+    assert "prior" in res.history.columns and np.isfinite(res.history["prior"].dropna()).all()

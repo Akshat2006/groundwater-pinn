@@ -96,6 +96,7 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
                                   alpha=wcfg.get("alpha", 0.1), every=wcfg.get("every", 100))
     pcfg = tcfg.get("prior", {"weight": 0.0})
     use_prior = pcfg.get("weight", 0.0) > 0 and zone.S_prior is not None
+    fix_T = bool(tcfg.get("fix_T", False))     # PLAN.md §10 fallback: T held at its starting (report) value
     stages = tcfg["stages"]
     batch = tcfg.get("batch_data", 0)
 
@@ -126,7 +127,7 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
             ("joint", stages.get("joint", 0), True, True)]
     for name, n_steps, physics, learn_params in plan:
         model.log_S.requires_grad_(learn_params)
-        model.log_T.requires_grad_(learn_params)
+        model.log_T.requires_grad_(learn_params and not fix_T)
         decay = (tcfg.get("lr_final_factor", 1.0) ** (1 / max(n_steps, 1))) if name == "joint" else 1.0
         base_lrs = [g["lr"] for g in opt.param_groups]
         for i in range(n_steps):
@@ -158,7 +159,7 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
     n_lbfgs = stages.get("lbfgs", 0)
     if n_lbfgs:
         model.log_S.requires_grad_(True)
-        model.log_T.requires_grad_(True)
+        model.log_T.requires_grad_(not fix_T)
         fixed_pts = CollocationSampler(tcfg.get("lbfgs_colloc", tcfg["n_colloc"]), device, zone.mask, gen).sample()
         R_fixed = R_at(fixed_pts)
         lam = weighting.weight
@@ -168,6 +169,8 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
         def closure():
             lb.zero_grad(set_to_none=True)
             t = pde_loss(model.residual(fixed_pts.clone(), R_fixed)) + lam * data_loss(model.head_norm(xyt_obs), h_obs_n)
+            if use_prior:
+                t = t + pcfg["weight"] * prior_loss(model.log_S, model.log_T, zone.S_prior, zone.T_prior, pcfg["sigma_log"])
             t.backward()
             return t
         lb.step(closure)
