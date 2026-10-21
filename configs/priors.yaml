@@ -1,0 +1,36 @@
+# Report values for S (specific yield) and T (transmissivity), shallow (unconfined) aquifer = Aquifer group I.
+# Extracted 2026-10-22 from the CGWB NAQUIM district reports in data/raw/cgwb_reports/naquim/ (page = PDF page).
+# Used as the starting values and the gentle prior of the PINN (PLAN.md §2.1).
+#
+# Caveats (read before using):
+# - Specific yield is almost never measured: nearly every report uses the GEC norm of 12% (and 60% of it,
+#   0.072, for in-storage resources). It is a convention, not a local measurement.
+# - T comes from a handful of pumping tests per district, often in deeper zones than the water table,
+#   and spans more than a factor of 10 within one district. Treat it as an order of magnitude.
+# - Some reports reuse another district's numbers (noted below).
+
+belt:                      # one prior for the whole study area (used unless a zone-level prior is chosen)
+  S: 0.12                  # GEC-2015 norm for alluvium; NAQUIM resource tables use 0.072-0.12
+  S_range: [0.072, 0.15]
+  T_m2_per_day: 1500       # rough geometric centre of the Aquifer-I values below
+  T_range: [400, 6000]
+  sigma_log_S: 0.5         # prior width in log units: ×/÷ 1.65
+  sigma_log_T: 0.8         # ×/÷ 2.2: T is poorly known
+
+districts:                 # Aquifer-I (shallow) values; S given only where the report states a measured value
+  Ambala:          {T: [154, 4900], page: 16, note: "test wells 150-400 m deep; storativity 1.4e-4 to 0.10"}
+  Jind:            {T: 1176, Sy: 0.12, page: 43}
+  Kaithal:         {T: [400, 1400], Sy_measured: [0.0235, 0.12], page: 27, note: "central 686 m2/day, Sy 0.0235; north 400, Sy 0.12"}
+  Karnal:          {T: 2200, page: 10, note: "Upper Yamuna Project average for the upper group"}
+  Kurukshetra:     {T: [830, 2424], Sy: 0.12, page: 17, note: "unconfined group average 2200"}
+  Panipat:         {T: [127, 1580], page: 58, note: "Bapoli-Samalkha 2024 study, several methods, one site"}
+  Sonipat:         {T: null, page: null, note: "NCR Vol II report is scanned; no text extracted - use belt prior"}
+  Yamunanagar:     {T: [875, 2500], Sy: 0.12, page: 29}
+  Barnala:         {T: [1620, 2000], Sy: 0.072, page: 31, note: "storativity 0.014-0.075"}
+  Fatehgarh Sahib: {T: [1555, 4222], Sy: 0.072, page: 26, note: "Aquifer-I summary 1780 (p53)"}
+  Jalandhar:       {T: [1028, 5750], page: 26}
+  Kapurthala:      {T: null, page: 20, note: "only a deep (278-394 m) test: 987"}
+  Ludhiana:        {T: [628, 1120], page: 15}
+  Moga:            {T: 5750, Sy: 0.072, page: 34, note: "same numbers as Jalandhar - likely copied"}
+  Patiala:         {T: [900, 9410], Sy: 0.072, page: 26}
+  Sangrur:         {T: [1620, 2000], Sy: 0.072, page: 33, note: "text identical to Barnala - likely copied"}

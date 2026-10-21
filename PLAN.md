@@ -1,6 +1,6 @@
 # PLAN.md: Zoned PINN for Groundwater Forecasting
 
-> **Status:** approved 2026-10-17. **M0 done 2026-10-17** (environment, tests, G0 notebook, literature check). **M1 done 2026-10-17** (FD solver passes all analytical checks; synthetic cases A–D in `data/synthetic/`; `reports/m1_solver.md`). **M2 gate (M2-A) passed 2026-10-21** on attempt 9 (S −5%, T +2%, seasonal pumping 9% average; shoulder months +22%, see `reports/m2_synthetic.md`). Next: rest of the M2 run matrix.
+> **Status:** approved 2026-10-17. **M0 done 2026-10-17** (environment, tests, G0 notebook, literature check). **M1 done 2026-10-17** (FD solver passes all analytical checks; synthetic cases A–D in `data/synthetic/`; `reports/m1_solver.md`). **M2 gate (M2-A) passed 2026-10-21** on attempt 9 (S −5%, T +2%, seasonal pumping 9% average; shoulder months +22%), but repeated on 1 of 2 seeds; the realistic quarterly cases (M2-B/D) fail (S ~−37%, T collapses); diagnostic batch running (`reports/m2_synthetic.md`). **M3 data pipeline built 2026-10-22** (`reports/m3_data_gaps.md`: 1,233 wells, 188 Tier-1 shallow wells, QC, heads, rainfall, land use, canals, S/T report values). Next: M2 diagnostics → decide fixes; then M4 zoning.
 
 ## Context
 

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 MANUAL = "MANUAL-Water Level"
@@ -82,3 +83,98 @@ def read_idp(path: str | Path, districts: dict[str, list[str]] | None = None) ->
                      + df["lat"].round(4).astype(str) + "," + df["lon"].round(4).astype(str))
     df["source"] = "idp"
     return df.reset_index(drop=True)
+
+
+# --- M3: one table of manual readings + telemetry ------------------------------------------------
+
+_NEST = r"(?:^|[\s(\-_])(S|M|D|[Ss]hallow|[Mm]edium|[Dd]eep)\)?(?:[_\-]?\d+)?\s*$"
+_NEST_NAMES = {"S": "S", "M": "M", "D": "D", "shallow": "S", "medium": "M", "deep": "D"}
+
+
+def nest_level(names: pd.Series) -> pd.Series:
+    """Nested-piezometer suffix in the station name: S (shallow), M (medium), D (deep) or <NA>."""
+    s = names.astype(str).str.extract(_NEST, expand=False)
+    return s.map(lambda v: _NEST_NAMES.get(v, _NEST_NAMES.get(str(v).lower())) if isinstance(v, str) else None)
+
+
+def depth_class(aquifer_type: pd.Series, nest: pd.Series, well_depth_m: pd.Series, deep_depth_m: float) -> pd.Series:
+    """"deep" if the well taps a confined/semi-confined or deep aquifer, else "shallow".
+
+    The WRIS aquifer field is blank for many medium/deep nested piezometers (median depth ~200-300 m),
+    so the name suffix and the well depth are used as well.
+    """
+    deep = (aquifer_type.isin(["Confined", "Semi-Confined"]) | nest.isin(["M", "D"])
+            | (well_depth_m >= deep_depth_m))
+    return pd.Series(np.where(deep, "deep", "shallow"), index=aquifer_type.index)
+
+
+def assemble_manual(wris_root: str | Path, idp_path: str | Path | None = None,
+                    idp_fill: dict[str, list[str]] | None = None, match_km: float = 0.2,
+                    same_reading_days: int = 20) -> pd.DataFrame:
+    """WRIS manual readings + India Data Portal readings for the `idp_fill` districts.
+
+    An IDP well is the same well as a WRIS well if it lies within `match_km` and has the same nest
+    suffix; it then takes the WRIS id and metadata. IDP readings within `same_reading_days` of a WRIS
+    reading of the same well are dropped (WRIS wins).
+    """
+    w = read_wris(wris_root, "manual")
+    w["date"] = w["time"].dt.normalize()
+    cols = ["well_id", "station_name", "lat", "lon", "state", "district", "date", "dtw_m",
+            "well_type", "well_depth_m", "aquifer_type", "source"]
+    w = w[cols].copy()
+    for c in ("well_type", "aquifer_type"):
+        w[c] = w[c].replace("", pd.NA)
+    if not (idp_path and idp_fill):
+        return w.reset_index(drop=True)
+
+    i = read_idp(idp_path, idp_fill)
+    i["date"] = i["time"].dt.normalize()
+    meta = w.groupby("well_id").agg(lat=("lat", "first"), lon=("lon", "first"), name=("station_name", "first"),
+                                    well_type=("well_type", "first"), well_depth_m=("well_depth_m", "first"),
+                                    aquifer_type=("aquifer_type", "first"))
+    meta["nest"] = nest_level(meta["name"])
+    iw = i.groupby("well_id").agg(lat=("lat", "first"), lon=("lon", "first"), name=("station_name", "first"))
+    iw["nest"] = nest_level(iw["name"])
+    from scipy.spatial import cKDTree
+    k = np.cos(np.radians(float(meta.lat.mean())))
+    tree = cKDTree(np.c_[meta.lat, meta.lon * k])
+    pairs = tree.query_ball_point(np.c_[iw.lat, iw.lon * k], r=match_km / 111.0)
+    mapping = {}
+    for idp_id, cand, nest in zip(iw.index, pairs, iw.nest):
+        same = [meta.index[j] for j in cand if meta.nest.iloc[j] == nest or (pd.isna(meta.nest.iloc[j]) and pd.isna(nest))]
+        if len(same) == 1:
+            mapping[idp_id] = same[0]
+    i["idp_id"] = i["well_id"]
+    i["well_id"] = i["well_id"].map(lambda v: mapping.get(v, v))
+    for c in ("well_type", "well_depth_m", "aquifer_type"):
+        i[c] = i["well_id"].map(meta[c]) if c in meta else pd.NA
+    i["well_type"] = i["well_type"].astype("object")
+    # drop IDP readings that duplicate a WRIS reading of the same well
+    wd = w[["well_id", "date"]].rename(columns={"date": "wdate"})
+    j = i.reset_index().merge(wd, on="well_id", how="left")
+    near = (j["date"] - j["wdate"]).abs() <= pd.Timedelta(days=same_reading_days)
+    dup_rows = set(j.loc[near, "index"])
+    i = i.drop(index=list(dup_rows))
+    out = pd.concat([w, i[cols]], ignore_index=True)
+    out.attrs["idp_matched_wells"] = len(mapping)
+    out.attrs["idp_dropped_duplicates"] = len(dup_rows)
+    return out
+
+
+def telemetry_daily(wris_root: str | Path, max_dtw_m: float = 150.0, spike_m: float = 5.0) -> pd.DataFrame:
+    """6-hourly DWLR telemetry -> daily median depth to water, after basic cleaning.
+
+    Telemetry values are negative below ground, so dtw = -value. Readings outside (0, max_dtw_m] are
+    dropped, then any day more than `spike_m` from the well's 31-day rolling median.
+    """
+    t = read_wris(wris_root, "telemetry")
+    t = t.assign(dtw_m=-t["value"], date=t["time"].dt.normalize())
+    n_raw = len(t)
+    t = t[(t.dtw_m > 0) & (t.dtw_m <= max_dtw_m)]
+    d = (t.groupby(["well_id", "date"]).agg(dtw_m=("dtw_m", "median"), n_obs=("dtw_m", "size"),
+                                             lat=("lat", "first"), lon=("lon", "first"), district=("district", "first"))
+         .reset_index())
+    roll = d.groupby("well_id")["dtw_m"].transform(lambda s: s.rolling(31, center=True, min_periods=5).median())
+    d = d[~((d.dtw_m - roll).abs() > spike_m)]
+    d.attrs["n_raw"] = n_raw
+    return d.reset_index(drop=True)

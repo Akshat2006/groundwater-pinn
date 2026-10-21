@@ -26,3 +26,22 @@ wells:
   aquifer_types_main: [Unconfined, ""]        # "" = unknown; confined/semi-confined reported separately
   tier1_min_years: 5      # years in the training period with both a pre- and a post-monsoon reading
   min_readings: 3         # Tier 2: drop wells with fewer readings after QC
+
+grid:
+  res_m: 1000           # model grid (UTM 43N), edges on whole km
+  buffer_m: 5000        # around the district union
+
+qc:                     # src/features/head.py
+  spike_m: 5.0          # single-reading jump away from both neighbours (G0: 6% of changes > 5 m)
+  jump_m: 15.0          # persistent step: kept but flagged suspect_jump
+  max_dtw_m: 100.0
+  dry_margin_m: 1.0     # within 1 m of the well bottom -> dry / censored
+  max_gap_days: 400     # a step across a longer gap can be real decline: not flagged
+  spike_gap_days: 800   # spikes are judged against neighbours up to this far away
+  dup_days: 31          # identical value repeated within this many days = copied entry
+  outlier_m: 20.0       # vs median of the 4 nearest-in-time readings (+1 m per year of gap)
+  deep_depth_m: 150.0   # wells this deep (or confined, or nested M/D) are "deep", not in the main analysis
+  telemetry_max_dtw_m: 150.0
+
+recharge:
+  rif: 0.22             # GEC-2015 report Table 4 (p. 31): Indo-Gangetic alluvium 22% (range 20-25%)
