@@ -1,6 +1,6 @@
 # PLAN.md: Zoned PINN for Groundwater Forecasting
 
-> **Status:** approved 2026-10-17. **M0 done 2026-10-17** (environment, tests, G0 notebook, literature check). **M1 done 2026-10-17** (FD solver passes all analytical checks; synthetic cases A–D in `data/synthetic/`; `reports/m1_solver.md`). Next: M2.
+> **Status:** approved 2026-10-17. **M0 done 2026-10-17** (environment, tests, G0 notebook, literature check). **M1 done 2026-10-17** (FD solver passes all analytical checks; synthetic cases A–D in `data/synthetic/`; `reports/m1_solver.md`). **M2 gate (M2-A) passed 2026-10-21** on attempt 9 (S −5%, T +2%, seasonal pumping 9% average; shoulder months +22%, see `reports/m2_synthetic.md`). Next: rest of the M2 run matrix.
 
 ## Context
 

@@ -1,16 +1,26 @@
 # PINN architecture and training (PLAN.md §2.4, §6.3). Experiment configs override parts of this.
+# Defaults = the settings that passed the M2 gate (attempt 9, reports/m2_synthetic.md).
 h_net: {width: 64, depth: 6, act: tanh, n_harmonics: 2}
-q_net: {width: 16, depth: 3, act: tanh, mode: restricted, n_harmonics: 2, season_features: harmonics, doy_at_t0: 0,
-        smooth_days: 1, smooth_points: 11}   # smooth_days: average Q in the PDE over the recharge window
+q_net:
+  width: 16
+  depth: 3
+  act: tanh
+  mode: restricted                # pumping depends on land use + season + one slow trend (PLAN.md §2.1)
+  season_features: month          # one-hot calendar month; "harmonics" (smooth waves) was too flat
+  n_harmonics: 2                  # only used when season_features = harmonics
+  doy_at_t0: 0                    # day of year (0 = 1 Jan) at t = 0
+  smooth_days: 31                 # average Q in the PDE over the same window as recharge (must match below)
+  smooth_points: 11
 training:
   n_colloc: 4096                  # fresh random PDE points every step
   batch_data: 0                   # 0 = all readings every step
-  stages: {data_only: 3000, physics_frozen: 2000, joint: 20000, lbfgs: 0}
+  stages: {data_only: 3000, physics_frozen: 500, joint: 40000, lbfgs: 1000}
   lr: 1.0e-3
-  lr_params: 5.0e-3               # log S, log T
-  lr_final_factor: 0.1            # joint stage decays to lr × this
-  param_warmup: 0                 # joint steps over which the S, T learning rate ramps up from ~0
-  weighting: {type: gradnorm, init: 1.0, alpha: 0.1, every: 100}
+  lr_params: 0.02                 # log S, log T
+  lr_final_factor: 0.3            # joint stage decays to lr × this
+  param_warmup: 2000              # joint steps over which the S, T learning rate ramps up from ~0
+  lbfgs_colloc: 8192              # fixed PDE points for the final L-BFGS polish
+  weighting: {type: fixed, init: 100.0, alpha: 0.1, every: 100}   # gradnorm saturated and under-weighted physics
   prior: {weight: 0.0, sigma_log: 0.5}   # off for synthetic recovery tests: S, T must come from the data
   flux_scale_m_per_year: 0.25     # typical |R − Q|; scales the PDE residual to ~1
   recharge_smooth_days: 31

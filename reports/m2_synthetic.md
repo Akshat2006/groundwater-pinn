@@ -13,9 +13,9 @@
 - T
 - pumping per season
 
-**Gate status: NOT PASSED YET.**
+**Gate status: PASSED.**
 
-Errors are the PINN estimate relative to the truth (−34% = 34% too low). Full runs have 20k joint steps;
+Errors are the PINN estimate relative to the truth (−34% = 34% too low). Full runs have 20k or 40k joint steps;
 8k runs were quick comparisons.
 
 | Run | Settings | S | T | Pumping, seasons (mean abs) | Pumping, total | Hidden-well level error | Gate |
@@ -28,12 +28,30 @@ Errors are the PINN estimate relative to the truth (−34% = 34% too low). Full 
 | run1 | a_smooth1, 20k joint steps | -50% | -8% | 19% | -18% | 0.16 m | ❌ |
 | run1 | a_smooth7, 20k joint steps | -29% | -5% | 36% | -10% | 0.13 m | ❌ |
 | run1 | a6_matched_smoothing, 20k joint steps | -19% | -3% | 15% | -7% | 0.11 m | ❌ |
+| run1 | a7_warmup_40k, 40k joint steps | -10% | -0% | 14% | -4% | 0.07 m | ❌ |
+| run1 | a9_a7_plus_lbfgs, 40k joint steps | -5% | +2% | 9% | -1% | 0.09 m | ✅ |
 
 ![trajectory](figures/m2_gate_trajectory.png)
 
 ![pumping](figures/m2_gate_pumping.png)
 
-*Figures show the best gate attempt so far (a6_matched_smoothing).*
+*Figures show the best gate attempt so far (a9_a7_plus_lbfgs).*
+
+### Pumping by season type (a9_a7_plus_lbfgs)
+
+| Season | Mean error | Mean abs error | Worst season |
+|---|---|---|---|
+| other | +22% | 22% | 42% |
+| paddy | -3% | 3% | 4% |
+| wheat | -3% | 3% | 4% |
+
+21 of 31 individual seasons are within 10%.
+
+**How the gate rule is applied.** The rule (written in this script before the passing run) uses the *average* seasonal error across all seasons.
+
+Judged season by season instead, the low-pumping shoulder months ('other': Apr, May, Oct; about a tenth of yearly pumping) are overestimated. This is a **known limitation** to state in the paper.
+
+Likely cause: the 31-day time window still mixes May with the start of paddy pumping in June.
 
 ## What the metrics mean
 

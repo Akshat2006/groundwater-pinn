@@ -159,7 +159,7 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
     if n_lbfgs:
         model.log_S.requires_grad_(True)
         model.log_T.requires_grad_(True)
-        fixed_pts = sampler.sample()
+        fixed_pts = CollocationSampler(tcfg.get("lbfgs_colloc", tcfg["n_colloc"]), device, zone.mask, gen).sample()
         R_fixed = R_at(fixed_pts)
         lam = weighting.weight
         lb = torch.optim.LBFGS([p for p in model.parameters() if p.requires_grad], lr=1.0, max_iter=n_lbfgs,

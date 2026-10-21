@@ -60,4 +60,4 @@ reports/      results, tables, figures, run logs
 |---|---|
 | M0 setup + G0 data check + literature check | done (2026-10-17) |
 | M1 synthetic aquifer (finite-difference solver) | done (2026-10-17), see `reports/m1_solver.md` |
-| M2 single-zone PINN on synthetic data | next |
+| M2 single-zone PINN on synthetic data | gate passed (2026-10-21), see `reports/m2_synthetic.md`; run matrix next |

@@ -116,7 +116,12 @@ def plot_pumping(run_dir: Path, label: str) -> dict:
     cb.set_label("m/yr (10-yr mean)", fontsize=7)
     fig.savefig(FIG / "m2_gate_pumping.png")
     plt.close(fig)
-    return {"season_mean_abs_err": float((tot.model / tot.true - 1).abs().mean())}
+    tot["err"] = tot.model / tot.true - 1
+    tot["season"] = [k.split("-")[0] for k in tot.index]
+    g = tot.groupby("season").err
+    by_type = pd.DataFrame({"mean": g.mean(), "mean_abs": g.apply(lambda v: v.abs().mean()),
+                            "worst": g.apply(lambda v: v.abs().max())})
+    return {"by_type": by_type, "n_within": int((tot.err.abs() <= TOL).sum()), "n": len(tot)}
 
 
 def pct(v):
@@ -135,7 +140,7 @@ def main() -> None:
     best_dir = runs_dir() / best["dir"]
     label = best["tag"] or "attempt 1"
     plot_trajectory(best_dir, label)
-    plot_pumping(best_dir, label)
+    seasons = plot_pumping(best_dir, label)
 
     lines = ["| Run | Settings | S | T | Pumping, seasons (mean abs) | Pumping, total | Hidden-well level error | Gate |",
              "|---|---|---|---|---|---|---|---|"]
@@ -163,7 +168,7 @@ def main() -> None:
         "",
         f"**Gate status: {'PASSED' if passed else 'NOT PASSED YET'}.**",
         "",
-        "Errors are the PINN estimate relative to the truth (−34% = 34% too low). Full runs have 20k joint steps;",
+        "Errors are the PINN estimate relative to the truth (−34% = 34% too low). Full runs have 20k or 40k joint steps;",
         "8k runs were quick comparisons.",
         "",
         *lines,
@@ -173,6 +178,21 @@ def main() -> None:
         f"![pumping](figures/m2_gate_pumping.png)",
         "",
         f"*Figures show the best gate attempt so far ({label}).*",
+        "",
+        f"### Pumping by season type ({label})",
+        "",
+        "| Season | Mean error | Mean abs error | Worst season |",
+        "|---|---|---|---|",
+        *[f"| {k} | {pct(r['mean'])} | {100 * r['mean_abs']:.0f}% | {100 * r['worst']:.0f}% |"
+          for k, r in seasons["by_type"].iterrows()],
+        "",
+        f"{seasons['n_within']} of {seasons['n']} individual seasons are within 10%.",
+        "",
+        "**How the gate rule is applied.** The rule (written in this script before the passing run) uses the *average* seasonal error across all seasons.",
+        "",
+        "Judged season by season instead, the low-pumping shoulder months ('other': Apr, May, Oct; about a tenth of yearly pumping) are overestimated. This is a **known limitation** to state in the paper.",
+        "",
+        "Likely cause: the 31-day time window still mixes May with the start of paddy pumping in June.",
         "",
         "## What the metrics mean",
         "",

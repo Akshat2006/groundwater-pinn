@@ -106,7 +106,7 @@ def test_smoke_train_small_synthetic_case():
     zone = zone_from_synthetic(ds, wells, 0.2, 3000.0)
     cfg = load_config(REPO_ROOT / "configs" / "pinn.yaml", overrides={
         "h_net": {"width": 24, "depth": 3},
-        "training": {"n_colloc": 256, "stages": {"data_only": 100, "physics_frozen": 50, "joint": 150},
+        "training": {"n_colloc": 256, "stages": {"data_only": 100, "physics_frozen": 50, "joint": 150, "lbfgs": 0},
                      "log_every": 50}})
     res = train_zone(cfg, zone, seed=0, device="cpu", verbose=False)
     h = res.history
