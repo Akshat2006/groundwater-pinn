@@ -58,6 +58,8 @@ def test_case_c_canal_and_clusters():
     far = dict(x=19500, y=19500)                                               # > 15 km from both clusters
     ratio = (ds.q_map / ds.landuse_true) / float(ds.q_map.sel(**far) / ds.landuse_true.sel(**far))
     assert float(ratio.max()) == pytest.approx(3.0, rel=0.01)                   # 3x at cluster centres
+    q_per_input = ds.q_map / ds.landuse_input                                   # well-posed: the model's map
+    assert float(q_per_input.std() / q_per_input.mean()) < 1e-12                # matches true pumping pattern
 
 
 def test_case_d_hides_things_from_the_model():

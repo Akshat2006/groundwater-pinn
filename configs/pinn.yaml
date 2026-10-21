@@ -1,0 +1,15 @@
+# PINN architecture and training (PLAN.md §2.4, §6.3). Experiment configs override parts of this.
+h_net: {width: 64, depth: 6, act: tanh, n_harmonics: 2}
+q_net: {width: 16, depth: 3, act: tanh, mode: restricted, n_harmonics: 2}
+training:
+  n_colloc: 4096                  # fresh random PDE points every step
+  batch_data: 0                   # 0 = all readings every step
+  stages: {data_only: 3000, physics_frozen: 2000, joint: 20000, lbfgs: 0}
+  lr: 1.0e-3
+  lr_params: 5.0e-3               # log S, log T
+  lr_final_factor: 0.1            # joint stage decays to lr × this
+  weighting: {type: gradnorm, init: 1.0, alpha: 0.1, every: 100}
+  prior: {weight: 0.0, sigma_log: 0.5}   # off for synthetic recovery tests: S, T must come from the data
+  flux_scale_m_per_year: 0.25     # typical |R − Q|; scales the PDE residual to ~1
+  recharge_smooth_days: 31
+  log_every: 500

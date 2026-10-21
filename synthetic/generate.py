@@ -133,6 +133,9 @@ def build_case(cfg: dict) -> xr.Dataset:
         c = ex["clusters"]
         multiplier += (c["peak_multiplier"] - 1) * gaussian_bumps(X, Y, np.array(c["centres_km"]) * 1000,
                                                                   c["sigma_km"] * 1000)
+    # What the model is told about where pumping happens: farmland intensity, including the (known)
+    # heavy-pumping clusters. Patches and hot spots below are hidden from the model (case D).
+    known_intensity = a * multiplier
     if "patches" in ex:
         p = ex["patches"]
         multiplier *= 1 + p["amplitude"] * smooth_field(grid, p["scale_km"] / 2, rng, -1.0, 1.0)
@@ -142,7 +145,7 @@ def build_case(cfg: dict) -> xr.Dataset:
         multiplier += (h["peak_multiplier"] - 1) * gaussian_bumps(X, Y, centres, h["sigma_km"] * 1000)
     q_map = q0 * a * multiplier
     return_frac = float(ex.get("return_flow_fraction", 0.0))
-    landuse_input = a
+    landuse_input = known_intensity
     if "landuse_input" in ex:
         li = ex["landuse_input"]
         block = int(round(li["coarsen_km"] * 1000 / grid.dx))
@@ -191,7 +194,8 @@ def build_case(cfg: dict) -> xr.Dataset:
             "q_map": (yx, q_map, {"units": "m/day", "long_name": "gross pumping at q_time = 1"}),
             "q_time": (("time",), q_time[rec], {"units": "1"}),
             "landuse_true": (yx, a, {"units": "1"}),
-            "landuse_input": (yx, landuse_input, {"units": "1", "long_name": "land use given to the model"}),
+            "landuse_input": (yx, landuse_input, {"units": "1",
+                                                  "long_name": "pumping-intensity map given to the model"}),
         },
         coords=coords,
     )

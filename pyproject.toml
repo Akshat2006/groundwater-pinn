@@ -16,4 +16,5 @@ testpaths = ["tests"]
 markers = [
     "gpu: needs a CUDA GPU (skipped when none is available)",
     "data: needs files in data/raw (skipped when they are missing)",
+    "slow: takes more than a few seconds",
 ]
