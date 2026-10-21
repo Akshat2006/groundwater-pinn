@@ -1,8 +1,9 @@
-"""Two-page progress report (PDF) with a milestone track, project flowchart and key results.
+"""Progress report (PDF) with a milestone track, project flowchart and key results (M0–M2).
 
     python scripts/make_progress_report.py     -> reports/progress_report.pdf
 
-Needs the outputs of M0 (reports/tables/g0_*.csv) and M1 (reports/figures/m1_cases.png).
+Needs the outputs of M0 (reports/tables/g0_*.csv), M1 (reports/figures/m1_cases.png) and M2
+(reports/figures/m2_gate_*.png from scripts/check_m2.py).
 """
 from datetime import date
 from pathlib import Path
@@ -23,6 +24,8 @@ from reportlab.platypus import (Image, KeepTogether, PageBreak, Paragraph, Simpl
                                 Table, TableStyle)
 
 ROOT = Path(__file__).resolve().parents[1]
+import sys  # noqa: E402
+sys.path.insert(0, str(ROOT))
 FIG = ROOT / "reports" / "figures"
 OUT = ROOT / "reports" / "progress_report.pdf"
 
@@ -31,7 +34,7 @@ BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
 INK, MUTED, LINE, PALE = "#0b0b0b", "#52514e", "#c9c8c3", "#f3f2ef"
 DONE_FILL, NEXT_FILL, TODO_FILL = "#d6f2e6", "#fde3d8", "#f3f2ef"
 
-MILESTONES = [("M0", "Setup"), ("M1", "Simulator"), ("M2", "PINN\ntest"), ("M3", "Data\npipeline"),
+MILESTONES = [("M0", "Setup"), ("M1", "Simulator"), ("M2", "PINN test\n(gate ✓)"), ("M3", "Data\npipeline"),
               ("M4", "Zoning"), ("M5", "Base-\nlines"), ("M6", "Regional\nPINN"), ("M7", "Zoned\nPINN"),
               ("M8", "Experi-\nments"), ("M9", "Scenarios"), ("M10", "Write-up")]
 N_DONE = 2
@@ -65,7 +68,8 @@ def milestone_strip(path: Path) -> None:
 
 
 def _box(ax, cx, cy, w, h, text, state, fs=5.6):
-    fill, edge = {"done": (DONE_FILL, AQUA), "next": (NEXT_FILL, ORANGE), "todo": (TODO_FILL, LINE)}[state]
+    fill, edge = {"done": (DONE_FILL, AQUA), "next": (NEXT_FILL, ORANGE), "running": (NEXT_FILL, ORANGE),
+                  "todo": (TODO_FILL, LINE)}[state]
     ax.add_patch(FancyBboxPatch((cx - w / 2, cy - h / 2), w, h, boxstyle="round,pad=0,rounding_size=1.2",
                                 facecolor=fill, edgecolor=edge, linewidth=1.3))
     lines = text.split("\n")
@@ -73,7 +77,7 @@ def _box(ax, cx, cy, w, h, text, state, fs=5.6):
     if len(lines) > 1:
         ax.text(cx, cy + h / 2 - 4.9, "\n".join(lines[1:]), ha="center", va="top", fontsize=fs - 0.5,
                 color=MUTED, linespacing=1.25)
-    tag = {"done": "✓ done", "next": "▶ next", "todo": ""}[state]
+    tag = {"done": "✓ done", "next": "▶ next", "running": "▶ running", "todo": ""}[state]
     if tag:
         ax.text(cx + w / 2 - 1.0, cy - h / 2 + 1.0, tag, ha="right", va="bottom", fontsize=5.3,
                 color=edge, fontweight="bold")
@@ -100,34 +104,34 @@ def flowchart(path: Path) -> None:
     cx = [9.0 + i * 16.4 for i in range(6)]
     y_top, y_bot = 39.5, 10.5
     # lane 1: synthetic track
-    _box(ax, cx[0], y_top, w, h, "M0 Setup\nPython env, GPU,\n46 tests,\ndata check", "done")
+    _box(ax, cx[0], y_top, w, h, "M0 Setup\nPython env, GPU,\n58 tests,\ndata check", "done")
     _box(ax, cx[1] + 3, y_top, w, h, "M1 Simulator\nfake aquifer with\nknown S, T, pumping;\nchecks passed", "done")
     gx, dw, dh = cx[3], 11.0, 8.5
     ax.add_patch(Polygon([(gx, y_top + dh), (gx + dw, y_top), (gx, y_top - dh), (gx - dw, y_top)], closed=True,
-                         facecolor=NEXT_FILL, edgecolor=ORANGE, linewidth=1.3))
+                         facecolor=DONE_FILL, edgecolor=AQUA, linewidth=1.3))
     ax.text(gx, y_top + 1.6, "M2 GATE", ha="center", fontsize=6.2, fontweight="bold", color=INK)
     ax.text(gx, y_top - 2.8, "PINN recovers\nS, T, Q within 10%?", ha="center", fontsize=5.0, color=MUTED,
             linespacing=1.2)
-    ax.text(gx + dw + 0.3, y_top + 4.3, "▶ next", fontsize=5.3, color=ORANGE, fontweight="bold")
+    ax.text(gx + dw + 0.3, y_top + 3.3, "✓ passed\n(attempt 9)", fontsize=5.3, color=AQUA, fontweight="bold",
+            va="bottom", linespacing=1.15)
     fx = cx[5] - 1
-    _box(ax, fx, y_top, w, h, "Fix & retry\nadjust training,\nor backup method\n(ask you first)", "todo")
+    _box(ax, fx, y_top, w, h, "M2 stress tests\nrealistic wells,\nnoise, wrong\nrecharge (Colab)", "running")
     _arrow(ax, (cx[0] + w / 2, y_top), (cx[1] + 3 - w / 2, y_top))
     _arrow(ax, (cx[1] + 3 + w / 2, y_top), (gx - dw, y_top))
     _arrow(ax, (gx + dw, y_top), (fx - w / 2, y_top))
-    ax.text((gx + dw + fx - w / 2) / 2, y_top - 2.4, "no", ha="center", fontsize=5.8, color=MUTED)
-    _arrow(ax, (fx, y_top + h / 2), (gx + 1.5, y_top + dh - 0.6), rad=0.35, ls="--")
+    ax.text((gx + dw + fx - w / 2) / 2, y_top - 2.4, "then", ha="center", fontsize=5.8, color=MUTED)
     # lane 2: real data
     _box(ax, cx[0], y_bot, w, h, "Data in hand\n1,139 wells,\nrain, elevation,\nland use, canals", "done")
-    _box(ax, cx[1], y_bot, w, h, "M3 Pipeline\nclean + merge\ninto one\nmaster table", "todo")
+    _box(ax, cx[1], y_bot, w, h, "M3 Pipeline\nclean + merge\ninto one\nmaster table", "next")
     _box(ax, cx[2], y_bot, w, h, "M4–M5 Zoning\ngroup wells;\nearly check:\ndoes it help?", "todo")
     _box(ax, cx[3], y_bot, w, h, "M6–M7 PINNs\nregional vs\nzoned; infer\npumping", "todo")
     _box(ax, cx[4], y_bot, w, h, "M8 Tests\nvs 6+ simpler\nmodels on\nhidden areas", "todo")
     _box(ax, cx[5], y_bot, w, h, "M9–M10 Results\nwhat-if runs,\nmaps, slides,\npaper", "todo")
     for i in range(5):
         _arrow(ax, (cx[i] + w / 2, y_bot), (cx[i + 1] - w / 2, y_bot))
-    _arrow(ax, (gx, y_top - dh), (gx, y_bot + h / 2), color=ORANGE)
-    ax.text(gx + 0.8, (y_top - dh + y_bot + h / 2) / 2, "yes: only then use real data", fontsize=5.6,
-            color=ORANGE, va="center", fontweight="bold")
+    _arrow(ax, (gx, y_top - dh), (gx, y_bot + h / 2), color=AQUA)
+    ax.text(gx + 0.8, (y_top - dh + y_bot + h / 2) / 2, "yes: real data now allowed", fontsize=5.6,
+            color=AQUA, va="center", fontweight="bold")
     fig.savefig(path, bbox_inches="tight", pad_inches=0.02)
     plt.close(fig)
 
@@ -209,8 +213,8 @@ def build() -> None:
     story = []
     # ---------------- page 1
     story += [Paragraph("Zoned PINNs for Groundwater Forecasting", h1),
-              Paragraph(f"Progress report · {date.today():%d %B %Y} · Punjab–Haryana alluvial belt, 16 districts · "
-                        f"<b>2 of 11 milestones complete</b>", sub),
+              Paragraph(f"Progress report · {date.today():%d %B %Y} · Punjab–Haryana belt, 16 districts · "
+                        f"<b>M0–M1 done · M2 gate passed</b>", sub),
               Spacer(1, 4), img("progress_milestones.png", W), Spacer(1, 2)]
     story += [Paragraph("The project in one paragraph", h2),
               Paragraph(
@@ -220,7 +224,7 @@ def build() -> None:
                   "equation <b>S·∂h/∂t = T∇²h + R − Q</b> (storage × change in level = sideways flow + recharge − "
                   "pumping). Unmetered farm <b>pumping Q</b> is inferred as a hidden quantity. Before touching real "
                   "data, the method must prove on a simulated aquifer that it recovers answers we planted.", body)]
-    story += [Paragraph("Project flow and where we are", h2), img("progress_flowchart.png", W)]
+    story += [Paragraph("Project flow and where we are", h2), img("progress_flowchart.png", 0.9 * W)]
     story += [Paragraph("Done so far", h2), table([
         ["Step", "What was done", "Key result"],
         ["Plan", "Brief checked; 12 design problems ranked and fixed (PLAN.md)",
@@ -228,9 +232,12 @@ def build() -> None:
         ["Data", "Study area chosen by a data check; every dataset fetched by script",
          "1,139 wells (1990–2024) + 248 sensor wells; nothing left to download by hand"],
         ["M0 Setup", "Python environment, project layout, automatic tests, Colab notebook, literature check",
-         "GPU (GTX 1050) works; 46 tests pass; no prior zoned or hidden-pumping PINN on field data found"],
+         "GPU (GTX 1050) works; 58 tests pass; no prior zoned or hidden-pumping PINN on field data found"],
         ["M1 Simulator", "Finite-difference aquifer simulator and 4 synthetic aquifers (A–D) with known answers",
          "Matches exact textbook solutions; water balance closes to 1 part in 10 billion"],
+        ["M2 PINN test", "The real PINN trained on a simulated aquifer from deliberately wrong starting values; "
+         "9 attempts, each failure diagnosed and fixed (page 3)",
+         "<b>Gate passed:</b> storage −5%, flow ease +2%, total pumping −1%; stress tests running on Colab"],
     ], [0.13 * W, 0.45 * W, 0.42 * W])]
     story += [Paragraph("Biggest risks found in the plan review, and how they are handled", h2), table([
         ["Risk", "Why it matters", "How the plan handles it"],
@@ -241,7 +248,7 @@ def build() -> None:
         ["Result could be luck", "A small test set makes a 5% difference look like chance",
          "859 test wells; 3 different held-out area layouts; confidence ranges; main result fixed in advance"],
         ["PINN training fails", "PINNs often fail to train on messy, sparse data",
-         "Careful scaling, staged training, automatic tests; a backup method if needed (asks first)"],
+         "<b>Happened in M2 attempt 1</b> (physics under-weighted); diagnosed and fixed, see page 3"],
     ], [0.19 * W, 0.37 * W, 0.44 * W])]
     story.append(PageBreak())
 
@@ -293,32 +300,100 @@ def build() -> None:
                                       "sparse 'wells' the PINN will see). Bottom: the true pumping the PINN must "
                                       "recover without being shown it (aqua outline = canal).", caption)])]
 
-    story += [Paragraph("Next steps and honest status", h2), table([
-        ["Next", "What it decides"],
-        ["<b>M2</b> PINN on the simulated aquifer", "Pass/fail gate: recover S, T and pumping within ~10% on case C. "
-         "If it fails, fix or switch to the backup method (asks first). No real-data modelling before this passes."],
-        ["<b>M3</b> data pipeline", "Clean and merge all data into one table; convert depth-to-water into water level."],
-        ["<b>M4–M5</b> zoning + early check", "First real signal on whether zoning beats a single regional model."],
-    ], [0.27 * W, 0.73 * W]),
-        Spacer(1, 3),
-        Paragraph("<b>Honest status:</b> no accuracy result on real data exists yet. The 5–10% improvement over a "
-                  "single regional PINN is a <i>target, not a result</i>; the first evidence comes from the zoning "
-                  "check in M4. Pumping estimates on real data will be inferences with no ground truth and will be "
-                  "reported as ranges.", small)]
+    story.append(PageBreak())
 
-    def footer(canvas, doc):
-        canvas.saveState()
-        canvas.setFont(font, 6.5)
-        canvas.setFillColor(muted)
-        canvas.drawString(14 * mm, 9 * mm, "Generated from the project repository (scripts/make_progress_report.py)")
-        canvas.drawRightString(A4[0] - 14 * mm, 9 * mm, f"Page {doc.page} of 2")
-        canvas.restoreState()
+    # ---------------- page 3: M2
+    m2 = m2_attempts()
 
-    doc = SimpleDocTemplate(str(OUT), pagesize=A4, leftMargin=14 * mm, rightMargin=14 * mm, topMargin=12 * mm,
-                            bottomMargin=14 * mm, title="Zoned PINNs for Groundwater Forecasting: progress report",
-                            author="Groundwater PINN project")
-    doc.build(story, onFirstPage=footer, onLaterPages=footer)
+    def pct(v):
+        return f"{100 * v:+.0f}%"
+
+    def ok(v):
+        return " ✓" if abs(v) <= 0.10 else ""
+
+    rows = [["Attempt", "What changed", "Storage S", "Flow ease T", "Pumping per season", "Total pumping"]]
+    for label, change, r in m2:
+        rows.append([label, change, pct(r["S_rel_err"]) + ok(r["S_rel_err"]), pct(r["T_rel_err"]) + ok(r["T_rel_err"]),
+                     f"{100 * r['Q_net_season_mean_abs_err']:.0f}%" + ok(r["Q_net_season_mean_abs_err"]),
+                     pct(r["Q_net_total_rel_err"]) + ok(r["Q_net_total_rel_err"])])
+    story += [Paragraph("M2 result: the PINN recovers a hidden aquifer (gate passed)", h2),
+              Paragraph(
+                  "The real PINN was trained on simulated case C (60 wells read monthly). It started from wrong guesses: "
+                  "storage 0.20 instead of 0.12, ease of flow 3,000 instead of 1,500 m²/day. It got no hints. "
+                  "To pass, storage, ease of flow and pumping per season all had to come out within 10% of the "
+                  "hidden truth. ✓ marks a value within 10%.", small),
+              Spacer(1, 2),
+              table(rows, [0.10 * W, 0.36 * W, 0.12 * W, 0.12 * W, 0.16 * W, 0.14 * W]),
+              Spacer(1, 3),
+              img("m2_gate_pumping.png", W),
+              Paragraph("Attempt 9: pumping per crop season over 10 years, PINN vs truth (left), and the 10-year "
+                        "average pumping map (right). The PINN was never shown either.", caption),
+              Spacer(1, 2),
+              img("m2_gate_trajectory.png", 0.86 * W),
+              Paragraph("How storage S and ease of flow T moved during training of attempt 9 "
+                        "(green band = within 10% of the truth).", caption)]
+    story += [Paragraph("What went wrong on the way, and the fixes (all kept as project defaults)", h2), table([
+        ["Problem found", "Fix"],
+        ["Automatic loss balancing let the data swamp the physics", "Fixed weight between data and physics"],
+        ["Smooth seasonal pumping made storage come out too low", "Month-of-year input for pumping (the crop calendar)"],
+        ["Blurred recharge vs sharp pumping let the model trade one for the other",
+         "Pumping blurred over the same 31 days inside the physics check"],
+        ["Storage jumped too low when it started learning, then crawled back",
+         "Gentle start for S and T, twice the training, final L-BFGS polish"],
+    ], [0.52 * W, 0.48 * W])]
+    story += [Paragraph("Caveats, next steps and honest status", h2), table([
+        ["", ""],
+        ["<b>Caveats</b>", "Shoulder months (April, May, October) are overestimated by about 22% (paddy and wheat "
+         "seasons are within 4%). One training run only; a repeat with a different random start is running. This "
+         "was the friendly case: realistic sparse, noisy data will do worse, and will be reported, not gated."],
+        ["<b>Now (Colab)</b>", "M2 stress tests: 30 wells read 4×/year, noise, recharge 20% wrong, the unfair case D, "
+         "and the brief's original pumping design."],
+        ["<b>Next</b>", "M3 data pipeline (real data) → M4–M5 zoning and the early 'does zoning help?' check → "
+         "M6 first PINN on real data."],
+        ["<b>Honest status</b>", "No accuracy result on real data exists yet. The 5–10% improvement over a single "
+         "regional PINN is a <i>target, not a result</i>; first evidence comes from the M4 check. Pumping on real "
+         "data will be an inference without ground truth, reported as ranges."],
+    ], [0.16 * W, 0.84 * W], header=False)]
+
+    def make_footer(total):
+        def footer(canvas, doc):
+            canvas.saveState()
+            canvas.setFont(font, 6.5)
+            canvas.setFillColor(muted)
+            canvas.drawString(14 * mm, 9 * mm, "Generated from the project repository (scripts/make_progress_report.py)")
+            canvas.drawRightString(A4[0] - 14 * mm, 9 * mm, f"Page {doc.page} of {total}" if total else f"Page {doc.page}")
+            canvas.restoreState()
+        return footer
+
+    def build_pdf(total):
+        doc = SimpleDocTemplate(str(OUT), pagesize=A4, leftMargin=14 * mm, rightMargin=14 * mm, topMargin=12 * mm,
+                                bottomMargin=14 * mm, title="Zoned PINNs for Groundwater Forecasting: progress report",
+                                author="Groundwater PINN project")
+        f = make_footer(total)
+        doc.build(list(story), onFirstPage=f, onLaterPages=f)
+        return doc.page
+
+    build_pdf(build_pdf(None))      # second pass knows the page count
     print("wrote", OUT)
+
+
+def m2_attempts() -> list[tuple[str, str, dict]]:
+    """Key M2 gate attempts with their metrics, read from reports/runs."""
+    import json
+
+    from src.utils.config import runs_dir
+    wanted = [("", "1", "Automatic balancing of data vs physics"),
+              ("a5_month_fastparams", "5", "Fixed balance; month-of-year pumping input"),
+              ("a6_matched_smoothing", "6", "+ pumping blurred like recharge in the physics check"),
+              ("a7_warmup_40k", "7", "+ gentle start for S, T; twice the training"),
+              ("a9_a7_plus_lbfgs", "9", "+ final L-BFGS polish (passed)")]
+    found = {}
+    for d in sorted(runs_dir().glob("*_m2_run1*")):
+        m = d / "metrics.json"
+        if m.exists():
+            r = json.loads(m.read_text())
+            found.setdefault(r.get("tag", ""), r)
+    return [(label, change, found[tag]) for tag, label, change in wanted if tag in found]
 
 
 if __name__ == "__main__":

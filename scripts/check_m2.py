@@ -106,15 +106,15 @@ def plot_pumping(run_dir: Path, label: str) -> dict:
     style(ax)
     vmax = float(max(qt.mean("time").max(), qm.mean("time").max())) * 365.25
     for k, (field, name) in enumerate(((qt.mean("time"), "true pumping"), (qm.mean("time"), "PINN pumping"))):
-        a = fig.add_axes([0.62 + k * 0.19, 0.2, 0.17, 0.68])
+        a = fig.add_axes([0.63 + k * 0.165, 0.2, 0.15, 0.68])
         im = a.imshow(field * 365.25, origin="lower", cmap="Blues", vmin=0, vmax=vmax,
                       extent=[0, 60, 0, 60])
         a.set_title(name, fontsize=8, color=INK, loc="left")
-        a.tick_params(labelsize=6, colors=MUTED)
+        a.tick_params(labelsize=6, colors=MUTED, labelleft=(k == 0))
     cb = fig.colorbar(im, ax=fig.axes[-2:], shrink=0.8, pad=0.02)
     cb.ax.tick_params(labelsize=6)
     cb.set_label("m/yr (10-yr mean)", fontsize=7)
-    fig.savefig(FIG / "m2_gate_pumping.png")
+    fig.savefig(FIG / "m2_gate_pumping.png", bbox_inches="tight", pad_inches=0.05)
     plt.close(fig)
     tot["err"] = tot.model / tot.true - 1
     tot["season"] = [k.split("-")[0] for k in tot.index]
