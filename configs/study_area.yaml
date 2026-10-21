@@ -1,0 +1,28 @@
+# Study area and period (PLAN.md Section 1; decided after the G0 data check, 2026-10-17)
+name: punjab_haryana_belt
+crs_model: EPSG:32643        # UTM zone 43N, metres; all modelling coordinates
+crs_geographic: EPSG:4326
+bbox_deg: {south: 28.4, west: 74.5, north: 32.0, east: 78.0}   # download bbox (wells + ~0.4° buffer)
+
+districts:
+  Punjab: [Ludhiana, Patiala, Sangrur, Fatehgarh Sahib, Moga, Barnala, Jalandhar, Kapurthala]
+  Haryana: [Karnal, Kaithal, Panipat, Kurukshetra, Yamunanagar, Ambala, Sonipat, Jind]
+
+# Karnal has only 2019-2022 in WRIS; the India Data Portal file fills 2013-2021.
+idp_fill_districts: [Karnal]
+
+period:
+  history_start: "1990-01-01"   # pre-2005 readings: long-term trend features only
+  train: ["2005-01-01", "2018-12-31"]
+  val: ["2019-01-01", "2019-12-31"]
+  test: ["2020-01-01", "2024-12-31"]
+  telemetry_bonus: ["2022-01-01", "2025-12-31"]
+
+seasons:            # month ranges used to label readings
+  pre_monsoon: [3, 6]
+  post_monsoon: [10, 12]
+
+wells:
+  aquifer_types_main: [Unconfined, ""]        # "" = unknown; confined/semi-confined reported separately
+  tier1_min_years: 5      # years in the training period with both a pre- and a post-monsoon reading
+  min_readings: 3         # Tier 2: drop wells with fewer readings after QC

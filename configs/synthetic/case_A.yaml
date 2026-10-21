@@ -1,0 +1,6 @@
+# Case A: homogeneous aquifer; the main recovery test (PLAN.md §6.2)
+defaults: [base.yaml]
+case: A
+designs:
+  q30: {n_wells: 30, schedule: quarterly}
+  q15: {n_wells: 15, schedule: quarterly}

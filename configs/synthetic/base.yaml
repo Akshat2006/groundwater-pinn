@@ -1,0 +1,29 @@
+# Synthetic aquifer, shared settings (PLAN.md §6.1–6.2). Units: m, days, m²/day; rates given per year.
+seed: 0
+grid: {nx: 60, ny: 60, dx_m: 1000.0, dy_m: 1000.0}
+time:
+  dt_days: 1.0
+  spinup_days: 365                # discarded
+  record_start: "2000-01-01"      # 10 recorded years
+  record_end: "2009-12-31"
+boundary:                         # fixed head on the west ("river") and east edges; no flow north/south
+  west_head_m: 220.0
+  east_head_m: 238.0
+aquifer: {S: 0.12, T_m2_day: 1500.0}
+rain:
+  annual_mm: 650.0
+  monsoon_months: [7, 8, 9]
+  monsoon_fraction: 0.75
+  wet_day_prob: {monsoon: 0.5, other: 0.1}
+  ns_gradient: 0.15               # rain factor 0.85 at the south edge, 1.15 at the north edge
+recharge:
+  rif: 0.22                       # rainfall infiltration factor: R = rif · rain
+pumping:
+  mean_m_per_year: 0.25           # domain-mean Q over the record (before case-specific extras)
+  growth_per_year: 0.02           # Q grows 2% per year
+  month_factor: {paddy: [6, 7, 8, 9], wheat: [11, 12, 1, 2, 3], paddy_value: 1.0, wheat_value: 0.5, other_value: 0.2}
+  landuse_range: [0.3, 1.0]       # farmland intensity a(x, y)
+  landuse_smooth_km: 8.0
+extras: {}
+# Well designs written by scripts/make_synthetic.py (noise variants are made on the fly in M2)
+designs: {}

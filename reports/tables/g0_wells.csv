@@ -1,0 +1,1140 @@
+well_id,district,region,lat,lon,well_type,aquifer_type,well_depth_m,n_readings,first_year,last_year,usable_years_all,usable_years_train,tier1,longest_run_years
+284956076543001,Sonipat,Haryana belt,28.8322,76.9083,Dug Well,Unconfined,15.0,6,2015,2022,1,1,False,1
+285045077093001,Sonipat,Haryana belt,28.8458,77.1583,Tube Well,Unconfined,103.0,15,2012,2022,3,2,False,7
+285152076563501,Sonipat,Haryana belt,28.8644,76.9431,Dug Well,Unconfined,15.0,7,2015,2022,2,2,False,1
+285200077025001,Sonipat,Haryana belt,28.8667,77.0472,Dug Well,Unconfined,19.0,113,1990,2022,25,11,True,21
+285240076544501,Sonipat,Haryana belt,28.8778,76.9125,Tube Well,Unconfined,19.51,78,1990,2013,16,6,True,13
+285245076544501,Sonipat,Haryana belt,28.8792,76.9125,Dug Well,unknown,21.15,38,1990,2022,6,0,False,11
+285256077043801,Sonipat,Haryana belt,28.8822,77.0772,Tube Well,Unconfined,50.0,6,2015,2022,2,2,False,1
+285400076513001,Sonipat,Haryana belt,28.9,76.8583,Dug Well,Unconfined,7.55,110,1990,2024,24,9,True,29
+285410077065002,Sonipat,Haryana belt,28.9028,77.1139,Tube Well,Unconfined,53.0,30,2012,2024,6,4,False,11
+285430077105001,Sonipat,Haryana belt,28.9083,77.1806,Tube Well,Unconfined,113.55,8,2012,2021,0,0,False,3
+285430077105002,Sonipat,Haryana belt,28.9083,77.1806,Tube Well,Unconfined,124.23,17,2012,2022,4,4,False,4
+285452077022201,Sonipat,Haryana belt,28.9144,77.0394,Tube Well,Unconfined,50.0,7,2015,2022,2,2,False,1
+285459076561301,Sonipat,Haryana belt,28.9164,76.9369,Dug Well,Unconfined,15.0,7,2015,2022,2,2,False,1
+285512076540001,Sonipat,Haryana belt,28.92,76.9,Dug Well,Unconfined,15.0,7,2015,2022,2,2,False,1
+285555077095001,Sonipat,Haryana belt,28.9319,77.1639,Tube Well,Unconfined,44.0,33,2012,2023,7,5,True,12
+285600076583001,Sonipat,Haryana belt,28.9333,76.975,Dug Well,Unconfined,11.5,107,1990,2022,27,12,True,27
+285630077054502,Sonipat,Haryana belt,28.9417,77.0958,Tube Well,Unconfined,30.0,37,2005,2024,8,7,True,10
+285630077054503,Sonipat,Haryana belt,28.9417,77.0958,Tube Well,Unconfined,50.0,18,2014,2022,2,1,False,6
+285652076484501,Sonipat,Haryana belt,28.9478,76.8125,Dug Well,Unconfined,15.0,7,2015,2022,2,2,False,1
+285713076514801,Sonipat,Haryana belt,28.9536,76.8633,Dug Well,Unconfined,15.0,7,2015,2022,2,2,False,1
+285800077071501,Sonipat,Haryana belt,28.9667,77.1208,Tube Well,unknown,69.0,28,2012,2024,5,5,True,13
+285800077071503,Sonipat,Haryana belt,28.9667,77.1208,Tube Well,Confined,301.0,5,2005,2022,0,0,False,1
+285905076484501,Sonipat,Haryana belt,28.9847,76.8125,Dug Well,Unconfined,13.0,118,1993,2022,26,13,True,30
+285924076560801,Sonipat,Haryana belt,28.99,76.9356,Dug Well,Unconfined,15.0,5,2015,2022,1,1,False,1
+285948076454001,Sonipat,Haryana belt,28.9967,76.7611,Dug Well,Unconfined,5.5,74,1990,2012,17,6,True,23
+290000076580001,Sonipat,Haryana belt,29.0,76.9667,Tube Well,Confined,321.0,32,2012,2024,6,4,False,13
+290000076580002,Sonipat,Haryana belt,29.0,76.9667,Tube Well,Unconfined,70.32,51,1997,2023,9,8,True,17
+290005077011501,Sonipat,Haryana belt,29.0014,77.0208,Dug Well,unknown,32.1,3,2015,2015,1,1,False,1
+290010076453001,Sonipat,Haryana belt,29.0028,76.7583,Tube Well,unknown,75.0,9,2012,2022,2,2,False,2
+290028077101301,Sonipat,Haryana belt,29.0078,77.1703,Tube Well,unknown,111.0,13,2018,2023,1,0,False,3
+290045076574501,Sonipat,Haryana belt,29.0125,76.9625,Dug Well,Unconfined,7.8,89,1993,2023,22,9,True,19
+290045076574502,Sonipat,Haryana belt,29.0125,76.9625,Dug Well,Unconfined,2.35,2,2023,2024,0,0,False,2
+290051077093101,Sonipat,Haryana belt,29.0143,77.1588,unknown,unknown,,3,2022,2024,0,0,False,3
+290110077014601,Sonipat,Haryana belt,29.0194,77.0294,Tube Well,Unconfined,111.0,21,2012,2024,4,4,False,7
+290145077010001,Sonipat,Haryana belt,29.0292,77.0167,Tube Well,Unconfined,111.14,18,2012,2021,2,2,False,3
+290200076473001,Sonipat,Haryana belt,29.0333,76.7917,Dug Well,Unconfined,13.2,101,1990,2024,23,13,True,20
+290215076522501,Sonipat,Haryana belt,29.0375,76.8736,Tube Well,unknown,60.0,4,2011,2012,0,0,False,2
+290216076563101,Sonipat,Haryana belt,29.0378,76.9419,Dug Well,Unconfined,15.0,5,2015,2022,1,1,False,1
+290226077052801,Sonipat,Haryana belt,29.0406,77.0911,Tube Well,Unconfined,105.0,43,2012,2024,8,6,True,13
+290250076492501,Sonipat,Haryana belt,29.0472,76.8236,Dug Well,Unconfined,15.0,6,2015,2022,2,2,False,1
+290315076513001,Sonipat,Haryana belt,29.0542,76.8583,Dug Well,Unconfined,7.5,107,1993,2022,25,13,True,30
+290340076500001,Sonipat,Haryana belt,29.0611,76.8333,Dug Well,Unconfined,13.0,112,1993,2024,24,13,True,32
+290345076540201,Sonipat,Haryana belt,29.0625,76.9006,Dug Well,Unconfined,15.0,4,2015,2022,1,1,False,1
+290355076495501,Sonipat,Haryana belt,29.0653,76.8319,Tube Well,Unconfined,111.0,18,2012,2022,3,3,False,5
+290430076333001,Sonipat,Haryana belt,29.075,76.5583,Tube Well,Unconfined,28.96,100,1990,2022,21,11,True,33
+290430076464501,Sonipat,Haryana belt,29.075,76.7792,Dug Well,Unconfined,8.7,112,1990,2024,25,12,True,23
+290450076512201,Sonipat,Haryana belt,29.0806,76.8561,Dug Well,Unconfined,7.2,109,1990,2022,24,11,True,33
+290502076403001,Sonipat,Haryana belt,29.0839,76.675,Tube Well,Unconfined,80.0,19,2012,2020,4,4,False,7
+290533077020501,Sonipat,Haryana belt,29.0925,77.0347,Tube Well,Unconfined,50.0,7,2015,2022,2,2,False,1
+290555076410501,Sonipat,Haryana belt,29.0986,76.6847,Dug Well,Unconfined,9.0,100,1990,2022,23,10,True,26
+290600076365501,Sonipat,Haryana belt,29.1,76.6153,Dug Well,Unconfined,5.9,128,1990,2024,29,13,True,35
+290603077044201,Sonipat,Haryana belt,29.1008,77.0783,Tube Well,unknown,80.0,3,2006,2022,0,0,False,1
+290630076350001,Sonipat,Haryana belt,29.1083,76.5833,Dug Well,unknown,23.1,68,1990,2022,13,0,False,16
+290710076384501,Sonipat,Haryana belt,29.1194,76.6458,Dug Well,Unconfined,8.7,133,1990,2024,30,13,True,35
+290722076240401,Jind,Haryana belt,29.123,76.4013,unknown,unknown,,3,2022,2024,0,0,False,3
+290730076243001,Jind,Haryana belt,29.125,76.4083,Tube Well,Unconfined,18.08,34,2012,2023,7,6,True,12
+290800076243001,Jind,Haryana belt,29.1333,76.4083,Dug Well,Unconfined,29.75,122,1990,2024,25,13,True,35
+290800077005201,Sonipat,Haryana belt,29.1333,77.0144,Tube Well,Unconfined,50.0,7,2015,2022,2,2,False,1
+290805076333201,Sonipat,Haryana belt,29.1347,76.5589,Dug Well,Unconfined,15.0,7,2015,2022,2,2,False,1
+290810076193001,Jind,Haryana belt,29.1361,76.325,Dug Well,Unconfined,35.0,7,2015,2022,2,2,False,2
+290820076202001,Jind,Haryana belt,29.1389,76.3389,Dug Well,Unconfined,36.7,115,1990,2022,26,13,True,33
+290821076245101,Jind,Haryana belt,29.1392,76.4142,Dug Well,Unconfined,28.8,10,2015,2022,2,1,False,4
+290822076425502,Sonipat,Haryana belt,29.1394,76.7153,Tube Well,Unconfined,28.0,98,1992,2024,21,11,True,24
+290822076425503,Sonipat,Haryana belt,29.1394,76.7153,Tube Well,Unconfined,50.0,3,2014,2023,0,0,False,2
+290848076374301,Sonipat,Haryana belt,29.1467,76.6286,Dug Well,Unconfined,15.0,4,2015,2022,1,1,False,1
+290850076280001,Jind,Haryana belt,29.1472,76.4667,Dug Well,unknown,16.57,86,1990,2022,18,7,True,23
+290853076244801,Jind,Haryana belt,29.1483,76.4136,unknown,unknown,,2,2022,2023,0,0,False,2
+290853076244802,Jind,Haryana belt,29.1483,76.4136,unknown,unknown,,3,2022,2024,0,0,False,3
+290853076244803,Jind,Haryana belt,29.1483,76.4136,unknown,unknown,,2,2022,2023,0,0,False,2
+290915077064501,Sonipat,Haryana belt,29.1542,77.1125,Tube Well,Unconfined,60.0,26,2011,2022,5,4,False,12
+290915077064503,Sonipat,Haryana belt,29.1542,77.1125,Tube Well,Unconfined,47.0,14,2012,2022,3,2,False,4
+290930076335601,Sonipat,Haryana belt,29.1583,76.5656,Dug Well,Unconfined,15.0,5,2015,2022,1,1,False,1
+290935076494001,Sonipat,Haryana belt,29.1597,76.8278,Tube Well,Unconfined,89.0,36,2012,2024,8,6,True,13
+290935077045001,Sonipat,Haryana belt,29.1597,77.0806,Tube Well,Unconfined,112.0,31,2012,2022,6,5,True,11
+290946076581701,Sonipat,Haryana belt,29.1628,76.9714,Tube Well,Unconfined,50.0,7,2015,2022,2,2,False,1
+291003076531501,Sonipat,Haryana belt,29.1675,76.8875,Tube Well,Unconfined,101.0,15,2012,2022,4,4,False,4
+291054077024201,Sonipat,Haryana belt,29.1819,77.0451,unknown,unknown,,3,2022,2023,0,0,False,2
+291054077044201,Sonipat,Haryana belt,29.1819,77.0784,unknown,unknown,,3,2022,2024,0,0,False,3
+291100076322001,Sonipat,Haryana belt,29.1833,76.5389,Dug Well,Unconfined,17.4,120,1990,2022,29,13,True,33
+291115076373001,Sonipat,Haryana belt,29.1875,76.625,Dug Well,Unconfined,20.4,132,1990,2024,29,12,True,35
+291118077062501,Panipat,Haryana belt,29.1883,77.1069,Bore Well,Semi-Confined,470.0,13,2015,2023,3,2,False,3
+291215076460001,Sonipat,Haryana belt,29.2042,76.7667,Dug Well,Unconfined,6.75,74,1990,2013,14,6,True,24
+291228076395501,Sonipat,Haryana belt,29.2078,76.6653,Dug Well,Unconfined,16.25,102,1990,2024,24,9,True,27
+291230076470001,Sonipat,Haryana belt,29.2083,76.7833,Dug Well,Unconfined,7.0,95,1990,2022,21,9,True,26
+291235077014001,Panipat,Haryana belt,29.2097,77.0278,Tube Well,Confined,187.0,81,1996,2023,16,10,True,23
+291235077014002,Panipat,Haryana belt,29.2097,77.0278,Tube Well,Unconfined,68.0,27,1994,2024,5,3,False,13
+291245076461501,Sonipat,Haryana belt,29.2125,76.7708,Tube Well,Unconfined,33.53,38,1990,2022,6,2,False,9
+291245076461502,Sonipat,Haryana belt,29.2125,76.7708,Tube Well,Unconfined,40.0,28,2012,2022,5,3,False,11
+291300076201501,Jind,Haryana belt,29.2167,76.3375,Dug Well,unknown,11.79,77,1990,2012,16,3,False,23
+291304076413101,Sonipat,Haryana belt,29.2178,76.6919,Dug Well,Unconfined,15.0,4,2015,2022,1,1,False,1
+291315076145501,Jind,Haryana belt,29.2208,76.2486,Dug Well,unknown,22.1,46,1990,2022,10,2,False,10
+291325076263601,Jind,Haryana belt,29.2236,76.4433,Dug Well,Unconfined,5.5,7,2015,2022,2,2,False,2
+291325077040001,Panipat,Haryana belt,29.2236,77.0667,Tube Well,Confined,187.0,37,1996,2012,8,6,True,12
+291325077040002,Panipat,Haryana belt,29.2236,77.0667,Tube Well,Unconfined,85.0,34,1994,2024,8,4,False,9
+291330076591501,Panipat,Haryana belt,29.225,76.9875,Dug Well,unknown,40.0,19,1990,2022,3,1,False,5
+291335077070501,Panipat,Haryana belt,29.2264,77.1181,Tube Well,Unconfined,114.0,15,2012,2022,4,4,False,4
+291345076302001,Sonipat,Haryana belt,29.2292,76.5056,Dug Well,unknown,16.66,84,1990,2022,20,5,True,19
+291400076325701,Jind,Haryana belt,29.2333,76.5492,Dug Well,Unconfined,25.2,8,2015,2022,2,2,False,2
+291400076524001,Panipat,Haryana belt,29.2333,76.8778,Tube Well,Unconfined,48.0,33,2012,2023,6,4,False,12
+291400077080002,Panipat,Haryana belt,29.2333,77.1333,Tube Well,Confined,204.0,2,2012,2013,0,0,False,2
+291410077005001,Panipat,Haryana belt,29.2361,77.0139,Tube Well,Unconfined,40.0,6,2015,2022,2,2,False,1
+291425076303501,Jind,Haryana belt,29.2403,76.5097,Dug Well,unknown,9.81,58,1990,2022,12,2,False,15
+291426076564501,Panipat,Haryana belt,29.2408,76.9461,unknown,unknown,,4,2022,2024,0,0,False,3
+291434076364301,Sonipat,Haryana belt,29.2428,76.6119,Dug Well,Unconfined,15.0,5,2015,2018,1,1,False,1
+291445076583001,Panipat,Haryana belt,29.2458,76.975,Tube Well,Unconfined,107.0,13,2012,2022,2,2,False,5
+291447076565601,Panipat,Haryana belt,29.2464,76.9489,Dug Well,Unconfined,14.7,6,2015,2022,2,2,False,1
+291449076163301,Jind,Haryana belt,29.2469,76.2758,Dug Well,Unconfined,20.0,5,2015,2022,2,2,False,1
+291457076484801,Panipat,Haryana belt,29.2492,76.8133,Dug Well,Unconfined,7.5,6,2015,2022,2,2,False,1
+291500076394001,Sonipat,Haryana belt,29.25,76.6611,Dug Well,Unconfined,13.98,125,1990,2024,29,12,True,35
+291515076483001,Panipat,Haryana belt,29.2542,76.8083,Dug Well,Unconfined,7.0,111,1990,2024,24,7,True,26
+291516076420301,Sonipat,Haryana belt,29.2544,76.7008,Dug Well,Unconfined,15.0,5,2015,2022,1,1,False,1
+291521077003601,Panipat,Haryana belt,29.2558,77.01,Tube Well,Unconfined,87.0,19,2012,2022,5,5,True,8
+291528076140201,Jind,Haryana belt,29.2578,76.2339,Tube Well,Unconfined,75.0,4,2015,2018,1,1,False,2
+291600076273001,Jind,Haryana belt,29.2667,76.4583,Dug Well,Unconfined,10.82,128,1990,2024,29,13,True,35
+291640076510001,Panipat,Haryana belt,29.2778,76.85,Tube Well,Unconfined,309.0,78,1996,2024,16,10,True,20
+291640076511001,Panipat,Haryana belt,29.2778,76.8528,Tube Well,unknown,319.43,7,2010,2021,0,0,False,3
+291715076202001,Jind,Haryana belt,29.2875,76.3389,Tube Well,Confined,230.0,7,2013,2022,0,0,False,2
+291715076202002,Jind,Haryana belt,29.2875,76.3389,Tube Well,Unconfined,80.0,78,1990,2022,13,6,True,14
+291735076584501,Panipat,Haryana belt,29.2931,76.9792,Tube Well,unknown,199.0,3,2012,2016,0,0,False,2
+291735076584502,Panipat,Haryana belt,29.2931,76.9792,Tube Well,Unconfined,70.0,58,1995,2022,9,7,True,15
+291735076584504,Panipat,Haryana belt,29.2931,76.9792,Tube Well,unknown,74.0,1,2021,2021,0,0,False,1
+291739076132701,Jind,Haryana belt,29.2942,76.2242,Tube Well,Unconfined,75.0,4,2015,2022,0,0,False,2
+291740076462801,Panipat,Haryana belt,29.2944,76.7744,Dug Well,Unconfined,12.8,98,1993,2022,18,13,True,30
+291800076314101,Jind,Haryana belt,29.3,76.5281,Dug Well,Unconfined,30.0,7,2015,2022,2,2,False,2
+291808077043001,Panipat,Haryana belt,29.3022,77.075,Tube Well,Confined,196.0,57,1996,2021,12,6,True,17
+291808077043002,Panipat,Haryana belt,29.3022,77.075,Tube Well,unknown,70.0,9,1994,2015,2,0,False,3
+291809076533601,Panipat,Haryana belt,29.3025,76.8933,Bore Well,unknown,456.0,6,2015,2023,1,1,False,2
+291836077055401,Panipat,Haryana belt,29.31,77.0983,Tube Well,Unconfined,63.0,14,2012,2022,2,2,False,8
+291850076582501,Panipat,Haryana belt,29.3139,76.9736,Dug Well,unknown,16.3,13,1992,2022,2,0,False,6
+291900076520001,Panipat,Haryana belt,29.3167,76.8667,Dug Well,Unconfined,15.57,6,2015,2022,2,2,False,1
+291907076382501,Panipat,Haryana belt,29.3186,76.6403,Tube Well,Unconfined,70.0,78,1997,2024,17,12,True,28
+291912076484801,Panipat,Haryana belt,29.32,76.8133,Dug Well,Unconfined,15.0,4,2015,2022,1,1,False,1
+291917076182501,Jind,Haryana belt,29.3214,76.3069,Tube Well,Unconfined,75.0,5,2015,2022,0,0,False,2
+291957076425801,Panipat,Haryana belt,29.3325,76.7161,Dug Well,Unconfined,7.35,2,2015,2018,0,0,False,1
+292010076291501,Jind,Haryana belt,29.3361,76.4875,Dug Well,Unconfined,15.0,99,1990,2024,20,11,True,20
+292030076404501,Panipat,Haryana belt,29.3417,76.6792,Dug Well,Unconfined,20.6,112,1993,2024,23,12,True,32
+292030076584501,Panipat,Haryana belt,29.3417,76.9792,Tube Well,unknown,75.0,17,2002,2022,4,2,False,6
+292050076443001,Panipat,Haryana belt,29.3472,76.7417,Tube Well,Unconfined,75.0,7,2013,2018,1,1,False,4
+292050076443002,Panipat,Haryana belt,29.3472,76.7417,Tube Well,Unconfined,55.0,10,2013,2024,1,1,False,4
+292126076293601,Jind,Haryana belt,29.3572,76.4933,Tube Well,Unconfined,75.0,7,2015,2022,2,2,False,2
+292130076252001,Jind,Haryana belt,29.3583,76.4222,Tube Well,Unconfined,80.0,31,2012,2023,5,3,False,10
+292130076502001,Panipat,Haryana belt,29.3583,76.8389,Tube Well,Confined,184.0,30,2001,2022,6,3,False,8
+292130076502002,Panipat,Haryana belt,29.3583,76.8389,Tube Well,unknown,33.0,25,2012,2024,5,3,False,8
+292152076362505,Jind,Haryana belt,29.3646,76.607,unknown,unknown,,3,2022,2023,0,0,False,2
+292152076362506,Jind,Haryana belt,29.3646,76.607,unknown,unknown,,3,2022,2023,0,0,False,2
+292152076362507,Jind,Haryana belt,29.3646,76.607,unknown,unknown,,4,2022,2024,0,0,False,3
+292206076294401,Jind,Haryana belt,29.3683,76.4956,Tube Well,unknown,73.0,2,1996,2004,0,0,False,1
+292230076163001,Jind,Haryana belt,29.375,76.275,Dug Well,Unconfined,20.0,81,1990,2022,18,6,True,23
+292237076293301,Jind,Haryana belt,29.3769,76.4925,Dug Well,Unconfined,15.13,6,2015,2022,2,2,False,1
+292250077021001,Panipat,Haryana belt,29.3806,77.0361,Tube Well,Unconfined,100.0,12,2012,2020,2,2,False,4
+292253076200301,Jind,Haryana belt,29.3814,76.3342,Tube Well,Unconfined,75.0,4,2015,2022,1,1,False,1
+292255077052801,Panipat,Haryana belt,29.3819,77.0911,Tube Well,Unconfined,79.0,36,2012,2022,8,6,True,11
+292310076525001,Panipat,Haryana belt,29.3861,76.8806,Dug Well,Unconfined,7.4,1,2015,2015,0,0,False,1
+292311076305601,Jind,Haryana belt,29.3864,76.5156,Tube Well,unknown,125.0,3,2017,2022,0,0,False,2
+292311076380701,Jind,Haryana belt,29.3864,76.6353,Dug Well,Unconfined,20.0,4,2017,2022,1,1,False,2
+292314076225901,Jind,Haryana belt,29.3872,76.3831,Dug Well,Unconfined,29.5,4,2015,2018,1,1,False,1
+292330076510001,Panipat,Haryana belt,29.3917,76.85,Dug Well,Unconfined,17.05,121,1992,2024,27,12,True,33
+292400076390001,Jind,Haryana belt,29.4,76.65,Dug Well,Unconfined,5.7,11,1993,1999,1,0,False,5
+292400076390002,Jind,Haryana belt,29.4,76.65,Tube Well,unknown,50.0,30,1994,2022,7,5,True,9
+292406077073301,Panipat,Haryana belt,29.4019,77.1261,Piezometer,Unconfined,99.0,1,2023,2023,0,0,False,1
+292415076362002,Jind,Haryana belt,29.4042,76.6056,Tube Well,unknown,75.0,2,2021,2022,0,0,False,2
+292415076392001,Jind,Haryana belt,29.4042,76.6556,Tube Well,unknown,127.0,10,2018,2021,1,1,False,4
+292415076392002,Jind,Haryana belt,29.4042,76.6556,Tube Well,Unconfined,74.0,63,1994,2024,10,6,True,15
+292420076144501,Jind,Haryana belt,29.4056,76.2458,Dug Well,Unconfined,17.3,106,1990,2024,23,10,True,29
+292456076431501,Jind,Haryana belt,29.4156,76.7208,Tube Well,Unconfined,75.0,7,2015,2022,2,2,False,2
+292500076453001,Panipat,Haryana belt,29.4167,76.7583,Dug Well,unknown,25.0,22,1990,2022,3,1,False,4
+292517076440301,Jind,Haryana belt,29.4214,76.7342,Tube Well,Unconfined,50.0,35,2012,2024,8,6,True,13
+292540076505001,Panipat,Haryana belt,29.4278,76.8472,Dug Well,unknown,20.0,67,1990,2022,13,2,False,19
+292545077030001,Panipat,Haryana belt,29.4292,77.05,Tube Well,Semi-Confined,204.0,32,2012,2024,7,5,True,13
+292545077030002,Panipat,Haryana belt,29.4292,77.05,Tube Well,Unconfined,75.0,26,2012,2022,6,4,False,11
+292545077030003,Panipat,Haryana belt,29.4292,77.05,Tube Well,Unconfined,20.0,6,2012,2015,1,1,False,4
+292602076412901,Jind,Haryana belt,29.4339,76.6914,Tube Well,Unconfined,75.0,3,2015,2018,0,0,False,2
+292611076290701,Karnal,Haryana belt,29.4364,76.4853,Tube Well,unknown,70.0,1,2022,2022,0,0,False,1
+292612076090401,Jind,Haryana belt,29.4367,76.1511,Dug Well,Unconfined,20.0,4,2015,2022,1,1,False,1
+292620076112001,Jind,Haryana belt,29.4389,76.1889,Tube Well,Unconfined,80.0,35,2012,2024,8,6,True,11
+292632076373601,Jind,Haryana belt,29.4422,76.6267,Tube Well,unknown,80.0,4,2017,2022,1,1,False,2
+292639077061105,Panipat,Haryana belt,29.4442,77.1031,unknown,unknown,,4,2022,2024,0,0,False,3
+292645076591501,Panipat,Haryana belt,29.4458,76.9875,Dug Well,unknown,30.0,4,2015,2022,1,1,False,1
+292700076240002,Jind,Haryana belt,29.45,76.4,Tube Well,Unconfined,50.0,8,2015,2022,2,2,False,2
+292711076444701,Jind,Haryana belt,29.4531,76.7466,unknown,unknown,,1,2023,2023,0,0,False,1
+292717076420901,Jind,Haryana belt,29.4547,76.7025,Tube Well,Unconfined,50.0,5,2015,2022,1,1,False,1
+292720076563502,Panipat,Haryana belt,29.4556,76.9431,Bore Well,unknown,467.0,11,2015,2024,3,2,False,3
+292721076051402,Jind,Haryana belt,29.4558,76.0872,Dug Well,Unconfined,23.5,4,2017,2022,1,1,False,2
+292722076590001,Panipat,Haryana belt,29.4561,76.9833,Tube Well,Confined,169.0,14,1996,2015,1,0,False,4
+292722076590002,Panipat,Haryana belt,29.4561,76.9833,Tube Well,unknown,55.0,7,2012,2021,1,1,False,3
+292800076110001,Jind,Haryana belt,29.4667,76.1833,Dug Well,Unconfined,35.1,120,1990,2024,26,12,True,35
+292810076111001,Jind,Haryana belt,29.4694,76.1861,Tube Well,Unconfined,49.37,34,2012,2024,5,3,False,13
+292810076492001,Panipat,Haryana belt,29.4694,76.8222,Tube Well,Unconfined,64.0,63,1994,2024,13,6,True,9
+292810076492002,Panipat,Haryana belt,29.4694,76.8222,Tube Well,unknown,64.0,1,2020,2020,0,0,False,1
+292813076471801,Karnal,Haryana belt,29.4703,76.7883,Tube Well,unknown,80.0,1,2022,2022,0,0,False,1
+292815076271501,Jind,Haryana belt,29.4708,76.4542,Dug Well,Unconfined,55.0,87,1993,2022,19,9,True,21
+292834076331101,Karnal,Haryana belt,29.4761,76.5531,Tube Well,unknown,74.0,1,2022,2022,0,0,False,1
+292837076161901,Jind,Haryana belt,29.4769,76.2719,Dug Well,Unconfined,12.83,5,2016,2022,2,1,False,1
+292845076535701,Panipat,Haryana belt,29.4792,76.8992,Tube Well,Unconfined,65.0,6,2015,2022,2,2,False,1
+292850076270001,Jind,Haryana belt,29.4806,76.45,Tube Well,Unconfined,45.0,21,2013,2024,2,1,False,12
+292855076170001,Jind,Haryana belt,29.4819,76.2833,Dug Well,Unconfined,37.4,66,1990,2008,11,1,False,19
+292858076423001,Karnal,Haryana belt,29.4828,76.7083,Tube Well,unknown,78.0,1,2022,2022,0,0,False,1
+292901076453201,Karnal,Haryana belt,29.4836,76.7589,Tube Well,unknown,70.0,1,2022,2022,0,0,False,1
+292909076311201,Karnal,Haryana belt,29.4858,76.52,Tube Well,unknown,70.0,1,2022,2022,0,0,False,1
+292950077000601,Karnal,Haryana belt,29.4972,77.0017,Tube Well,unknown,75.0,1,2022,2022,0,0,False,1
+292956076570601,Karnal,Haryana belt,29.4989,76.9517,Tube Well,unknown,78.0,1,2022,2022,0,0,False,1
+293009076133601,Jind,Haryana belt,29.5025,76.2267,Dug Well,Unconfined,30.0,4,2017,2022,1,1,False,2
+293032076242501,Jind,Haryana belt,29.5089,76.4069,Dug Well,Unconfined,25.0,4,2015,2017,1,1,False,1
+293044077012401,Karnal,Haryana belt,29.5122,77.0233,Tube Well,unknown,75.0,1,2022,2022,0,0,False,1
+293048076143601,Jind,Haryana belt,29.5133,76.2433,Dug Well,unknown,30.1,7,2015,2022,2,2,False,2
+293105076325003,Karnal,Haryana belt,29.5181,76.5472,Tube Well,unknown,185.0,8,2019,2022,0,0,False,4
+293107076285501,Jind,Haryana belt,29.5186,76.4819,Tube Well,Unconfined,42.54,29,2012,2024,5,4,False,13
+293119076091001,Jind,Haryana belt,29.5222,76.1528,Dug Well,Unconfined,18.5,2,2023,2024,0,0,False,2
+293120076000501,Jind,Haryana belt,29.5222,76.0014,Dug Well,unknown,16.22,61,1990,2022,12,0,False,16
+293120076091001,Jind,Haryana belt,29.5222,76.1528,Dug Well,Unconfined,17.5,110,1990,2023,26,11,True,26
+293150077050301,Karnal,Haryana belt,29.5306,77.0842,Tube Well,unknown,70.0,1,2022,2022,0,0,False,1
+293155075591501,Jind,Haryana belt,29.5319,75.9875,Tube Well,Unconfined,75.0,7,2015,2022,2,2,False,2
+293200077032503,Karnal,Haryana belt,29.5333,77.0569,Tube Well,unknown,180.0,5,2019,2022,0,0,False,2
+293245076233501,Kaithal,Haryana belt,29.5458,76.3931,Tube Well,Unconfined,102.0,41,2012,2023,9,6,True,12
+293300076560004,Karnal,Haryana belt,29.55,76.9333,Tube Well,unknown,67.5,1,2019,2019,0,0,False,1
+293315076030001,Jind,Haryana belt,29.5542,76.05,Dug Well,unknown,14.8,38,1990,2022,6,1,False,11
+293318076525601,Karnal,Haryana belt,29.555,76.8822,Tube Well,unknown,70.0,1,2022,2022,0,0,False,1
+293325077021301,Karnal,Haryana belt,29.5569,77.0369,Tube Well,unknown,70.0,1,2022,2022,0,0,False,1
+293343076350601,Karnal,Haryana belt,29.5619,76.585,Tube Well,unknown,78.0,1,2022,2022,0,0,False,1
+293351077042501,Karnal,Haryana belt,29.5642,77.0736,Tube Well,unknown,80.0,1,2022,2022,0,0,False,1
+293424076185001,Jind,Haryana belt,29.5733,76.3139,Dug Well,Unconfined,25.2,7,2015,2022,2,2,False,2
+293440076291501,Kaithal,Haryana belt,29.5778,76.4875,Dug Well,unknown,22.17,67,1990,2012,14,3,False,18
+293440076303501,Kaithal,Haryana belt,29.5778,76.5097,Tube Well,Unconfined,105.0,11,2012,2022,4,4,False,4
+293442076564401,Karnal,Haryana belt,29.5783,76.9456,Tube Well,unknown,70.0,1,2022,2022,0,0,False,1
+293515076255801,Kaithal,Haryana belt,29.5875,76.4328,Dug Well,Unconfined,18.0,4,2015,2022,1,1,False,1
+293528076171701,Kaithal,Haryana belt,29.5911,76.2881,Dug Well,Unconfined,22.0,4,2015,2022,1,1,False,1
+293535076405401,Karnal,Haryana belt,29.5931,76.6817,Tube Well,unknown,78.0,1,2022,2022,0,0,False,1
+293539077025401,Karnal,Haryana belt,29.5942,77.0483,Tube Well,unknown,74.0,1,2022,2022,0,0,False,1
+293540076070001,Jind,Haryana belt,29.5944,76.1167,Tube Well,Unconfined,30.0,13,2012,2020,2,2,False,4
+293556076555001,Karnal,Haryana belt,29.5989,76.9306,Tube Well,unknown,78.0,1,2022,2022,0,0,False,1
+293600076073001,Jind,Haryana belt,29.6,76.125,Dug Well,unknown,50.0,28,1993,2019,4,0,False,7
+293600076073002,Jind,Haryana belt,29.6,76.125,Tube Well,unknown,20.0,9,1994,2022,3,3,False,3
+293600076290001,Kaithal,Haryana belt,29.6,76.4833,Tube Well,Unconfined,26.1,57,1995,2014,10,7,True,20
+293602076194001,Kaithal,Haryana belt,29.6006,76.3278,Dug Well,Unconfined,26.0,3,2015,2022,0,0,False,1
+293627076473901,Karnal,Haryana belt,29.6075,76.7942,Dug Well,unknown,35.0,1,2022,2022,0,0,False,1
+293630076153001,Kaithal,Haryana belt,29.6083,76.2583,Dug Well,Unconfined,39.4,124,1990,2023,26,14,True,34
+293650075575501,Jind,Haryana belt,29.6139,75.9653,Dug Well,unknown,17.5,89,1990,2022,18,7,True,24
+293710076535801,Karnal,Haryana belt,29.6194,76.8994,Tube Well,unknown,75.0,1,2022,2022,0,0,False,1
+293720076224001,Kaithal,Haryana belt,29.6222,76.3778,Dug Well,Unconfined,29.6,6,2015,2023,1,1,False,2
+293745076295501,Kaithal,Haryana belt,29.6292,76.4986,Dug Well,Unconfined,29.75,3,2015,2022,0,0,False,1
+293808076585601,Karnal,Haryana belt,29.6356,76.9822,Tube Well,unknown,190.0,1,2022,2022,0,0,False,1
+293810076075001,Jind,Haryana belt,29.6361,76.1306,Tube Well,Unconfined,90.0,32,2012,2022,8,6,True,11
+293821076380501,Kaithal,Haryana belt,29.6393,76.6348,Piezometer,Confined,298.0,2,2023,2023,0,0,False,1
+293821076380502,Kaithal,Haryana belt,29.6393,76.6348,Piezometer,Unconfined,32.0,2,2023,2023,0,0,False,1
+293830076130001,Kaithal,Haryana belt,29.6417,76.2167,Dug Well,unknown,7.8,53,1990,2022,8,0,False,14
+293835076520002,Karnal,Haryana belt,29.6431,76.8667,Tube Well,unknown,64.0,11,2019,2022,1,0,False,4
+293836076424001,Karnal,Haryana belt,29.6433,76.7111,Tube Well,unknown,76.0,1,2022,2022,0,0,False,1
+293900076074501,Jind,Haryana belt,29.65,76.1292,Dug Well,unknown,8.0,40,1993,2017,8,0,False,9
+293905076221001,Kaithal,Haryana belt,29.6514,76.3694,Dug Well,Unconfined,10.0,2,2015,2017,0,0,False,1
+293910076312001,Kaithal,Haryana belt,29.6528,76.5222,Tube Well,Unconfined,100.0,13,2012,2024,3,2,False,5
+293915076345001,Kaithal,Haryana belt,29.6542,76.5806,Dug Well,Unconfined,29.4,2,2015,2017,0,0,False,1
+293924076214701,Kaithal,Haryana belt,29.6569,76.3633,unknown,unknown,,4,2023,2023,1,0,False,1
+293924076214702,Kaithal,Haryana belt,29.6569,76.3633,unknown,unknown,,4,2023,2023,1,0,False,1
+293924076214703,Kaithal,Haryana belt,29.6569,76.3633,unknown,unknown,,4,2023,2023,1,0,False,1
+293925076172501,Kaithal,Haryana belt,29.6569,76.2903,Dug Well,Unconfined,9.2,2,2015,2017,0,0,False,1
+293930076254501,Kaithal,Haryana belt,29.6583,76.4292,Tube Well,Unconfined,100.0,44,2012,2023,9,6,True,12
+294030076024501,Jind,Haryana belt,29.675,76.0458,Dug Well,Unconfined,15.8,76,1990,2012,15,2,False,23
+294031076550001,Karnal,Haryana belt,29.6753,76.9167,Tube Well,unknown,80.0,1,2022,2022,0,0,False,1
+294045076151001,Kaithal,Haryana belt,29.6792,76.2528,Dug Well,Unconfined,29.0,116,1990,2024,25,12,True,35
+294045076151002,Kaithal,Haryana belt,29.6792,76.2528,Tube Well,Unconfined,20.0,21,1992,2022,6,5,True,6
+294100076570003,Karnal,Haryana belt,29.6833,76.95,Tube Well,unknown,451.44,7,2020,2022,1,0,False,3
+294108076565901,Karnal,Haryana belt,29.6856,76.9497,Tube Well,unknown,75.0,1,2022,2022,0,0,False,1
+294115076400001,Kaithal,Haryana belt,29.6875,76.6667,Tube Well,Unconfined,101.0,36,2012,2023,8,6,True,12
+294123076502801,Karnal,Haryana belt,29.6897,76.8411,Tube Well,unknown,70.0,1,2022,2022,0,0,False,1
+294127077033401,Karnal,Haryana belt,29.6908,77.0594,Tube Well,unknown,80.0,1,2022,2022,0,0,False,1
+294135076585901,Karnal,Haryana belt,29.6931,76.9831,Tube Well,unknown,78.0,1,2022,2022,0,0,False,1
+294200076220001,Kaithal,Haryana belt,29.7,76.3667,Dug Well,Unconfined,25.35,119,1990,2024,28,14,True,35
+294220075582001,Jind,Haryana belt,29.7056,75.9722,Dug Well,Unconfined,25.9,70,1993,2022,13,3,False,17
+294222075575101,Jind,Haryana belt,29.7061,75.9642,Tube Well,Unconfined,75.0,7,2015,2022,2,2,False,2
+294225076134501,Kaithal,Haryana belt,29.7069,76.2292,Dug Well,Unconfined,27.4,4,2015,2022,1,1,False,1
+294229076543701,Karnal,Haryana belt,29.7081,76.9103,Tube Well,unknown,78.0,1,2022,2022,0,0,False,1
+294249076565901,Karnal,Haryana belt,29.7136,76.9497,Tube Well,unknown,80.0,1,2022,2022,0,0,False,1
+294252076493901,Karnal,Haryana belt,29.7144,76.8275,Tube Well,unknown,72.0,1,2022,2022,0,0,False,1
+294255076355001,Kaithal,Haryana belt,29.7153,76.5972,Tube Well,Unconfined,103.0,4,2015,2022,1,1,False,1
+294259076314001,Kaithal,Haryana belt,29.7164,76.5278,Dug Well,Unconfined,26.8,3,2015,2017,1,1,False,1
+294328077064001,Karnal,Haryana belt,29.7244,77.1111,Tube Well,unknown,78.0,1,2022,2022,0,0,False,1
+294340076020001,Jind,Haryana belt,29.7278,76.0333,Tube Well,unknown,46.0,7,2015,2022,2,2,False,2
+294345076023001,Jind,Haryana belt,29.7292,76.0417,Dug Well,Unconfined,20.0,109,1990,2022,26,13,True,33
+294345076023002,Kaithal,Haryana belt,29.7292,76.0417,unknown,unknown,,1,2023,2023,0,0,False,1
+294347076503801,Karnal,Haryana belt,29.7297,76.8439,Tube Well,unknown,78.0,1,2022,2022,0,0,False,1
+294410077010801,Karnal,Haryana belt,29.7361,77.0189,Tube Well,unknown,75.0,1,2022,2022,0,0,False,1
+294414076431701,Karnal,Haryana belt,29.7372,76.7214,Tube Well,unknown,78.0,1,2022,2022,0,0,False,1
+294420076451501,Karnal,Haryana belt,29.7389,76.7542,Tube Well,unknown,23.0,1,2022,2022,0,0,False,1
+294430076330001,Kaithal,Haryana belt,29.7417,76.55,Dug Well,Unconfined,22.0,101,1990,2019,24,10,True,26
+294445076251501,Kaithal,Haryana belt,29.7458,76.4208,Dug Well,unknown,45.0,69,1990,2019,15,3,False,17
+294450076250001,Kaithal,Haryana belt,29.7472,76.4167,Tube Well,Unconfined,95.0,26,2012,2022,7,7,True,8
+294526076063701,Jind,Haryana belt,29.7572,76.1103,Tube Well,Unconfined,75.0,7,2015,2022,2,2,False,2
+294526076063702,Jind,Haryana belt,29.7572,76.1103,Dug Well,Unconfined,20.0,7,2015,2022,2,2,False,2
+294528076180001,Kaithal,Haryana belt,29.7578,76.3,Dug Well,Unconfined,25.0,2,2015,2017,0,0,False,1
+294545076003501,Sangrur,Central Punjab,29.7625,76.0097,Dug Well,Unconfined,10.05,47,1990,2010,6,0,False,12
+294552076415501,Karnal,Haryana belt,29.7644,76.6986,Tube Well,unknown,70.0,1,2022,2022,0,0,False,1
+294557076153801,Kaithal,Haryana belt,29.7658,76.2606,Tube Well,unknown,120.0,7,2014,2024,1,0,False,2
+294600076153601,Kaithal,Haryana belt,29.7667,76.26,Bore Well,Semi-Confined,120.0,17,2015,2023,3,1,False,5
+294611076424801,Karnal,Haryana belt,29.7697,76.7133,Tube Well,unknown,160.0,1,2022,2022,0,0,False,1
+294630076160001,Kaithal,Haryana belt,29.775,76.2667,Dug Well,Unconfined,36.1,105,1990,2024,21,12,True,35
+294630076302001,Kaithal,Haryana belt,29.775,76.5056,Dug Well,Unconfined,30.0,116,1990,2022,27,13,True,33
+294640076343001,Kaithal,Haryana belt,29.7778,76.575,Tube Well,Confined,211.0,69,1996,2019,14,9,True,24
+294640076343002,Kaithal,Haryana belt,29.7778,76.575,Tube Well,Unconfined,98.0,38,1990,2022,7,3,False,7
+294640076343003,Karnal,Haryana belt,29.7778,76.575,Tube Well,unknown,225.25,4,2019,2020,0,0,False,2
+294738077042301,Karnal,Haryana belt,29.7939,77.0731,Tube Well,unknown,80.0,1,2022,2022,0,0,False,1
+294800076180001,Kaithal,Haryana belt,29.8,76.3,Tube Well,unknown,69.9,41,1995,2023,5,4,False,15
+294800076224801,Kaithal,Haryana belt,29.8,76.38,Bore Well,Semi-Confined,119.0,12,2015,2023,1,1,False,3
+294800076240001,Kaithal,Haryana belt,29.8,76.4,Tube Well,Unconfined,35.0,76,1992,2022,13,7,True,11
+294833077061901,Karnal,Haryana belt,29.8092,77.1053,Tube Well,unknown,78.0,1,2022,2022,0,0,False,1
+294840075585001,Sangrur,Central Punjab,29.8111,75.9806,Dug Well,unknown,12.0,34,1991,2023,7,0,False,9
+294842076315201,Kaithal,Haryana belt,29.8117,76.5311,Tube Well,Unconfined,75.0,4,2015,2022,1,1,False,1
+294845076090001,Jind,Haryana belt,29.8125,76.15,Tube Well,Unconfined,51.2,21,2012,2024,3,2,False,6
+294900076123002,Jind,Haryana belt,29.8167,76.2083,Dug Well,Unconfined,18.35,7,2015,2022,2,2,False,2
+294905076201501,Kaithal,Haryana belt,29.8181,76.3375,Dug Well,unknown,45.0,46,1990,2017,7,0,False,13
+294910075480001,Sangrur,Central Punjab,29.8194,75.8,Tube Well,unknown,302.5,103,1996,2024,22,14,True,29
+294910075480002,Sangrur,Central Punjab,29.8194,75.8,Tube Well,Confined,,1,2023,2023,0,0,False,1
+294945076194501,Kaithal,Haryana belt,29.8292,76.3292,Tube Well,Unconfined,90.0,31,2012,2021,6,5,True,10
+295000075524001,Sangrur,Central Punjab,29.8333,75.8778,Dug Well,unknown,30.0,56,2000,2022,12,8,True,15
+295005076350501,Kaithal,Haryana belt,29.8347,76.5847,Dug Well,unknown,30.0,52,1990,2002,10,0,False,13
+295006076473901,Karnal,Haryana belt,29.835,76.7942,Tube Well,unknown,70.0,1,2022,2022,0,0,False,1
+295024077065601,Karnal,Haryana belt,29.84,77.1156,Tube Well,unknown,80.0,1,2022,2022,0,0,False,1
+295027076085801,Patiala,Central Punjab,29.8411,76.1497,unknown,unknown,,3,2023,2024,0,0,False,2
+295027076504401,Karnal,Haryana belt,29.8408,76.8456,Tube Well,unknown,78.0,1,2022,2022,0,0,False,1
+295029076085701,Patiala,Central Punjab,29.8414,76.1494,unknown,unknown,,4,2023,2024,1,0,False,2
+295030075510001,Sangrur,Central Punjab,29.8417,75.85,Tube Well,Unconfined,60.0,2,2016,2017,0,0,False,2
+295030076085801,Patiala,Central Punjab,29.8417,76.1497,unknown,unknown,,3,2023,2024,0,0,False,2
+295050076370001,Kaithal,Haryana belt,29.8472,76.6167,Dug Well,unknown,35.0,46,1990,2017,8,0,False,12
+295050076394101,Kaithal,Haryana belt,29.8472,76.6614,Tube Well,unknown,113.0,30,2015,2024,7,4,False,10
+295050076394102,Kaithal,Haryana belt,29.8472,76.6614,Tube Well,Unconfined,106.0,20,2015,2023,2,1,False,7
+295058075561001,Sangrur,Central Punjab,29.8496,75.9361,Piezometer,Confined,300.0,2,2023,2024,0,0,False,2
+295105076222001,Kaithal,Haryana belt,29.8514,76.3722,Tube Well,Unconfined,119.0,28,2014,2024,4,3,False,11
+295114076221401,Kaithal,Haryana belt,29.8539,76.3706,Bore Well,Semi-Confined,117.0,9,2016,2022,2,1,False,2
+295134076221201,Kaithal,Haryana belt,29.8597,76.37,Piezometer,Semi-Confined,200.0,1,2023,2023,0,0,False,1
+295155076344501,Kaithal,Haryana belt,29.8653,76.5792,Tube Well,Unconfined,65.0,4,2015,2022,1,1,False,1
+295156077083901,Karnal,Haryana belt,29.8656,77.1442,Tube Well,unknown,70.0,1,2022,2022,0,0,False,1
+295201076522501,Karnal,Haryana belt,29.8669,76.8736,Tube Well,unknown,80.0,1,2022,2022,0,0,False,1
+295212076282001,Kaithal,Haryana belt,29.87,76.4722,Tube Well,Unconfined,86.0,9,2012,2017,4,4,False,4
+295230076213801,Kaithal,Haryana belt,29.875,76.3608,unknown,unknown,,2,2023,2023,0,0,False,1
+295248076365501,Kaithal,Haryana belt,29.88,76.6153,Tube Well,Unconfined,80.0,3,2015,2022,1,1,False,1
+295300076211401,Kaithal,Haryana belt,29.8833,76.3539,Tube Well,Unconfined,80.0,18,2015,2023,1,1,False,9
+295306076535301,Karnal,Haryana belt,29.885,76.8981,Tube Well,unknown,80.0,1,2022,2022,0,0,False,1
+295306077090101,Karnal,Haryana belt,29.885,77.1503,Tube Well,unknown,70.0,1,2022,2022,0,0,False,1
+295310076450901,Kurukshetra,Haryana belt,29.8861,76.7525,Tube Well,Unconfined,75.0,4,2017,2022,1,1,False,2
+295320076342201,Kaithal,Haryana belt,29.8889,76.5728,Tube Well,Unconfined,100.0,13,2012,2021,4,4,False,7
+295334076212601,Kaithal,Haryana belt,29.8928,76.3572,Tube Well,Semi-Confined,214.0,11,2018,2023,1,1,False,4
+295412076471501,Kurukshetra,Haryana belt,29.9033,76.7875,Tube Well,Unconfined,75.0,2,2015,2022,0,0,False,1
+295418076362401,Kaithal,Haryana belt,29.905,76.6067,Tube Well,Confined,300.0,24,2018,2024,3,1,False,7
+295418076362402,Karnal,Haryana belt,29.905,76.6067,Tube Well,unknown,200.0,15,2019,2022,2,0,False,4
+295418076362403,Karnal,Haryana belt,29.905,76.6067,Tube Well,unknown,100.0,15,2019,2022,2,0,False,4
+295418076362405,Kaithal,Haryana belt,29.9051,76.6068,unknown,unknown,,4,2023,2024,0,0,False,2
+295418076362408,Kaithal,Haryana belt,29.9051,76.6068,unknown,unknown,,4,2023,2024,0,0,False,2
+295419076472401,Kurukshetra,Haryana belt,29.9053,76.79,Tube Well,unknown,19.96,8,2002,2009,1,0,False,3
+295432076010001,Patiala,Central Punjab,29.9089,76.0167,Tube Well,Unconfined,75.0,11,2012,2018,1,1,False,7
+295433076435601,Kurukshetra,Haryana belt,29.9092,76.7322,Tube Well,Unconfined,80.0,4,2017,2022,1,1,False,2
+295438076420701,Kurukshetra,Haryana belt,29.9106,76.7019,Tube Well,Unconfined,75.0,4,2017,2022,1,1,False,2
+295451076153801,Kaithal,Haryana belt,29.9142,76.2606,Tube Well,unknown,119.6,30,2014,2023,6,4,False,10
+295500076550001,Kurukshetra,Haryana belt,29.9167,76.9167,Tube Well,Unconfined,70.0,15,2015,2022,3,2,False,8
+295512076240001,Kaithal,Haryana belt,29.92,76.4,Bore Well,Semi-Confined,119.6,5,2015,2023,1,1,False,2
+295512076300501,Kurukshetra,Haryana belt,29.92,76.5014,Tube Well,Confined,163.0,66,1998,2022,15,11,True,18
+295515076363001,Kurukshetra,Haryana belt,29.9208,76.6083,Tube Well,unknown,61.0,39,1997,2015,8,3,False,13
+295517077043101,Karnal,Haryana belt,29.9214,77.0753,Tube Well,unknown,80.0,1,2022,2022,0,0,False,1
+295553076395501,Kurukshetra,Haryana belt,29.9314,76.6653,Tube Well,Unconfined,75.0,4,2017,2022,1,1,False,2
+295601077031701,Karnal,Haryana belt,29.9336,77.0547,Tube Well,unknown,78.0,1,2022,2022,0,0,False,1
+295611076330101,Kurukshetra,Haryana belt,29.9364,76.5503,Tube Well,Unconfined,80.0,3,2017,2022,0,0,False,2
+295615075580001,Sangrur,Central Punjab,29.9375,75.9667,Tube Well,unknown,60.0,2,2016,2017,0,0,False,2
+295616076512801,Kurukshetra,Haryana belt,29.9378,76.8578,Tube Well,Unconfined,78.0,4,2017,2022,1,1,False,2
+295621076353201,Kurukshetra,Haryana belt,29.9392,76.5922,Tube Well,Unconfined,75.0,4,2017,2022,1,1,False,2
+295628075471701,Sangrur,Central Punjab,29.9411,75.7881,Tube Well,unknown,50.0,4,2022,2022,1,0,False,1
+295646076542201,Kurukshetra,Haryana belt,29.9461,76.9061,Tube Well,Unconfined,103.0,9,2018,2023,1,1,False,2
+295650077080002,Karnal,Haryana belt,29.9472,77.1333,Tube Well,unknown,70.4,1,2021,2021,0,0,False,1
+295700076454501,Kurukshetra,Haryana belt,29.95,76.7625,Tube Well,Confined,193.0,27,2013,2023,4,3,False,11
+295700076454502,Kurukshetra,Haryana belt,29.95,76.7625,Tube Well,Unconfined,66.0,35,2001,2023,7,6,True,7
+295710076433001,Kurukshetra,Haryana belt,29.9528,76.725,Tube Well,Unconfined,70.0,4,2017,2022,1,1,False,2
+295713077014501,Kurukshetra,Haryana belt,29.9536,77.0292,Tube Well,Unconfined,80.0,4,2017,2022,1,1,False,2
+295716076473701,Kurukshetra,Haryana belt,29.9544,76.7936,Tube Well,Unconfined,70.0,4,2017,2022,1,1,False,2
+295720077030801,Kurukshetra,Haryana belt,29.9556,77.0522,Tube Well,Unconfined,103.0,39,2012,2023,9,7,True,12
+295721076293301,Kurukshetra,Haryana belt,29.9558,76.4925,Tube Well,Unconfined,75.0,4,2017,2022,1,1,False,2
+295724076032401,Patiala,Central Punjab,29.9567,76.0567,Tube Well,Unconfined,71.47,43,2012,2024,8,6,True,13
+295724076074501,Patiala,Central Punjab,29.9567,76.1292,unknown,unknown,,1,2023,2023,0,0,False,1
+295724076464101,Kurukshetra,Haryana belt,29.9567,76.7781,Tube Well,Unconfined,80.0,4,2017,2022,1,1,False,2
+295736076515101,Kurukshetra,Haryana belt,29.96,76.8642,Tube Well,Unconfined,72.0,4,2017,2022,1,1,False,2
+295737077054301,Kurukshetra,Haryana belt,29.9603,77.0953,Tube Well,Unconfined,78.0,4,2017,2022,1,1,False,2
+295745076421501,Kurukshetra,Haryana belt,29.9625,76.7042,Tube Well,unknown,54.0,10,1993,2022,2,1,False,3
+295749076434901,Kurukshetra,Haryana belt,29.9636,76.7303,Tube Well,Unconfined,78.0,3,2017,2022,0,0,False,2
+295758076480001,Kurukshetra,Haryana belt,29.9661,76.8,Tube Well,Unconfined,75.0,3,2017,2022,0,0,False,2
+295822077032601,Kurukshetra,Haryana belt,29.9728,77.0572,Tube Well,Unconfined,78.0,4,2017,2022,1,1,False,2
+295825076494001,Kurukshetra,Haryana belt,29.9736,76.8278,Bore Well,unknown,103.0,1,2019,2019,0,0,False,1
+295825076494002,Kurukshetra,Haryana belt,29.9736,76.8278,Bore Well,unknown,156.0,3,2018,2022,0,0,False,1
+295825077073501,Karnal,Haryana belt,29.9736,77.1264,Tube Well,unknown,80.0,1,2022,2022,0,0,False,1
+295826076471701,Kurukshetra,Haryana belt,29.9739,76.7881,Tube Well,Unconfined,80.0,4,2017,2022,1,1,False,2
+295830076573001,Kurukshetra,Haryana belt,29.975,76.9583,Dug Well,Unconfined,15.28,1,2023,2023,0,0,False,1
+295848075521001,Sangrur,Central Punjab,29.98,75.8694,Tube Well,Unconfined,50.0,10,2016,2022,1,1,False,4
+295854077042801,Kurukshetra,Haryana belt,29.9817,77.0744,Tube Well,Unconfined,90.0,4,2017,2022,1,1,False,2
+295858075481801,Sangrur,Central Punjab,29.9828,75.805,Tube Well,Unconfined,50.0,10,2016,2022,1,1,False,4
+295900076345001,Kurukshetra,Haryana belt,29.9833,76.5806,Tube Well,Confined,194.0,91,1996,2023,21,13,True,18
+295900076345002,Kurukshetra,Haryana belt,29.9833,76.5806,Tube Well,Confined,104.0,20,2012,2023,2,1,False,7
+295900076345003,Kurukshetra,Haryana belt,29.9833,76.5806,Tube Well,Unconfined,40.0,17,1990,2015,1,0,False,7
+295900076580001,Kurukshetra,Haryana belt,29.9833,76.9667,Tube Well,unknown,293.0,27,2012,2022,6,5,True,11
+295900076580002,Kurukshetra,Haryana belt,29.9833,76.9667,Tube Well,unknown,136.0,17,1996,2024,3,1,False,4
+295906076141801,Kaithal,Haryana belt,29.985,76.2383,Tube Well,Confined,200.0,20,2018,2023,3,1,False,6
+295910076473901,Kurukshetra,Haryana belt,29.9861,76.7942,Tube Well,Unconfined,100.0,26,2015,2023,3,3,False,9
+295920076450501,Kurukshetra,Haryana belt,29.9889,76.7514,Tube Well,Unconfined,96.0,26,2012,2024,7,6,True,8
+295932077052701,Kurukshetra,Haryana belt,29.9922,77.0908,Tube Well,Unconfined,93.0,11,2012,2019,3,3,False,3
+295938077010801,Kurukshetra,Haryana belt,29.9939,77.0189,Tube Well,unknown,80.0,4,2017,2022,1,1,False,2
+300000076450501,Kurukshetra,Haryana belt,30.0,76.7514,Tube Well,Unconfined,92.0,16,2012,2017,5,5,True,6
+300001076300701,Kurukshetra,Haryana belt,30.0003,76.5019,Tube Well,Unconfined,100.0,17,2012,2022,5,5,True,9
+300002076451301,Kurukshetra,Haryana belt,30.0006,76.7536,Tube Well,Unconfined,93.0,37,2012,2023,8,7,True,12
+300006077000101,Kurukshetra,Haryana belt,30.0017,77.0003,Tube Well,Unconfined,100.0,10,2012,2022,3,3,False,5
+300023076373101,Kurukshetra,Haryana belt,30.0064,76.6253,Tube Well,Unconfined,78.0,7,2016,2023,0,0,False,3
+300037076404401,Kurukshetra,Haryana belt,30.0103,76.6789,Tube Well,Unconfined,70.0,4,2017,2022,1,1,False,2
+300040077062501,Kurukshetra,Haryana belt,30.0111,77.1069,Tube Well,Unconfined,85.0,4,2017,2022,1,1,False,2
+300055077035401,Kurukshetra,Haryana belt,30.0153,77.065,Tube Well,Unconfined,75.0,5,2017,2022,1,1,False,2
+300100076293001,Kurukshetra,Haryana belt,30.0167,76.4917,Dug Well,Unconfined,18.22,1,2023,2023,0,0,False,1
+300100076293002,Kurukshetra,Haryana belt,30.0167,76.4917,Tube Well,unknown,60.0,103,1993,2023,24,14,True,31
+300108076591501,Kurukshetra,Haryana belt,30.0189,76.9875,Tube Well,Unconfined,65.0,6,2015,2022,2,2,False,2
+300118075584001,Sangrur,Central Punjab,30.0217,75.9778,Tube Well,Unconfined,50.0,10,2016,2022,1,1,False,4
+300120076394901,Kurukshetra,Haryana belt,30.0222,76.6636,Tube Well,Unconfined,75.0,4,2017,2022,1,1,False,2
+300130076534501,Kurukshetra,Haryana belt,30.025,76.8958,Tube Well,Confined,203.0,73,1996,2023,15,10,True,18
+300130076534502,Kurukshetra,Haryana belt,30.025,76.8958,Tube Well,Unconfined,73.0,21,1996,2024,3,3,False,4
+300130077090001,Yamunanagar,Haryana belt,30.025,77.15,Tube Well,Unconfined,30.5,76,1992,2024,13,7,True,17
+300145076433001,Kurukshetra,Haryana belt,30.0292,76.725,Tube Well,Confined,201.0,54,1996,2021,13,9,True,16
+300222076452001,Kurukshetra,Haryana belt,30.0394,76.7556,Tube Well,Unconfined,100.0,30,2012,2021,6,5,True,10
+300223076572501,Kurukshetra,Haryana belt,30.04,76.9572,unknown,unknown,,2,2023,2023,0,0,False,1
+300224076572601,Kurukshetra,Haryana belt,30.04,76.9572,Tube Well,Unconfined,78.0,4,2017,2022,1,1,False,2
+300225076180001,Kaithal,Haryana belt,30.0403,76.3,Tube Well,unknown,193.0,40,1996,2022,7,3,False,11
+300227077061101,Yamunanagar,Haryana belt,30.0411,77.1031,Piezometer,Semi-Confined,105.0,1,2023,2023,0,0,False,1
+300233076511701,Kurukshetra,Haryana belt,30.0425,76.8547,Tube Well,Unconfined,70.0,3,2017,2022,0,0,False,2
+300238076293901,Kurukshetra,Haryana belt,30.0439,76.4942,Tube Well,Unconfined,80.0,4,2017,2022,1,1,False,2
+300245075405801,Sangrur,Central Punjab,30.0458,75.6828,Tube Well,Unconfined,75.0,19,2012,2022,3,3,False,8
+300245076380002,Kurukshetra,Haryana belt,30.0458,76.6333,Tube Well,unknown,60.0,1,2022,2022,0,0,False,1
+300255076203801,Kaithal,Haryana belt,30.0486,76.3439,Tube Well,Unconfined,80.0,4,2015,2022,1,1,False,1
+300300077080001,Yamunanagar,Haryana belt,30.05,77.1333,Tube Well,Unconfined,35.0,4,2015,2022,0,0,False,1
+300307077071801,Yamunanagar,Haryana belt,30.0519,77.1217,Bore Well,Semi-Confined,101.0,13,2017,2023,1,0,False,7
+300315076333001,Kurukshetra,Haryana belt,30.0542,76.5583,Tube Well,Confined,152.0,78,1998,2023,17,12,True,26
+300315076333002,Kurukshetra,Haryana belt,30.0542,76.5583,Tube Well,Unconfined,67.0,21,2012,2023,4,4,False,6
+300325076512801,Kurukshetra,Haryana belt,30.0569,76.8578,Tube Well,Unconfined,75.0,4,2017,2022,1,1,False,2
+300327076545301,Kurukshetra,Haryana belt,30.0575,76.9147,Tube Well,Unconfined,80.0,3,2017,2022,0,0,False,2
+300336076275701,Kurukshetra,Haryana belt,30.06,76.4658,Tube Well,Unconfined,80.0,4,2017,2022,1,1,False,2
+300340076240001,Kaithal,Haryana belt,30.0611,76.4,Tube Well,Unconfined,80.0,4,2015,2022,1,1,False,1
+300355076330601,Kurukshetra,Haryana belt,30.0653,76.5517,Tube Well,Unconfined,78.0,4,2017,2022,1,1,False,2
+300400077113001,Yamunanagar,Haryana belt,30.0667,77.1917,Tube Well,Confined,185.0,69,1996,2024,15,12,True,14
+300400077113002,Yamunanagar,Haryana belt,30.0667,77.1917,Tube Well,Unconfined,55.0,42,1993,2024,10,6,True,8
+300405075530001,Sangrur,Central Punjab,30.0681,75.8833,Tube Well,Unconfined,50.0,10,2016,2022,1,1,False,4
+300405076292001,Kurukshetra,Haryana belt,30.0681,76.4889,Tube Well,Unconfined,75.0,6,2015,2022,2,2,False,2
+300410077165101,Yamunanagar,Haryana belt,30.0694,77.2808,Tube Well,Confined,200.0,88,1996,2023,20,13,True,26
+300410077165102,Yamunanagar,Haryana belt,30.0694,77.2808,Tube Well,Unconfined,70.0,34,1994,2024,7,5,True,13
+300430076074501,Patiala,Central Punjab,30.075,76.1292,Tube Well,Unconfined,75.0,13,2012,2018,2,2,False,7
+300434076431801,Kurukshetra,Haryana belt,30.0761,76.7217,Tube Well,Unconfined,80.0,4,2016,2022,0,0,False,3
+300440076383501,Kurukshetra,Haryana belt,30.0778,76.6431,Tube Well,Unconfined,80.0,5,2015,2022,1,1,False,2
+300444076400701,Kurukshetra,Haryana belt,30.0789,76.6686,Tube Well,Unconfined,70.0,3,2017,2022,0,0,False,2
+300500077130001,Yamunanagar,Haryana belt,30.0833,77.2167,Tube Well,Unconfined,35.0,4,2015,2022,0,0,False,1
+300507077040401,Kurukshetra,Haryana belt,30.0853,77.0678,Tube Well,Unconfined,80.0,6,2015,2022,2,2,False,2
+300523076362301,Ambala,Haryana belt,30.09,76.6064,unknown,unknown,,3,2023,2023,0,0,False,1
+300523076362302,Ambala,Haryana belt,30.09,76.6064,unknown,unknown,,3,2023,2023,0,0,False,1
+300523076362303,Ambala,Haryana belt,30.09,76.6064,unknown,unknown,,3,2023,2023,0,0,False,1
+300532075470001,Sangrur,Central Punjab,30.0922,75.7833,Tube Well,Unconfined,55.0,10,2016,2022,1,1,False,4
+300545076461501,Kurukshetra,Haryana belt,30.0958,76.7708,Tube Well,unknown,188.0,1,1996,1996,0,0,False,1
+300545076461502,Kurukshetra,Haryana belt,30.0958,76.7708,Tube Well,unknown,53.0,6,2015,2022,2,2,False,2
+300600076180001,Kaithal,Haryana belt,30.1,76.3,Tube Well,Confined,279.7,25,1998,2024,4,4,False,5
+300600076200001,Kaithal,Haryana belt,30.1,76.3333,Tube Well,unknown,250.5,7,2013,2019,0,0,False,3
+300600076200002,Kaithal,Haryana belt,30.1,76.3333,Tube Well,unknown,26.5,35,1994,2014,5,4,False,14
+300600077070001,Yamunanagar,Haryana belt,30.1,77.1167,Tube Well,Unconfined,50.0,4,2015,2022,0,0,False,1
+300600077164501,Yamunanagar,Haryana belt,30.1,77.2792,Dug Well,Unconfined,7.9,120,1990,2024,27,12,True,35
+300610076592001,Kurukshetra,Haryana belt,30.1028,76.9889,Tube Well,Unconfined,75.0,4,2017,2022,1,1,False,2
+300630076120001,Patiala,Central Punjab,30.1083,76.2,Tube Well,unknown,60.0,9,2016,2022,1,1,False,4
+300630076562001,Kurukshetra,Haryana belt,30.1083,76.9389,Dug Well,unknown,45.0,5,1991,2018,1,1,False,2
+300637077214502,Yamunanagar,Haryana belt,30.1103,77.3625,Tube Well,Semi-Confined,187.0,24,2018,2023,4,1,False,6
+300637077214503,Yamunanagar,Haryana belt,30.1103,77.3625,Tube Well,Semi-Confined,93.0,23,2018,2023,4,1,False,6
+300652076442702,Kurukshetra,Haryana belt,30.1144,76.7408,Tube Well,Unconfined,70.0,3,2017,2022,0,0,False,2
+300700076401001,Kurukshetra,Haryana belt,30.1167,76.6694,Tube Well,Unconfined,80.0,5,2015,2022,1,1,False,2
+300700076443301,Kurukshetra,Haryana belt,30.1167,76.7425,Tube Well,Unconfined,50.0,2,2015,2017,0,0,False,1
+300715076284401,Patiala,Central Punjab,30.1208,76.4789,Tube Well,unknown,60.0,10,2016,2022,1,1,False,4
+300724075485301,Sangrur,Central Punjab,30.1233,75.8147,Tube Well,Unconfined,81.94,42,2012,2024,8,6,True,13
+300724076525601,Kurukshetra,Haryana belt,30.1233,76.8822,Tube Well,Unconfined,70.0,4,2017,2022,1,1,False,2
+300730076513901,Kurukshetra,Haryana belt,30.125,76.8608,Tube Well,Confined,55.0,19,2016,2022,3,2,False,7
+300730076514302,Kurukshetra,Haryana belt,30.125,76.8619,Tube Well,unknown,195.0,2,2018,2018,0,0,False,1
+300730076514601,Kurukshetra,Haryana belt,30.125,76.8628,Tube Well,Confined,50.0,11,2016,2023,2,2,False,4
+300730077051001,Yamunanagar,Haryana belt,30.125,77.0861,Tube Well,Confined,199.6,82,1996,2023,17,10,True,19
+300730077051002,Yamunanagar,Haryana belt,30.125,77.0861,Tube Well,Unconfined,63.0,31,1993,2023,7,5,True,12
+300732076424601,Kurukshetra,Haryana belt,30.1256,76.7128,Tube Well,Unconfined,78.0,3,2017,2022,0,0,False,2
+300737076502701,Kurukshetra,Haryana belt,30.1269,76.8408,Tube Well,Confined,55.0,20,2016,2022,4,3,False,7
+300737077065401,Yamunanagar,Haryana belt,30.1269,77.115,Tube Well,Confined,60.0,18,2016,2023,3,2,False,8
+300741077021601,Kurukshetra,Haryana belt,30.1281,77.0378,Tube Well,Unconfined,85.0,4,2017,2022,1,1,False,2
+300745076590001,Kurukshetra,Haryana belt,30.1292,76.9833,Tube Well,Unconfined,60.5,83,1996,2024,16,11,True,25
+300751077064601,Yamunanagar,Haryana belt,30.1308,77.1128,Tube Well,Confined,55.0,18,2016,2023,3,2,False,8
+300755076391501,Kurukshetra,Haryana belt,30.1319,76.6542,Tube Well,Unconfined,78.0,3,2017,2022,0,0,False,2
+300755077072601,Yamunanagar,Haryana belt,30.1319,77.1239,Tube Well,Unconfined,107.0,27,2016,2023,5,2,False,8
+300759076503101,Kurukshetra,Haryana belt,30.1331,76.8419,Tube Well,Unconfined,82.0,3,2017,2022,0,0,False,2
+300800076184501,Patiala,Central Punjab,30.1333,76.3125,Tube Well,Unconfined,75.0,5,2017,2018,1,1,False,2
+300815077220001,Yamunanagar,Haryana belt,30.1375,77.3667,Dug Well,Unconfined,13.32,81,1990,2020,15,5,True,19
+300815077220002,Yamunanagar,Haryana belt,30.1375,77.3667,Dug Well,Unconfined,15.0,2,2014,2019,0,0,False,1
+300830076370601,Patiala,Central Punjab,30.1417,76.6183,Tube Well,Unconfined,75.0,8,2012,2015,1,1,False,4
+300830076570501,Kurukshetra,Haryana belt,30.1417,76.9514,Tube Well,Unconfined,80.0,3,2017,2022,0,0,False,2
+300840077011401,Kurukshetra,Haryana belt,30.1444,77.0206,Tube Well,Unconfined,80.0,4,2017,2022,1,1,False,2
+300842076115301,Patiala,Central Punjab,30.145,76.1981,Tube Well,Unconfined,71.79,43,2012,2024,9,6,True,13
+300855076411001,Kurukshetra,Haryana belt,30.1486,76.6861,Tube Well,Unconfined,78.0,3,2017,2022,0,0,False,2
+300900075593001,Sangrur,Central Punjab,30.15,75.9917,Tube Well,Unconfined,75.0,8,2016,2019,1,1,False,4
+300918076490601,Kurukshetra,Haryana belt,30.155,76.8183,Tube Well,Unconfined,70.0,3,2017,2022,0,0,False,2
+300928077244901,Yamunanagar,Haryana belt,30.1578,77.4138,Piezometer,Unconfined,52.0,3,2023,2024,0,0,False,2
+300931076590401,Kurukshetra,Haryana belt,30.1587,76.9845,Piezometer,Semi-Confined,20.0,2,2023,2023,0,0,False,1
+300932076590101,Kurukshetra,Haryana belt,30.1589,76.9837,Piezometer,Unconfined,100.0,2,2023,2023,0,0,False,1
+300936076215001,Patiala,Central Punjab,30.1603,76.364,unknown,unknown,,5,2023,2024,1,0,False,2
+300936076215002,Patiala,Central Punjab,30.1603,76.364,unknown,unknown,,5,2023,2024,1,0,False,2
+300936076215003,Patiala,Central Punjab,30.1603,76.364,unknown,unknown,,5,2023,2024,1,0,False,2
+300942076460001,Kurukshetra,Haryana belt,30.1617,76.7667,Tube Well,Unconfined,80.0,5,2015,2022,1,1,False,2
+300945077200001,Yamunanagar,Haryana belt,30.1625,77.3333,Tube Well,Unconfined,70.0,24,1996,2012,0,0,False,6
+300956075512501,Sangrur,Central Punjab,30.1656,75.8569,Tube Well,Unconfined,75.0,19,2012,2022,3,3,False,8
+300959076423501,Kurukshetra,Haryana belt,30.1664,76.7097,Tube Well,Unconfined,72.0,3,2017,2022,0,0,False,2
+301000076000501,Sangrur,Central Punjab,30.1667,76.0014,Tube Well,unknown,537.2,10,1996,2022,1,0,False,5
+301000076520001,Kurukshetra,Haryana belt,30.1667,76.8667,Tube Well,Confined,204.5,70,1996,2022,17,11,True,21
+301000076555701,Kurukshetra,Haryana belt,30.1667,76.9325,Tube Well,Unconfined,75.0,3,2017,2022,0,0,False,2
+301000077120001,Yamunanagar,Haryana belt,30.1667,77.2,Tube Well,Confined,457.17,34,2013,2023,9,6,True,11
+301000077120002,Yamunanagar,Haryana belt,30.1667,77.2,Tube Well,Unconfined,150.33,78,1996,2023,15,10,True,28
+301000077180001,Yamunanagar,Haryana belt,30.1667,77.3,Dug Well,Unconfined,10.4,2,1997,1997,0,0,False,1
+301000077180002,Yamunanagar,Haryana belt,30.1667,77.3,Tube Well,unknown,50.0,4,2015,2022,0,0,False,1
+301030076453001,Kurukshetra,Haryana belt,30.175,76.7583,Tube Well,unknown,61.0,20,1996,2003,3,0,False,8
+301036076073601,Patiala,Central Punjab,30.1769,76.1269,unknown,unknown,,4,2023,2023,1,0,False,1
+301045076465001,Kurukshetra,Haryana belt,30.1792,76.7806,Dug Well,unknown,45.0,1,2015,2015,0,0,False,1
+301048076465401,Kurukshetra,Haryana belt,30.1802,76.7819,Piezometer,Unconfined,200.0,3,2023,2024,0,0,False,2
+301048076465402,Kurukshetra,Haryana belt,30.1802,76.7819,Piezometer,Unconfined,100.0,3,2023,2024,0,0,False,2
+301050076563401,Kurukshetra,Haryana belt,30.1806,76.9428,Tube Well,Unconfined,78.0,4,2017,2022,1,1,False,2
+301056076434501,Kurukshetra,Haryana belt,30.1822,76.7292,Tube Well,Unconfined,80.0,6,2015,2022,2,2,False,2
+301100077110001,Yamunanagar,Haryana belt,30.1833,77.1833,Tube Well,Unconfined,50.0,4,2015,2022,0,0,False,1
+301104076153401,Patiala,Central Punjab,30.1847,76.2597,unknown,unknown,,1,2023,2023,0,0,False,1
+301105076304801,Patiala,Central Punjab,30.1847,76.5133,Tube Well,Unconfined,50.0,12,2010,2014,2,2,False,5
+301105076304802,Patiala,Central Punjab,30.1847,76.5133,Tube Well,Unconfined,100.0,43,2012,2023,9,6,True,12
+301105076304803,Patiala,Central Punjab,30.1847,76.5133,Tube Well,Unconfined,45.0,37,2012,2023,7,5,True,12
+301105076304804,Patiala,Central Punjab,30.1847,76.5133,Tube Well,unknown,45.0,33,2012,2022,7,5,True,11
+301130075403001,Sangrur,Central Punjab,30.1917,75.675,Tube Well,Unconfined,71.76,44,2013,2023,9,6,True,11
+301130076590001,Ambala,Haryana belt,30.1917,76.9833,Tube Well,unknown,60.0,17,1992,2022,4,2,False,4
+301130077030001,Ambala,Haryana belt,30.1917,77.05,Dug Well,Unconfined,11.6,2,2011,2012,0,0,False,2
+301145077084501,Yamunanagar,Haryana belt,30.1958,77.1458,Dug Well,Unconfined,10.7,113,1990,2023,25,10,True,22
+301148077084901,Yamunanagar,Haryana belt,30.1969,77.1472,Dug Well,Unconfined,1.5,3,2023,2024,0,0,False,2
+301204076483601,Kurukshetra,Haryana belt,30.2011,76.81,Tube Well,Unconfined,75.0,3,2017,2022,0,0,False,2
+301215077090001,Yamunanagar,Haryana belt,30.2042,77.15,Tube Well,Unconfined,57.0,70,1997,2024,14,9,True,18
+301227076410701,Ambala,Haryana belt,30.2075,76.6853,Dug Well,Unconfined,15.0,5,2015,2022,1,1,False,1
+301230076294002,Patiala,Central Punjab,30.2083,76.4944,Tube Well,unknown,52.0,39,1997,2015,5,4,False,15
+301230076294003,Patiala,Central Punjab,30.2083,76.4944,Tube Well,Unconfined,100.0,19,2012,2020,4,4,False,7
+301245076273001,Patiala,Central Punjab,30.2125,76.4583,Tube Well,Unconfined,75.0,9,2017,2023,2,1,False,2
+301245077020001,Ambala,Haryana belt,30.2125,77.0333,Tube Well,unknown,173.0,9,1996,1998,2,0,False,3
+301245077020002,Ambala,Haryana belt,30.2125,77.0333,Tube Well,unknown,39.0,17,1993,2018,4,2,False,4
+301255075515001,Sangrur,Central Punjab,30.2153,75.8639,Tube Well,unknown,60.0,2,2016,2017,0,0,False,2
+301300077030001,Ambala,Haryana belt,30.2167,77.05,Tube Well,Unconfined,35.0,6,2015,2022,2,2,False,1
+301300077070001,Yamunanagar,Haryana belt,30.2167,77.1167,Tube Well,Unconfined,50.0,4,2015,2022,0,0,False,1
+301314076514301,Kurukshetra,Haryana belt,30.2206,76.8619,Tube Well,Unconfined,80.0,4,2017,2022,1,1,False,2
+301330076084501,Patiala,Central Punjab,30.225,76.1458,Tube Well,Unconfined,75.0,17,2012,2022,3,3,False,6
+301400076543001,Ambala,Haryana belt,30.2333,76.9083,Tube Well,unknown,59.0,8,1993,1997,1,0,False,5
+301404076590401,Ambala,Haryana belt,30.2344,76.9844,Dug Well,Unconfined,15.0,5,2015,2022,1,1,False,1
+301406076494001,Kurukshetra,Haryana belt,30.235,76.8278,Tube Well,Unconfined,85.0,12,2012,2017,4,4,False,6
+301415075363001,Barnala,Central Punjab,30.2375,75.6083,Tube Well,Unconfined,75.0,3,2012,2013,0,0,False,2
+301415075542501,Sangrur,Central Punjab,30.2375,75.9069,Tube Well,unknown,55.0,10,2016,2022,1,1,False,4
+301419076422201,Ambala,Haryana belt,30.2386,76.7061,Dug Well,Unconfined,15.0,2,2015,2018,0,0,False,1
+301430076511001,Kurukshetra,Haryana belt,30.2417,76.8528,Tube Well,Unconfined,70.0,6,2015,2022,2,2,False,2
+301430076511002,Kurukshetra,Haryana belt,30.2417,76.8528,Dug Well,Unconfined,11.15,5,2015,2018,2,2,False,2
+301430077073001,Ambala,Haryana belt,30.2417,77.125,Dug Well,Unconfined,12.86,118,1990,2024,28,12,True,35
+301430077121501,Yamunanagar,Haryana belt,30.2417,77.2042,Tube Well,unknown,39.0,21,1993,2022,2,0,False,5
+301445075503101,Sangrur,Central Punjab,30.2458,75.8419,Bore Well,unknown,152.0,2,2019,2023,0,0,False,1
+301445077210001,Yamunanagar,Haryana belt,30.2458,77.35,Dug Well,unknown,13.9,14,1996,2022,1,1,False,3
+301452076392601,Ambala,Haryana belt,30.2478,76.6572,Dug Well,Unconfined,15.0,5,2015,2022,1,1,False,1
+301455076430001,Ambala,Haryana belt,30.2486,76.7167,Tube Well,Confined,189.0,43,1996,2023,11,7,True,6
+301455076430002,Ambala,Haryana belt,30.2486,76.7167,Tube Well,Semi-Confined,98.0,7,2014,2023,1,1,False,3
+301455076454501,Ambala,Haryana belt,30.2486,76.7625,Dug Well,Unconfined,15.0,5,2015,2022,1,1,False,1
+301500075230002,Barnala,Central Punjab,30.25,75.3833,Tube Well,unknown,100.0,18,1996,2015,1,1,False,6
+301500077200001,Yamunanagar,Haryana belt,30.25,77.3333,Tube Well,unknown,97.0,101,1990,2023,18,10,True,31
+301500077200002,Yamunanagar,Haryana belt,30.25,77.3333,Tube Well,Confined,97.0,2,2023,2023,0,0,False,1
+301514077013501,Ambala,Haryana belt,30.2539,77.0264,Dug Well,Unconfined,15.0,5,2015,2022,1,1,False,1
+301515075403001,Barnala,Central Punjab,30.2542,75.675,Dug Well,unknown,43.1,80,1990,2012,17,6,True,15
+301515075493001,Sangrur,Central Punjab,30.2542,75.825,Tube Well,Confined,300.8,1,1996,1996,0,0,False,1
+301515075493002,Sangrur,Central Punjab,30.2542,75.825,Tube Well,Confined,123.3,20,2014,2024,2,0,False,7
+301516077052001,Ambala,Haryana belt,30.2544,77.0889,Dug Well,Unconfined,15.0,5,2015,2022,1,1,False,1
+301520076165001,Patiala,Central Punjab,30.2556,76.2806,Tube Well,Unconfined,40.0,36,2008,2020,8,8,True,10
+301542076592001,Ambala,Haryana belt,30.2617,76.9889,Dug Well,Unconfined,15.0,4,2015,2018,1,1,False,1
+301543075341201,Barnala,Central Punjab,30.2619,75.57,Tube Well,unknown,60.0,9,2016,2022,1,1,False,4
+301545076365001,Ambala,Haryana belt,30.2625,76.6139,Dug Well,Unconfined,13.8,129,1990,2024,28,11,True,35
+301600075464501,Sangrur,Central Punjab,30.2667,75.7792,Tube Well,Unconfined,50.0,5,2014,2015,2,2,False,2
+301600076021501,Sangrur,Central Punjab,30.2667,76.0375,Tube Well,unknown,50.0,1,2022,2022,0,0,False,1
+301600076510001,Ambala,Haryana belt,30.2667,76.85,Dug Well,Unconfined,11.51,7,2015,2022,2,2,False,2
+301614075590801,Sangrur,Central Punjab,30.2706,75.9856,Tube Well,Unconfined,75.0,18,2012,2022,2,2,False,8
+301615076513001,Ambala,Haryana belt,30.2708,76.8583,Tube Well,unknown,201.0,16,1996,2010,3,0,False,4
+301615076513002,Ambala,Haryana belt,30.2708,76.8583,Tube Well,unknown,51.0,8,1994,1996,1,0,False,3
+301620076311801,Patiala,Central Punjab,30.2722,76.5217,Tube Well,Unconfined,75.0,16,2012,2022,2,2,False,8
+301645077203001,Yamunanagar,Haryana belt,30.2792,77.3417,Dug Well,Unconfined,10.15,129,1990,2024,29,13,True,35
+301645077213001,Yamunanagar,Haryana belt,30.2792,77.3583,Tube Well,Unconfined,72.6,49,1996,2014,8,5,True,19
+301648076471101,Ambala,Haryana belt,30.28,76.7864,Dug Well,Unconfined,15.0,5,2015,2022,1,1,False,1
+301650076525101,Ambala,Haryana belt,30.2806,76.8808,Dug Well,Unconfined,15.0,4,2015,2018,1,1,False,1
+301700076390001,Ambala,Haryana belt,30.2833,76.65,Dug Well,Unconfined,17.55,5,2015,2018,2,2,False,1
+301700076400001,Ambala,Haryana belt,30.2833,76.6667,Dug Well,Unconfined,17.35,6,2015,2022,2,2,False,1
+301700076450001,Ambala,Haryana belt,30.2833,76.75,Dug Well,Unconfined,18.75,6,2015,2022,2,2,False,1
+301700077020001,Ambala,Haryana belt,30.2833,77.0333,Tube Well,Confined,160.0,11,2013,2023,4,4,False,5
+301700077024501,Ambala,Haryana belt,30.2833,77.0458,Dug Well,Unconfined,8.95,120,1990,2024,28,11,True,35
+301700077170001,Yamunanagar,Haryana belt,30.2833,77.2833,Tube Well,Unconfined,50.0,4,2015,2022,0,0,False,1
+301710075273501,Barnala,Central Punjab,30.2861,75.4597,Tube Well,Unconfined,80.0,9,2016,2022,0,0,False,4
+301710075454001,Sangrur,Central Punjab,30.2861,75.7611,Tube Well,Confined,246.0,85,1996,2024,19,13,True,27
+301710075454002,Sangrur,Central Punjab,30.2861,75.7611,Tube Well,Unconfined,130.0,35,2012,2024,6,5,True,13
+301715075274501,Barnala,Central Punjab,30.2875,75.4625,Tube Well,Unconfined,75.0,4,2017,2022,0,0,False,2
+301715076055001,Sangrur,Central Punjab,30.2875,76.0972,Tube Well,Unconfined,200.0,22,2018,2024,2,1,False,7
+301730075231501,Barnala,Central Punjab,30.2917,75.3875,Dug Well,unknown,28.0,74,1990,2023,15,4,False,21
+301730075231502,Barnala,Central Punjab,30.2917,75.3875,Tube Well,unknown,75.0,16,2012,2023,3,2,False,7
+301730075343002,Barnala,Central Punjab,30.2917,75.575,Dug Well,unknown,50.0,70,1990,2015,14,4,False,11
+301745077070001,Ambala,Haryana belt,30.2958,77.1167,Dug Well,Unconfined,9.15,122,1990,2024,28,13,True,35
+301748076195001,Patiala,Central Punjab,30.2967,76.3306,Tube Well,unknown,50.0,10,2016,2022,1,1,False,4
+301750075214601,Barnala,Central Punjab,30.2972,75.3629,Piezometer,Confined,220.0,1,2023,2023,0,0,False,1
+301750076373601,Patiala,Central Punjab,30.2972,76.6267,Tube Well,Unconfined,35.0,11,2016,2022,1,1,False,4
+301800077050001,Ambala,Haryana belt,30.3,77.0833,Dug Well,Unconfined,17.76,6,2015,2022,2,2,False,1
+301800077180001,Yamunanagar,Haryana belt,30.3,77.3,Dug Well,Unconfined,15.5,43,1990,2024,6,0,False,7
+301800077180002,Yamunanagar,Haryana belt,30.3,77.3,Dug Well,unknown,12.4,31,2012,2023,7,5,True,8
+301800077291501,Yamunanagar,Haryana belt,30.3,77.4875,Dug Well,Unconfined,45.0,120,1990,2023,27,12,True,22
+301810075221501,Barnala,Central Punjab,30.3028,75.3708,Tube Well,Unconfined,50.0,17,2008,2023,4,4,False,5
+301820076540401,Ambala,Haryana belt,30.3058,76.9011,Piezometer,Semi-Confined,200.0,2,2023,2023,0,0,False,1
+301821076540601,Ambala,Haryana belt,30.3059,76.9017,Piezometer,Unconfined,100.0,3,2023,2024,0,0,False,2
+301824077080001,Ambala,Haryana belt,30.3067,77.1333,Dug Well,unknown,15.0,5,2015,2022,1,1,False,1
+301830076581501,Ambala,Haryana belt,30.3083,76.9708,Tube Well,Confined,194.0,54,1996,2023,10,5,True,19
+301840076504601,Ambala,Haryana belt,30.3111,76.8461,Dug Well,Unconfined,30.0,5,2015,2022,1,1,False,1
+301900076590001,Ambala,Haryana belt,30.3167,76.9833,Tube Well,Unconfined,75.0,11,2015,2023,2,2,False,2
+301900077310001,Yamunanagar,Haryana belt,30.3167,77.5167,Dug Well,Unconfined,29.67,4,2015,2022,0,0,False,1
+301905075432501,Sangrur,Central Punjab,30.3181,75.7236,Tube Well,unknown,55.0,10,2016,2022,1,1,False,4
+301910076362401,Patiala,Central Punjab,30.3194,76.6067,Dug Well,Unconfined,11.79,94,1990,2024,18,4,False,18
+301915076434501,Ambala,Haryana belt,30.3208,76.7292,Dug Well,Unconfined,19.65,127,1990,2024,30,12,True,25
+301940076540001,Ambala,Haryana belt,30.3278,76.9,Dug Well,unknown,8.4,30,1990,2018,5,0,False,10
+301947076425201,Patiala,Central Punjab,30.33,76.7147,unknown,unknown,,1,2023,2023,0,0,False,1
+301948076191201,Patiala,Central Punjab,30.33,76.32,Bore Well,Semi-Confined,354.0,27,2015,2024,4,2,False,10
+302005076141001,Patiala,Central Punjab,30.3347,76.2361,Tube Well,Unconfined,50.0,10,2016,2022,1,1,False,4
+302016075552901,Sangrur,Central Punjab,30.3378,75.9247,Tube Well,Unconfined,168.0,43,2013,2023,9,6,True,11
+302018075505202,Sangrur,Central Punjab,30.3383,75.8478,Tube Well,Unconfined,105.0,20,2018,2023,2,1,False,6
+302018075505203,Sangrur,Central Punjab,30.3383,75.8478,Tube Well,Semi-Confined,200.0,12,2017,2024,2,0,False,3
+302026076554201,Ambala,Haryana belt,30.3406,76.9283,Tube Well,Unconfined,50.0,5,2015,2022,1,1,False,1
+302028075453201,Sangrur,Central Punjab,30.3411,75.7589,Tube Well,Unconfined,75.0,17,2012,2019,3,3,False,8
+302042076383001,Patiala,Central Punjab,30.345,76.6417,Dug Well,Unconfined,10.85,132,1990,2024,29,13,True,35
+302045075590301,Sangrur,Central Punjab,30.3458,75.9842,Tube Well,Unconfined,75.0,12,2012,2018,1,1,False,7
+302045075590501,Sangrur,Central Punjab,30.3458,75.9847,Tube Well,Unconfined,40.0,19,2007,2014,4,4,False,8
+302052077050201,Ambala,Haryana belt,30.3478,77.0839,Dug Well,Unconfined,15.0,5,2015,2022,1,1,False,1
+302055076400501,Patiala,Central Punjab,30.3486,76.6681,Tube Well,Unconfined,70.0,10,2016,2022,1,1,False,4
+302100076211503,Patiala,Central Punjab,30.35,76.3542,Tube Well,Unconfined,49.0,10,2013,2024,1,1,False,3
+302100076460001,Ambala,Haryana belt,30.35,76.7667,Tube Well,Unconfined,25.0,6,2015,2022,2,2,False,1
+302100077050001,Ambala,Haryana belt,30.35,77.0833,Dug Well,Unconfined,45.0,6,2015,2022,2,2,False,1
+302105076505001,Ambala,Haryana belt,30.3514,76.8472,Tube Well,Confined,450.0,69,1996,2023,9,4,False,17
+302110076183001,Patiala,Central Punjab,30.3528,76.3083,Tube Well,Unconfined,40.0,57,2007,2023,11,10,True,17
+302115075564501,Sangrur,Central Punjab,30.3542,75.9458,Tube Well,Unconfined,70.0,9,2016,2022,0,0,False,4
+302122076143501,Patiala,Central Punjab,30.3561,76.2431,Tube Well,Unconfined,82.45,39,2012,2024,8,5,True,13
+302129076290001,Patiala,Central Punjab,30.3581,76.4833,Tube Well,Unconfined,75.0,20,2012,2022,3,3,False,8
+302130075391501,Barnala,Central Punjab,30.3583,75.6542,Tube Well,Unconfined,75.0,11,2015,2022,2,2,False,5
+302130077144501,Yamunanagar,Haryana belt,30.3583,77.2458,Dug Well,Unconfined,11.85,125,1990,2024,29,13,True,35
+302145075313001,Barnala,Central Punjab,30.3625,75.525,Tube Well,Confined,301.8,99,1996,2023,20,12,True,28
+302145075313002,Barnala,Central Punjab,30.3625,75.525,Tube Well,Unconfined,86.0,67,1990,2023,12,5,True,12
+302145076381001,Patiala,Central Punjab,30.3625,76.6361,Dug Well,unknown,14.8,49,1990,2013,9,0,False,13
+302200076500001,Ambala,Haryana belt,30.3667,76.8333,Tube Well,Unconfined,70.0,9,2015,2022,3,2,False,2
+302213076522301,Ambala,Haryana belt,30.3703,76.8731,Dug Well,Unconfined,15.0,5,2015,2022,1,1,False,1
+302215075475001,Sangrur,Central Punjab,30.3708,75.7972,Tube Well,Unconfined,50.0,10,2016,2022,1,1,False,4
+302218076153501,Patiala,Central Punjab,30.3717,76.2597,Tube Well,Unconfined,75.0,6,2017,2022,1,1,False,2
+302220076514501,Ambala,Haryana belt,30.3722,76.8625,Tube Well,unknown,449.55,1,1998,1998,0,0,False,1
+302224075512001,Sangrur,Central Punjab,30.3733,75.8556,Tube Well,Unconfined,71.47,34,2012,2024,4,3,False,8
+302235076314501,Patiala,Central Punjab,30.3764,76.5292,Tube Well,Unconfined,50.0,10,2016,2022,1,1,False,4
+302239076463101,Ambala,Haryana belt,30.3775,76.7753,Dug Well,Unconfined,15.0,5,2015,2022,1,1,False,1
+302240076404501,Patiala,Central Punjab,30.3778,76.6792,Tube Well,Unconfined,30.0,75,1999,2021,17,13,True,21
+302259077093301,Ambala,Haryana belt,30.3831,77.1592,Tube Well,unknown,100.0,16,2018,2024,2,0,False,7
+302259077093302,Ambala,Haryana belt,30.3831,77.1592,Tube Well,unknown,200.0,16,2018,2023,2,0,False,6
+302259077093303,Ambala,Haryana belt,30.3831,77.1592,Tube Well,unknown,300.0,16,2018,2023,2,0,False,6
+302300075230501,Barnala,Central Punjab,30.3833,75.3847,Tube Well,Unconfined,75.0,7,2017,2022,1,1,False,2
+302300076440001,Ambala,Haryana belt,30.3833,76.7333,Dug Well,Unconfined,16.83,7,2015,2022,2,2,False,2
+302300076454501,Ambala,Haryana belt,30.3833,76.7625,Dug Well,Unconfined,15.3,102,1993,2024,22,10,True,32
+302300076595001,Ambala,Haryana belt,30.3833,76.9972,Dug Well,unknown,9.75,52,1990,2005,9,0,False,16
+302300077010001,Ambala,Haryana belt,30.3833,77.0167,Tube Well,Unconfined,50.0,3,2015,2018,1,1,False,1
+302300077050001,Ambala,Haryana belt,30.3833,77.0833,Dug Well,Unconfined,45.0,3,2015,2022,1,1,False,1
+302300077130001,Yamunanagar,Haryana belt,30.3833,77.2167,Tube Well,Unconfined,47.0,95,1993,2024,19,10,True,22
+302300077133001,Yamunanagar,Haryana belt,30.3833,77.225,Tube Well,Confined,185.0,84,1996,2023,16,10,True,19
+302300077210001,Yamunanagar,Haryana belt,30.3833,77.35,Dug Well,Unconfined,8.81,2,2015,2015,0,0,False,1
+302311076072601,Patiala,Central Punjab,30.3864,76.1239,unknown,unknown,,5,2023,2024,1,0,False,2
+302311076072602,Patiala,Central Punjab,30.3864,76.1239,unknown,unknown,,5,2023,2024,1,0,False,2
+302311076072603,Patiala,Central Punjab,30.3864,76.1239,unknown,unknown,,4,2023,2023,1,0,False,1
+302345076263001,Patiala,Central Punjab,30.3958,76.4417,Tube Well,Unconfined,60.0,10,2016,2022,1,1,False,4
+302400077131501,Yamunanagar,Haryana belt,30.4,77.2208,Dug Well,Unconfined,6.4,56,1990,2023,8,1,False,7
+302400077131502,Yamunanagar,Haryana belt,30.4,77.2208,Dug Well,unknown,17.0,33,1992,2024,5,3,False,8
+302420076354501,Patiala,Central Punjab,30.4056,76.5958,Tube Well,Unconfined,75.0,18,2012,2022,3,3,False,8
+302430075470001,Sangrur,Central Punjab,30.4083,75.7833,Dug Well,unknown,50.0,4,1998,2020,0,0,False,2
+302430076201501,Patiala,Central Punjab,30.4083,76.3375,Tube Well,Unconfined,100.51,46,2012,2024,9,6,True,13
+302430076471501,Ambala,Haryana belt,30.4083,76.7875,Dug Well,Unconfined,14.0,136,1990,2024,30,14,True,35
+302430076504501,Ambala,Haryana belt,30.4083,76.8458,Dug Well,Unconfined,8.6,129,1990,2024,30,13,True,35
+302434076350701,Patiala,Central Punjab,30.4097,76.5854,unknown,unknown,,4,2023,2023,1,0,False,1
+302434076350702,Patiala,Central Punjab,30.4097,76.5854,unknown,unknown,,4,2023,2023,1,0,False,1
+302434076350801,Patiala,Central Punjab,30.4097,76.5856,unknown,unknown,,4,2023,2023,1,0,False,1
+302436075461201,Sangrur,Central Punjab,30.41,75.77,Bore Well,Semi-Confined,150.0,7,2018,2023,1,0,False,2
+302450076305002,Patiala,Central Punjab,30.4139,76.5139,Tube Well,Unconfined,51.0,78,1997,2021,16,13,True,25
+302455076102801,Patiala,Central Punjab,30.4153,76.1744,Tube Well,Unconfined,40.0,53,2007,2023,9,7,True,17
+302456076435501,Patiala,Central Punjab,30.4156,76.7322,unknown,unknown,,2,2023,2024,0,0,False,2
+302503076033001,Patiala,Central Punjab,30.4175,76.0583,Tube Well,Unconfined,60.0,10,2016,2022,1,1,False,4
+302520075390001,Barnala,Central Punjab,30.4222,75.65,Tube Well,Unconfined,75.0,13,2012,2018,1,1,False,7
+302526075463601,Sangrur,Central Punjab,30.4239,75.7767,Tube Well,unknown,150.06,38,2013,2023,7,6,True,11
+302530075254501,Barnala,Central Punjab,30.425,75.4292,Tube Well,Unconfined,75.0,10,2016,2022,1,1,False,4
+302530076400001,Patiala,Central Punjab,30.425,76.6667,Tube Well,Confined,244.0,33,1999,2021,5,3,False,7
+302535075574001,Sangrur,Central Punjab,30.4264,75.9611,Tube Well,Unconfined,75.0,3,2018,2022,0,0,False,1
+302540076400001,Patiala,Central Punjab,30.4278,76.6667,Tube Well,Unconfined,50.0,47,1999,2021,6,6,True,12
+302600077010001,Ambala,Haryana belt,30.4333,77.0167,Tube Well,Unconfined,20.0,3,2015,2018,1,1,False,1
+302604076571801,Ambala,Haryana belt,30.4344,76.955,Dug Well,Unconfined,30.0,4,2015,2022,0,0,False,2
+302615075261501,Sangrur,Central Punjab,30.4375,75.4375,Tube Well,unknown,75.0,8,2014,2017,2,2,False,4
+302615075423001,Barnala,Central Punjab,30.4375,75.7083,Tube Well,Unconfined,210.0,4,2007,2022,0,0,False,3
+302617076435501,Patiala,Central Punjab,30.4381,76.7322,unknown,unknown,,5,2023,2024,1,0,False,2
+302630077011501,Ambala,Haryana belt,30.4417,77.0208,Dug Well,unknown,10.2,45,1990,2022,9,1,False,10
+302644075422901,Sangrur,Central Punjab,30.4456,75.7082,Piezometer,Confined,200.0,3,2023,2024,0,0,False,2
+302645076173001,Patiala,Central Punjab,30.4458,76.2917,Dug Well,Unconfined,9.0,49,1990,2003,10,0,False,14
+302649077130001,Yamunanagar,Haryana belt,30.4472,77.2167,Dug Well,Unconfined,1.7,3,2023,2024,0,0,False,2
+302650077130001,Yamunanagar,Haryana belt,30.4472,77.2167,Dug Well,Unconfined,9.5,49,1990,2023,5,0,False,11
+302650077130002,Yamunanagar,Haryana belt,30.4472,77.2167,Dug Well,unknown,20.0,28,2012,2023,4,4,False,8
+302659076584401,Ambala,Haryana belt,30.4497,76.9789,Tube Well,Semi-Confined,200.0,2,2023,2024,0,0,False,2
+302659076584402,Ambala,Haryana belt,30.4497,76.9789,Tube Well,Unconfined,100.0,2,2023,2024,0,0,False,2
+302700076550001,Ambala,Haryana belt,30.45,76.9167,Dug Well,Unconfined,25.0,3,2015,2022,0,0,False,1
+302700077140001,Yamunanagar,Haryana belt,30.45,77.2333,Dug Well,Unconfined,15.01,4,2015,2022,0,0,False,1
+302700077170001,Yamunanagar,Haryana belt,30.45,77.2833,Tube Well,unknown,271.0,13,1997,2022,1,0,False,3
+302705076221001,Patiala,Central Punjab,30.4514,76.3694,Tube Well,Unconfined,55.0,10,2016,2022,1,1,False,4
+302715076165001,Patiala,Central Punjab,30.4542,76.2806,Tube Well,unknown,45.0,10,2016,2022,1,1,False,4
+302716077012001,Ambala,Haryana belt,30.4544,77.0222,Dug Well,Unconfined,15.0,3,2015,2022,0,0,False,1
+302728076030501,Sangrur,Central Punjab,30.4578,76.0514,Tube Well,Unconfined,75.0,17,2012,2022,3,3,False,4
+302732076011501,Sangrur,Central Punjab,30.4589,76.0208,Tube Well,Unconfined,65.81,37,2012,2022,7,5,True,11
+302737076434201,Patiala,Central Punjab,30.4603,76.7283,Dug Well,Unconfined,12.0,102,1990,2024,18,2,False,25
+302745076421801,Patiala,Central Punjab,30.4625,76.705,Tube Well,Unconfined,75.0,19,2012,2022,3,3,False,8
+302746077042001,Ambala,Haryana belt,30.4628,77.0722,Dug Well,Unconfined,15.0,3,2015,2022,0,0,False,1
+302800076282501,Fatehgarh Sahib,Central Punjab,30.4667,76.4736,Tube Well,Unconfined,75.0,16,2012,2019,3,3,False,8
+302800077070001,Ambala,Haryana belt,30.4667,77.1167,Tube Well,Unconfined,55.0,8,2015,2023,2,2,False,2
+302812075570501,Sangrur,Central Punjab,30.47,75.9514,Tube Well,unknown,60.0,7,2017,2022,0,0,False,3
+302815076083501,Patiala,Central Punjab,30.4708,76.1431,Tube Well,Unconfined,75.0,6,2017,2022,1,1,False,2
+302815077073001,Ambala,Haryana belt,30.4708,77.125,Dug Well,Unconfined,18.9,109,1990,2024,24,10,True,26
+302815077073002,Ambala,Haryana belt,30.4708,77.125,Dug Well,Unconfined,18.2,11,2016,2023,3,3,False,4
+302825075461501,Sangrur,Central Punjab,30.4736,75.7708,Tube Well,unknown,60.0,10,2016,2022,1,1,False,4
+302830075191801,Barnala,Central Punjab,30.475,75.3217,Tube Well,Unconfined,76.62,43,2012,2023,7,5,True,12
+302830076354501,Patiala,Central Punjab,30.475,76.5958,Tube Well,Unconfined,75.0,32,2014,2023,5,3,False,10
+302840075294501,Barnala,Central Punjab,30.4778,75.4958,Tube Well,Unconfined,75.0,7,2017,2022,1,1,False,2
+302845076121301,Patiala,Central Punjab,30.4792,76.2036,Tube Well,Unconfined,50.0,10,2016,2022,1,1,False,4
+302900076361501,Patiala,Central Punjab,30.4833,76.6042,Dug Well,Unconfined,17.3,20,1990,1997,3,0,False,6
+302900076361502,Patiala,Central Punjab,30.4833,76.6042,Tube Well,unknown,253.0,40,2012,2023,8,5,True,12
+302915076230001,Fatehgarh Sahib,Central Punjab,30.4875,76.3833,Tube Well,Unconfined,75.0,4,2012,2022,0,0,False,3
+302930076310001,Patiala,Central Punjab,30.4917,76.5167,Tube Well,Unconfined,60.0,10,2016,2022,1,1,False,4
+303000076253001,Fatehgarh Sahib,Central Punjab,30.5,76.425,Tube Well,Unconfined,100.0,42,2012,2023,8,5,True,12
+303000076331501,Patiala,Central Punjab,30.5,76.5542,Tube Well,Unconfined,74.0,83,1999,2024,18,14,True,26
+303000077050001,Ambala,Haryana belt,30.5,77.0833,Tube Well,Unconfined,22.0,6,2015,2022,2,2,False,1
+303005076202501,Fatehgarh Sahib,Central Punjab,30.5014,76.3403,Tube Well,Unconfined,85.0,8,2017,2022,1,1,False,3
+303029075280301,Barnala,Central Punjab,30.5083,75.4675,Piezometer,Confined,268.0,2,2023,2023,0,0,False,1
+303100075233001,Barnala,Central Punjab,30.5167,75.3917,Tube Well,Unconfined,75.0,14,2012,2018,2,2,False,7
+303105076204001,Fatehgarh Sahib,Central Punjab,30.5181,76.3444,Dug Well,unknown,17.0,56,1990,2022,10,0,False,15
+303105076285501,Fatehgarh Sahib,Central Punjab,30.5181,76.4819,Tube Well,Unconfined,75.0,12,2015,2022,2,2,False,5
+303120075421601,Sangrur,Central Punjab,30.5222,75.7044,Tube Well,Unconfined,75.0,18,2012,2022,3,3,False,8
+303122075333301,Barnala,Central Punjab,30.5228,75.5592,Tube Well,Unconfined,71.6,42,2012,2023,7,5,True,12
+303124075140201,Moga,Central Punjab,30.5233,75.2339,Tube Well,Unconfined,55.0,8,2016,2022,0,0,False,4
+303124075140202,Moga,Central Punjab,30.5233,75.2339,Tube Well,Unconfined,70.0,8,2016,2022,0,0,False,4
+303130075540001,Sangrur,Central Punjab,30.525,75.9,Dug Well,Unconfined,36.0,88,1990,2018,19,8,True,15
+303130075540002,Sangrur,Central Punjab,30.525,75.9,Dug Well,unknown,40.0,33,2012,2024,5,3,False,13
+303140075214501,Moga,Central Punjab,30.5278,75.3625,Tube Well,Unconfined,75.0,16,2012,2022,2,2,False,7
+303145075383001,Barnala,Central Punjab,30.5292,75.6417,Tube Well,Unconfined,75.0,19,2012,2022,3,3,False,8
+303219076141301,Patiala,Central Punjab,30.5386,76.2369,Tube Well,Semi-Confined,156.45,36,2013,2024,5,4,False,12
+303230076074501,Fatehgarh Sahib,Central Punjab,30.5417,76.1292,Tube Well,Unconfined,75.0,18,2012,2022,3,3,False,8
+303246075414401,Sangrur,Central Punjab,30.5461,75.6956,Tube Well,Unconfined,75.0,4,2012,2014,0,0,False,3
+303246075414402,Sangrur,Central Punjab,30.5461,75.6956,Tube Well,unknown,55.0,5,2016,2018,0,0,False,3
+303251076010101,Sangrur,Central Punjab,30.5475,76.0169,Tube Well,Unconfined,152.0,38,2013,2023,6,5,True,11
+303258077093301,Ambala,Haryana belt,30.5497,77.1592,unknown,unknown,,1,2023,2023,0,0,False,1
+303258077093302,Ambala,Haryana belt,30.5497,77.1592,unknown,unknown,,1,2023,2023,0,0,False,1
+303258077093303,Ambala,Haryana belt,30.5497,77.1592,unknown,unknown,,1,2023,2023,0,0,False,1
+303300075270001,Barnala,Central Punjab,30.55,75.45,Tube Well,Unconfined,75.0,9,2012,2015,1,1,False,4
+303315075271001,Barnala,Central Punjab,30.5542,75.4528,Tube Well,Unconfined,40.0,23,2007,2014,7,7,True,8
+303317076425201,Patiala,Central Punjab,30.555,76.7147,unknown,unknown,,3,2023,2023,0,0,False,1
+303327075482001,Sangrur,Central Punjab,30.5575,75.8056,Tube Well,unknown,60.0,10,2016,2022,1,1,False,4
+303330076155001,Fatehgarh Sahib,Central Punjab,30.5583,76.2639,Tube Well,Unconfined,75.0,18,2012,2022,3,3,False,8
+303330076433001,Patiala,Central Punjab,30.5583,76.725,Dug Well,Unconfined,8.4,38,1990,2004,6,0,False,10
+303333076090701,Fatehgarh Sahib,Central Punjab,30.5593,76.1519,Bore Well,Unconfined,92.0,4,2023,2023,1,0,False,1
+303335076393501,Patiala,Central Punjab,30.5597,76.6597,Dug Well,Unconfined,14.8,112,1990,2022,23,11,True,33
+303348076435001,Patiala,Central Punjab,30.5633,76.7306,Tube Well,Unconfined,40.0,23,2007,2020,3,3,False,9
+303350076010501,Sangrur,Central Punjab,30.5639,76.0181,Tube Well,Unconfined,75.0,18,2012,2022,3,3,False,8
+303350076010502,Sangrur,Central Punjab,30.5639,76.0181,Tube Well,Unconfined,75.0,17,2012,2019,3,3,False,8
+303351075015401,Moga,Central Punjab,30.5642,75.0317,Tube Well,Unconfined,75.0,9,2015,2022,1,1,False,4
+303406076045001,Ludhiana,Central Punjab,30.5683,76.0806,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+303420075491501,Sangrur,Central Punjab,30.5722,75.8208,Tube Well,unknown,60.0,10,2016,2022,1,1,False,4
+303420076330001,Fatehgarh Sahib,Central Punjab,30.5722,76.55,Tube Well,Unconfined,75.0,6,2017,2022,1,1,False,2
+303440075402801,Barnala,Central Punjab,30.5778,75.6744,Tube Well,Unconfined,75.0,14,2014,2022,2,2,False,6
+303508075164501,Moga,Central Punjab,30.5856,75.2792,Tube Well,Unconfined,75.0,17,2012,2022,2,2,False,8
+303515075524001,Sangrur,Central Punjab,30.5875,75.8778,Tube Well,Unconfined,75.0,3,2018,2022,0,0,False,1
+303527076140001,Fatehgarh Sahib,Central Punjab,30.5908,76.2333,Tube Well,Unconfined,90.0,21,2018,2023,3,1,False,6
+303553075041701,Moga,Central Punjab,30.5981,75.0714,Tube Well,Unconfined,55.0,4,2016,2022,0,0,False,3
+303610075092601,Moga,Central Punjab,30.6028,75.1572,Tube Well,Unconfined,75.0,11,2015,2022,2,2,False,4
+303615076293001,Fatehgarh Sahib,Central Punjab,30.6042,76.4917,Tube Well,Unconfined,75.0,7,2013,2016,2,2,False,4
+303615076293002,Fatehgarh Sahib,Central Punjab,30.6042,76.4917,Tube Well,Unconfined,78.0,6,2017,2022,1,1,False,2
+303619076154501,Fatehgarh Sahib,Central Punjab,30.6053,76.2625,Dug Well,unknown,28.0,37,2006,2022,8,8,True,9
+303620076160001,Fatehgarh Sahib,Central Punjab,30.6056,76.2667,Dug Well,unknown,13.5,7,1993,1997,0,0,False,3
+303620076251501,Fatehgarh Sahib,Central Punjab,30.6056,76.4208,Tube Well,Unconfined,75.0,22,2012,2023,4,3,False,7
+303630076190001,Fatehgarh Sahib,Central Punjab,30.6083,76.3167,Tube Well,Unconfined,75.0,12,2015,2022,2,2,False,5
+303638076245501,Fatehgarh Sahib,Central Punjab,30.6106,76.4155,Piezometer,Semi-Confined,172.0,2,2023,2023,0,0,False,1
+303639075105901,Moga,Central Punjab,30.6108,75.1831,Tube Well,Unconfined,70.0,41,2012,2024,8,6,True,13
+303640076344001,Fatehgarh Sahib,Central Punjab,30.6111,76.5778,Dug Well,Unconfined,25.0,69,2006,2024,15,12,True,19
+303645076372001,Fatehgarh Sahib,Central Punjab,30.6125,76.6222,Tube Well,Unconfined,75.0,12,2015,2022,2,2,False,5
+303645076382101,Patiala,Central Punjab,30.6125,76.6392,Dug Well,Unconfined,15.45,58,2004,2024,13,10,True,11
+303650076473001,Patiala,Central Punjab,30.6139,76.7917,Dug Well,Unconfined,9.9,34,2005,2020,7,7,True,11
+303704075043801,Moga,Central Punjab,30.6178,75.0772,Tube Well,Unconfined,63.75,43,2012,2024,8,6,True,13
+303704076252001,Fatehgarh Sahib,Central Punjab,30.6178,76.4225,unknown,unknown,,4,2023,2023,1,0,False,1
+303709075572701,Ludhiana,Central Punjab,30.6192,75.9575,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+303710076144501,Fatehgarh Sahib,Central Punjab,30.6194,76.2458,Tube Well,Semi-Confined,175.0,9,2016,2022,1,1,False,4
+303732075502201,Sangrur,Central Punjab,30.6256,75.8397,unknown,unknown,,2,2023,2023,0,0,False,1
+303732075502202,Sangrur,Central Punjab,30.6256,75.8397,unknown,unknown,,4,2023,2024,1,0,False,2
+303732076505701,Sangrur,Central Punjab,30.6256,76.8494,unknown,unknown,,4,2023,2024,1,0,False,2
+303740076221001,Fatehgarh Sahib,Central Punjab,30.6278,76.3694,Tube Well,Unconfined,75.0,12,2015,2022,2,2,False,5
+303746076211801,Fatehgarh Sahib,Central Punjab,30.6294,76.355,Dug Well,Unconfined,20.0,26,2006,2015,6,6,True,7
+303800075404501,Ludhiana,Central Punjab,30.6333,75.6792,Tube Well,Unconfined,75.0,17,2012,2022,3,3,False,8
+303804076363501,Fatehgarh Sahib,Central Punjab,30.6344,76.6097,Dug Well,Unconfined,15.25,64,2006,2024,14,11,True,19
+303812075000501,Moga,Central Punjab,30.6367,75.0014,Tube Well,Unconfined,75.0,16,2012,2022,2,2,False,7
+303815075000501,Moga,Central Punjab,30.6375,75.0014,Dug Well,unknown,19.0,78,1990,2014,18,4,False,20
+303830076310001,Fatehgarh Sahib,Central Punjab,30.6417,76.5167,Dug Well,unknown,18.1,8,1990,1992,1,0,False,3
+303830076310002,Fatehgarh Sahib,Central Punjab,30.6417,76.5167,Tube Well,Unconfined,55.0,90,1997,2023,20,14,True,27
+303837075212201,Moga,Central Punjab,30.6436,75.3561,Tube Well,unknown,60.0,9,2016,2023,0,0,False,4
+303838075421001,Ludhiana,Central Punjab,30.6439,75.7028,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+303839076235001,Fatehgarh Sahib,Central Punjab,30.6444,76.3972,Piezometer,Semi-Confined,200.0,3,2023,2024,0,0,False,2
+303845075441501,Ludhiana,Central Punjab,30.6458,75.7375,Tube Well,Unconfined,75.0,18,2012,2022,3,3,False,8
+303849076040801,Ludhiana,Central Punjab,30.6469,76.0689,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+303852076232403,Fatehgarh Sahib,Central Punjab,30.6478,76.39,Tube Well,Semi-Confined,288.0,17,2017,2023,2,1,False,3
+303852076232404,Fatehgarh Sahib,Central Punjab,30.6478,76.39,Tube Well,Semi-Confined,198.0,18,2017,2023,3,1,False,3
+303900076194501,Fatehgarh Sahib,Central Punjab,30.65,76.3292,Tube Well,Unconfined,75.0,18,2012,2022,3,3,False,8
+303900076212101,Fatehgarh Sahib,Central Punjab,30.65,76.3561,unknown,unknown,,1,2023,2023,0,0,False,1
+303900076240001,Fatehgarh Sahib,Central Punjab,30.65,76.4,Tube Well,Unconfined,75.0,17,2012,2024,2,1,False,8
+303911076235401,Fatehgarh Sahib,Central Punjab,30.6532,76.3985,Piezometer,Unconfined,100.0,3,2023,2024,0,0,False,2
+303928075322001,Ludhiana,Central Punjab,30.6578,75.5389,Tube Well,Unconfined,75.0,6,2017,2022,0,0,False,2
+303930075321501,Ludhiana,Central Punjab,30.6583,75.5375,Dug Well,unknown,17.64,1,2011,2011,0,0,False,1
+303930076003001,Ludhiana,Central Punjab,30.6583,76.0083,Tube Well,Unconfined,75.0,2,2017,2018,0,0,False,2
+303944075552501,Ludhiana,Central Punjab,30.6622,75.9236,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+303945076140001,Fatehgarh Sahib,Central Punjab,30.6625,76.2333,Tube Well,Unconfined,75.0,16,2012,2019,3,3,False,8
+304000076204501,Fatehgarh Sahib,Central Punjab,30.6667,76.3458,Tube Well,Unconfined,75.0,40,2012,2023,7,6,True,12
+304014076342401,Fatehgarh Sahib,Central Punjab,30.6706,76.5733,Tube Well,unknown,35.0,7,2016,2022,0,0,False,3
+304020075121001,Moga,Central Punjab,30.6722,75.2028,Tube Well,Unconfined,50.0,8,2014,2018,1,1,False,5
+304047075273201,Ludhiana,Central Punjab,30.6797,75.4589,Tube Well,Unconfined,75.0,10,2014,2022,2,2,False,4
+304130074585001,Moga,Central Punjab,30.6917,74.9806,Dug Well,Unconfined,50.0,118,1990,2023,26,13,True,34
+304130076200001,Fatehgarh Sahib,Central Punjab,30.6917,76.3333,Tube Well,Unconfined,75.0,18,2012,2022,3,3,False,8
+304132075364601,Ludhiana,Central Punjab,30.6922,75.6128,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+304200076321501,Fatehgarh Sahib,Central Punjab,30.7,76.5375,Tube Well,Unconfined,60.0,75,2001,2023,17,14,True,20
+304201076155301,Ludhiana,Central Punjab,30.7003,76.2647,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+304207076130701,Ludhiana,Central Punjab,30.7019,76.2186,Tube Well,Unconfined,71.0,43,2012,2023,8,5,True,12
+304207076130702,Ludhiana,Central Punjab,30.7019,76.2186,Tube Well,Unconfined,153.54,29,2013,2023,5,3,False,6
+304215076212201,Fatehgarh Sahib,Central Punjab,30.7042,76.3561,Tube Well,Unconfined,75.0,6,2017,2022,1,1,False,2
+304215076300501,Fatehgarh Sahib,Central Punjab,30.7042,76.5014,Tube Well,Unconfined,75.0,12,2015,2022,2,2,False,5
+304245075560001,Ludhiana,Central Punjab,30.7125,75.9333,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+304245076224001,Fatehgarh Sahib,Central Punjab,30.7125,76.3778,Tube Well,Unconfined,65.0,79,2001,2023,17,12,True,23
+304255076293701,Fatehgarh Sahib,Central Punjab,30.7153,76.4936,Dug Well,Unconfined,18.0,51,2006,2024,8,5,True,12
+304303076291001,Fatehgarh Sahib,Central Punjab,30.7177,76.4862,Piezometer,Semi-Confined,200.0,3,2023,2024,0,0,False,2
+304322074585301,Moga,Central Punjab,30.7228,74.9814,Tube Well,unknown,75.0,12,2015,2023,2,2,False,4
+304324075382202,Ludhiana,Central Punjab,30.7233,75.6394,Tube Well,Unconfined,103.0,14,2018,2024,1,1,False,4
+304324075382401,Ludhiana,Central Punjab,30.7233,75.64,Tube Well,Confined,203.85,23,2018,2024,4,1,False,7
+304325075130001,Moga,Central Punjab,30.7236,75.2167,Dug Well,unknown,27.0,39,1993,2002,8,0,False,10
+304330075353001,Ludhiana,Central Punjab,30.725,75.5917,Tube Well,Unconfined,75.0,18,2012,2022,3,3,False,8
+304332076034901,Ludhiana,Central Punjab,30.7256,76.0636,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+304335075420001,Ludhiana,Central Punjab,30.7264,75.7,Tube Well,Unconfined,50.0,42,2010,2022,10,9,True,13
+304335075420002,Ludhiana,Central Punjab,30.7264,75.7,Tube Well,Unconfined,50.0,34,2013,2023,5,5,True,11
+304335075420003,Ludhiana,Central Punjab,30.7264,75.7,unknown,unknown,,1,2023,2023,0,0,False,1
+304341075041701,Moga,Central Punjab,30.7282,75.0714,unknown,unknown,,3,2023,2024,0,0,False,2
+304341075041702,Moga,Central Punjab,30.7282,75.0714,unknown,unknown,,3,2023,2024,0,0,False,2
+304341075041703,Moga,Central Punjab,30.7282,75.0714,unknown,unknown,,3,2023,2024,0,0,False,2
+304343075304501,Ludhiana,Central Punjab,30.7286,75.5125,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+304349075321801,Ludhiana,Central Punjab,30.7303,75.5383,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+304350076281501,Fatehgarh Sahib,Central Punjab,30.7306,76.4708,Tube Well,Unconfined,75.0,18,2012,2022,3,3,False,8
+304403075074801,Moga,Central Punjab,30.7342,75.13,Tube Well,Unconfined,50.0,2,2016,2017,0,0,False,2
+304412076004201,Ludhiana,Central Punjab,30.7367,76.0117,Dug Well,Unconfined,5.94,10,1990,1992,1,0,False,3
+304415075503001,Ludhiana,Central Punjab,30.7375,75.8417,Tube Well,Confined,302.16,76,1996,2024,18,13,True,24
+304415075503002,Ludhiana,Central Punjab,30.7375,75.8417,Tube Well,Unconfined,65.0,49,1990,2024,11,6,True,13
+304415076110001,Ludhiana,Central Punjab,30.7375,76.1833,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+304415076182001,Fatehgarh Sahib,Central Punjab,30.7375,76.3056,Dug Well,unknown,15.45,67,1990,2011,13,4,False,13
+304419076094001,Ludhiana,Central Punjab,30.7386,76.1611,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+304425075401801,Ludhiana,Central Punjab,30.7403,75.6717,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+304430075101001,Moga,Central Punjab,30.7417,75.1694,Tube Well,Unconfined,75.0,16,2012,2022,2,2,False,7
+304432076310501,Fatehgarh Sahib,Central Punjab,30.7422,76.5181,Dug Well,unknown,55.0,21,1990,2023,1,0,False,5
+304453075470601,Ludhiana,Central Punjab,30.7481,75.785,Tube Well,unknown,75.0,3,2014,2014,1,1,False,1
+304453075470602,Ludhiana,Central Punjab,30.7481,75.785,Tube Well,Unconfined,75.0,12,2015,2022,2,2,False,5
+304456075401801,Ludhiana,Central Punjab,30.7489,75.6717,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+304519075573901,Ludhiana,Central Punjab,30.7553,75.9608,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+304520075050001,Moga,Central Punjab,30.7556,75.0833,Tube Well,unknown,50.0,9,2016,2023,0,0,False,4
+304530076011901,Ludhiana,Central Punjab,30.7583,76.0219,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+304540074593001,Moga,Central Punjab,30.7611,74.9917,Tube Well,Unconfined,50.0,10,2014,2022,2,2,False,5
+304540075124001,Moga,Central Punjab,30.7611,75.2111,Tube Well,Unconfined,55.0,6,2016,2019,0,0,False,4
+304545076233001,Fatehgarh Sahib,Central Punjab,30.7625,76.3917,Tube Well,Unconfined,75.0,17,2012,2019,3,3,False,8
+304600076023002,Ludhiana,Central Punjab,30.7667,76.0417,Tube Well,Unconfined,100.0,4,2013,2014,0,0,False,2
+304630075281502,Ludhiana,Central Punjab,30.775,75.4708,Tube Well,unknown,300.0,49,1996,2024,7,6,True,17
+304630075281504,Ludhiana,Central Punjab,30.775,75.4708,Tube Well,Semi-Confined,0.0,5,2012,2013,1,1,False,2
+304630075281505,Ludhiana,Central Punjab,30.775,75.4708,Tube Well,Unconfined,84.0,35,1990,2023,6,2,False,7
+304646075441401,Ludhiana,Central Punjab,30.7794,75.7372,Tube Well,Unconfined,75.0,14,2014,2019,3,3,False,6
+304734075334101,Ludhiana,Central Punjab,30.7928,75.5614,Tube Well,Unconfined,75.0,17,2014,2022,3,3,False,6
+304734075334102,Ludhiana,Central Punjab,30.7928,75.5614,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+304739075512401,Ludhiana,Central Punjab,30.7942,75.8567,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+304745075432501,Ludhiana,Central Punjab,30.7958,75.7236,Tube Well,unknown,75.0,18,2012,2022,3,3,False,8
+304750074583001,Moga,Central Punjab,30.7972,74.975,Tube Well,Unconfined,75.0,17,2012,2022,2,2,False,8
+304800076011502,Ludhiana,Central Punjab,30.8,76.0208,Tube Well,Unconfined,68.66,39,2012,2023,7,6,True,12
+304800076241501,Fatehgarh Sahib,Central Punjab,30.8,76.4042,Tube Well,Unconfined,75.0,5,2017,2018,1,1,False,2
+304815076153001,Ludhiana,Central Punjab,30.8042,76.2583,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,6
+304830075453001,Ludhiana,Central Punjab,30.8083,75.7583,Dug Well,Unconfined,12.8,42,1990,2002,7,0,False,13
+304830075453003,Ludhiana,Central Punjab,30.8083,75.7583,Tube Well,unknown,75.0,6,2017,2022,0,0,False,2
+304832075024601,Moga,Central Punjab,30.8089,75.0461,Tube Well,Unconfined,75.0,15,2012,2019,2,2,False,8
+304840076260501,Fatehgarh Sahib,Central Punjab,30.8111,76.4347,Tube Well,Unconfined,75.0,12,2015,2022,2,2,False,5
+304842076045001,Ludhiana,Central Punjab,30.8117,76.0806,Tube Well,Unconfined,75.0,7,2017,2022,1,1,False,2
+304855076204601,Fatehgarh Sahib,Central Punjab,30.8153,76.3461,Tube Well,Unconfined,75.0,10,2016,2022,1,1,False,4
+304900076032001,Ludhiana,Central Punjab,30.8167,76.0556,Dug Well,Unconfined,12.9,32,2012,2023,5,4,False,12
+304910076114801,Ludhiana,Central Punjab,30.8194,76.1967,Dug Well,Unconfined,14.7,94,1990,2024,17,5,True,18
+304926075013501,Moga,Central Punjab,30.8239,75.0264,Tube Well,Unconfined,81.0,43,2012,2024,8,6,True,13
+304930076094001,Ludhiana,Central Punjab,30.825,76.1611,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+304945076154501,Ludhiana,Central Punjab,30.8292,76.2625,Tube Well,unknown,75.0,16,2014,2022,3,3,False,6
+304945076160001,Ludhiana,Central Punjab,30.8292,76.2667,Dug Well,Unconfined,14.1,50,1990,2003,9,0,False,14
+304950075552501,Ludhiana,Central Punjab,30.8306,75.9236,Tube Well,unknown,75.0,18,2012,2022,3,3,False,8
+304956075382601,Ludhiana,Central Punjab,30.8322,75.6406,Tube Well,Unconfined,75.0,14,2014,2019,3,3,False,6
+305007075240601,Ludhiana,Central Punjab,30.8353,75.4017,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+305009075160801,Moga,Central Punjab,30.8358,75.2689,Tube Well,Unconfined,72.55,36,2012,2022,6,5,True,11
+305014075501501,Ludhiana,Central Punjab,30.8372,75.8375,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,6
+305025074574701,Moga,Central Punjab,30.8403,74.9631,Tube Well,Unconfined,35.0,38,2007,2022,6,6,True,12
+305025074574702,Moga,Central Punjab,30.8403,74.9631,Tube Well,unknown,50.0,4,2014,2018,1,1,False,2
+305028075070201,Moga,Central Punjab,30.8411,75.1172,Tube Well,Unconfined,75.0,11,2015,2022,1,1,False,5
+305042075195001,Moga,Central Punjab,30.845,75.3306,Tube Well,Unconfined,75.0,16,2012,2022,2,2,False,7
+305055075531901,Ludhiana,Central Punjab,30.8486,75.8886,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+305057076045601,Ludhiana,Central Punjab,30.8492,76.0822,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+305100076043002,Ludhiana,Central Punjab,30.85,76.075,Dug Well,Unconfined,12.0,35,2012,2023,6,5,True,12
+305101075352701,Ludhiana,Central Punjab,30.8503,75.5908,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+305110076071501,Ludhiana,Central Punjab,30.8528,76.1208,Tube Well,Unconfined,75.0,11,2014,2022,2,2,False,5
+305140075345501,Ludhiana,Central Punjab,30.8611,75.5819,Dug Well,unknown,6.5,1,1998,1998,0,0,False,1
+305145075450001,Ludhiana,Central Punjab,30.8625,75.75,Dug Well,unknown,13.6,48,1990,2013,8,0,False,12
+305148075104501,Moga,Central Punjab,30.8633,75.1792,Tube Well,Unconfined,75.0,11,2015,2022,1,1,False,5
+305158076135301,Ludhiana,Central Punjab,30.8661,76.2314,Dug Well,Unconfined,13.5,129,1990,2023,28,13,True,34
+305200075430501,Ludhiana,Central Punjab,30.8667,75.7181,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+305222076051501,Ludhiana,Central Punjab,30.8728,76.0875,Dug Well,Unconfined,13.0,30,2012,2023,3,3,False,12
+305230075284501,Ludhiana,Central Punjab,30.875,75.4792,Dug Well,Unconfined,10.0,36,1990,2000,5,0,False,11
+305243075195001,Moga,Central Punjab,30.8786,75.3306,Tube Well,Unconfined,55.0,7,2016,2022,0,0,False,3
+305300076000001,Ludhiana,Central Punjab,30.8833,76.0,Tube Well,Unconfined,341.0,38,2002,2014,7,5,True,13
+305300076120001,Ludhiana,Central Punjab,30.8833,76.2,Tube Well,Confined,293.26,94,1996,2024,20,13,True,29
+305300076120002,Ludhiana,Central Punjab,30.8833,76.2,Tube Well,Unconfined,74.35,64,1990,2024,13,6,True,13
+305311075303301,Ludhiana,Central Punjab,30.8866,75.5093,unknown,unknown,,3,2023,2024,0,0,False,2
+305311075303302,Ludhiana,Central Punjab,30.8866,75.5093,unknown,unknown,,3,2023,2024,0,0,False,2
+305311075303303,Ludhiana,Central Punjab,30.8866,75.5093,unknown,unknown,,3,2023,2024,0,0,False,2
+305314075141301,Moga,Central Punjab,30.8872,75.2369,Tube Well,Unconfined,75.0,11,2015,2022,1,1,False,5
+305315075303001,Ludhiana,Central Punjab,30.8875,75.5083,Tube Well,Unconfined,75.0,4,2017,2022,0,0,False,2
+305315076064501,Ludhiana,Central Punjab,30.8875,76.1125,Tube Well,Unconfined,75.0,18,2012,2022,3,3,False,8
+305345075071501,Moga,Central Punjab,30.8958,75.1208,Tube Well,Unconfined,50.0,2,2014,2014,0,0,False,1
+305400075473001,Ludhiana,Central Punjab,30.9,75.7917,Tube Well,Unconfined,45.5,34,2002,2021,3,3,False,7
+305403075094101,Moga,Central Punjab,30.9011,75.1616,Piezometer,Semi-Confined,200.0,3,2023,2024,0,0,False,2
+305405075372801,Ludhiana,Central Punjab,30.9016,75.6245,unknown,unknown,,3,2023,2024,0,0,False,2
+305405075372802,Ludhiana,Central Punjab,30.9016,75.6245,unknown,unknown,,2,2023,2023,0,0,False,1
+305406075372701,Ludhiana,Central Punjab,30.9019,75.6244,unknown,unknown,,2,2023,2023,0,0,False,1
+305410075484001,Ludhiana,Central Punjab,30.9028,75.8111,Tube Well,Confined,302.16,99,1996,2024,17,12,True,29
+305410075484002,Ludhiana,Central Punjab,30.9028,75.8111,Tube Well,Unconfined,77.0,66,1990,2024,14,6,True,13
+305410075484003,Ludhiana,Central Punjab,30.9028,75.8111,Tube Well,unknown,25.0,3,1992,2013,0,0,False,1
+305415076172001,Ludhiana,Central Punjab,30.9042,76.2889,Dug Well,Unconfined,15.45,42,2012,2023,7,5,True,12
+305430075470001,Ludhiana,Central Punjab,30.9083,75.7833,Tube Well,unknown,330.0,1,2014,2014,0,0,False,1
+305430075513001,Ludhiana,Central Punjab,30.9083,75.8583,Tube Well,Unconfined,75.0,4,2017,2022,0,0,False,2
+305500076120001,Ludhiana,Central Punjab,30.9167,76.2,Tube Well,Unconfined,75.0,7,2017,2022,1,1,False,2
+305524075262401,Ludhiana,Central Punjab,30.9233,75.44,Tube Well,Unconfined,66.33,42,2012,2024,7,6,True,13
+305549075184501,Moga,Central Punjab,30.9303,75.3125,Tube Well,Unconfined,75.0,11,2015,2022,1,1,False,5
+305555075244201,Ludhiana,Central Punjab,30.9319,75.4117,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+305610076181501,Ludhiana,Central Punjab,30.9361,76.3042,Tube Well,Unconfined,75.0,14,2014,2019,3,3,False,6
+305615076094301,Ludhiana,Central Punjab,30.9375,76.1621,unknown,unknown,,2,2023,2024,0,0,False,2
+305615076144001,Ludhiana,Central Punjab,30.9375,76.2444,Dug Well,Unconfined,7.0,70,2005,2024,14,11,True,20
+305616076094301,Ludhiana,Central Punjab,30.9378,76.1621,unknown,unknown,,2,2023,2024,0,0,False,2
+305616076094302,Ludhiana,Central Punjab,30.9378,76.1621,unknown,unknown,,2,2023,2024,0,0,False,2
+305633075343301,Ludhiana,Central Punjab,30.9426,75.5761,Piezometer,Semi-Confined,200.0,2,2023,2024,0,0,False,2
+305633075343302,Ludhiana,Central Punjab,30.9426,75.5761,Piezometer,Unconfined,100.0,2,2023,2024,0,0,False,2
+305643075364601,Ludhiana,Central Punjab,30.9453,75.6128,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+305710076145901,Ludhiana,Central Punjab,30.9528,76.2497,Tube Well,Unconfined,75.0,16,2014,2022,2,2,False,6
+305736076033501,Ludhiana,Central Punjab,30.96,76.0597,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+305750076094501,Ludhiana,Central Punjab,30.9639,76.1625,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,6
+305843075544301,Ludhiana,Central Punjab,30.9786,75.9119,Tube Well,Unconfined,97.6,13,2018,2022,1,1,False,3
+305843075544302,Ludhiana,Central Punjab,30.9786,75.9119,Tube Well,Semi-Confined,203.85,20,2018,2023,2,1,False,6
+305843075544303,Ludhiana,Central Punjab,30.9786,75.9119,Tube Well,Confined,302.83,20,2018,2024,4,1,False,7
+305850075544501,Ludhiana,Central Punjab,30.9806,75.9125,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+305954075164701,Moga,Central Punjab,30.9983,75.2797,Tube Well,Unconfined,75.0,11,2015,2022,1,1,False,5
+310000075090201,Moga,Central Punjab,31.0,75.1506,Tube Well,Unconfined,81.92,41,2012,2023,8,6,True,12
+310040075364501,Jalandhar,Doaba Punjab,31.0111,75.6125,Tube Well,Unconfined,75.0,19,2012,2022,3,3,False,8
+310114075230001,Jalandhar,Doaba Punjab,31.0206,75.3833,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+310115075275001,Jalandhar,Doaba Punjab,31.0208,75.4639,Tube Well,Unconfined,75.0,15,2012,2022,2,2,False,7
+310115075461501,Jalandhar,Doaba Punjab,31.0208,75.7708,Dug Well,unknown,15.0,53,1990,2012,11,0,False,13
+310145075473501,Jalandhar,Doaba Punjab,31.0292,75.7931,Tube Well,Confined,302.32,78,1996,2023,14,13,True,21
+310145075473502,Jalandhar,Doaba Punjab,31.0292,75.7931,Tube Well,Unconfined,50.0,62,1990,2023,11,4,False,12
+310245075543501,Jalandhar,Doaba Punjab,31.0458,75.9097,Dug Well,unknown,15.95,49,1990,2002,11,0,False,13
+310255075160001,Jalandhar,Doaba Punjab,31.0486,75.2667,Tube Well,Unconfined,75.0,7,2012,2015,1,1,False,4
+310255075392001,Jalandhar,Doaba Punjab,31.0486,75.6556,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+310315075181001,Jalandhar,Doaba Punjab,31.0542,75.3028,Tube Well,Unconfined,75.0,10,2015,2019,2,2,False,5
+310315075331701,Jalandhar,Doaba Punjab,31.0542,75.5547,Tube Well,Unconfined,75.0,14,2014,2022,2,2,False,6
+310315075454001,Jalandhar,Doaba Punjab,31.0542,75.7611,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+310345075531501,Jalandhar,Doaba Punjab,31.0625,75.8875,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+310416075410901,Jalandhar,Doaba Punjab,31.0711,75.6858,Dug Well,unknown,16.3,45,1990,2002,11,0,False,13
+310446075194901,Jalandhar,Doaba Punjab,31.0794,75.3303,Tube Well,Confined,303.12,81,1996,2023,15,10,True,23
+310446075194902,Jalandhar,Doaba Punjab,31.0794,75.3303,Tube Well,Unconfined,45.0,42,1990,2022,8,3,False,8
+310455075224501,Jalandhar,Doaba Punjab,31.0819,75.3792,Tube Well,Unconfined,75.0,14,2014,2022,3,3,False,6
+310455075430501,Jalandhar,Doaba Punjab,31.0819,75.7181,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+310515075401001,Jalandhar,Doaba Punjab,31.0875,75.6694,Tube Well,Unconfined,75.0,14,2014,2019,3,3,False,6
+310530075360001,Jalandhar,Doaba Punjab,31.0917,75.6,Dug Well,unknown,17.55,38,1990,2001,5,0,False,12
+310540075155001,Jalandhar,Doaba Punjab,31.0944,75.2639,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,6
+310550075512501,Jalandhar,Doaba Punjab,31.0972,75.8569,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,6
+310620075533401,Jalandhar,Doaba Punjab,31.1056,75.8929,unknown,unknown,,5,2023,2024,1,0,False,2
+310620075533402,Jalandhar,Doaba Punjab,31.1056,75.8929,unknown,unknown,,5,2023,2024,1,0,False,2
+310620075533403,Jalandhar,Doaba Punjab,31.1056,75.8929,unknown,unknown,,5,2023,2024,1,0,False,2
+310630075103501,Jalandhar,Doaba Punjab,31.1083,75.1764,Dug Well,unknown,7.85,1,1999,1999,0,0,False,1
+310630075230501,Jalandhar,Doaba Punjab,31.1083,75.3847,Tube Well,Unconfined,75.0,19,2012,2023,3,3,False,8
+310630075230502,Jalandhar,Doaba Punjab,31.1083,75.3847,Tube Well,Unconfined,75.0,17,2012,2022,3,3,False,8
+310640075230501,Jalandhar,Doaba Punjab,31.1113,75.3849,unknown,unknown,,4,2023,2024,0,0,False,2
+310640075230502,Jalandhar,Doaba Punjab,31.1113,75.3849,unknown,unknown,,3,2023,2023,0,0,False,1
+310640075230503,Jalandhar,Doaba Punjab,31.1113,75.3849,unknown,unknown,,4,2023,2024,0,0,False,2
+310646075314801,Jalandhar,Doaba Punjab,31.1128,75.53,Dug Well,unknown,25.0,33,1990,2001,6,0,False,10
+310657075491801,Jalandhar,Doaba Punjab,31.1158,75.8217,Dug Well,unknown,16.8,45,1990,2004,8,0,False,11
+310700075445501,Jalandhar,Doaba Punjab,31.1167,75.7486,Tube Well,unknown,75.0,16,2014,2022,3,3,False,6
+310719075420001,Jalandhar,Doaba Punjab,31.1222,75.7,unknown,unknown,,3,2023,2023,0,0,False,1
+310720075334001,Jalandhar,Doaba Punjab,31.1222,75.5611,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+310720075452501,Jalandhar,Doaba Punjab,31.1222,75.7569,Tube Well,Semi-Confined,171.0,34,2012,2022,7,6,True,11
+310720075452502,Jalandhar,Doaba Punjab,31.1222,75.7569,Tube Well,Confined,322.0,45,2012,2023,9,6,True,12
+310730075214001,Jalandhar,Doaba Punjab,31.125,75.3611,Tube Well,Confined,354.0,40,2013,2024,7,4,False,12
+310730075214002,Jalandhar,Doaba Punjab,31.125,75.3611,Tube Well,Semi-Confined,255.0,37,2013,2024,7,4,False,12
+310730075420001,Jalandhar,Doaba Punjab,31.125,75.7,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,6
+310745075330001,Jalandhar,Doaba Punjab,31.1292,75.55,Tube Well,Confined,300.0,43,2012,2023,8,6,True,12
+310745075330002,Jalandhar,Doaba Punjab,31.1292,75.55,Tube Well,unknown,100.0,7,2012,2017,0,0,False,3
+310745075330003,Jalandhar,Doaba Punjab,31.1292,75.55,Tube Well,Semi-Confined,150.0,45,2012,2023,9,6,True,12
+310800075162001,Jalandhar,Doaba Punjab,31.1333,75.2722,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+310800075290601,Jalandhar,Doaba Punjab,31.1333,75.485,Tube Well,Confined,304.0,74,1996,2021,14,11,True,18
+310800075290602,Jalandhar,Doaba Punjab,31.1333,75.485,Tube Well,Unconfined,128.0,28,2012,2019,7,6,True,8
+310800075290603,Jalandhar,Doaba Punjab,31.1333,75.485,Tube Well,Unconfined,50.0,35,1990,2022,5,2,False,9
+310845075485001,Jalandhar,Doaba Punjab,31.1458,75.8139,Dug Well,unknown,12.85,6,2005,2006,1,1,False,2
+310915075493001,Jalandhar,Doaba Punjab,31.1542,75.825,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,6
+310930075370001,Jalandhar,Doaba Punjab,31.1583,75.6167,Tube Well,Unconfined,72.09,44,2012,2024,9,6,True,13
+310941075375201,Jalandhar,Doaba Punjab,31.1614,75.6311,Dug Well,unknown,17.0,44,1990,2019,10,0,False,7
+310945075203501,Jalandhar,Doaba Punjab,31.1625,75.3431,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+310945075430301,Jalandhar,Doaba Punjab,31.1625,75.7175,Dug Well,Unconfined,18.46,59,1990,2004,12,0,False,15
+310959075501401,Jalandhar,Doaba Punjab,31.1664,75.8372,Dug Well,unknown,13.1,43,1990,2002,8,0,False,10
+311020075342501,Jalandhar,Doaba Punjab,31.1722,75.5736,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+311028075143201,Kapurthala,Doaba Punjab,31.1744,75.2422,Dug Well,Unconfined,30.0,84,1993,2020,17,10,True,28
+311047075054001,Kapurthala,Doaba Punjab,31.1797,75.0944,Tube Well,Unconfined,75.0,8,2012,2015,2,2,False,4
+311100075261001,Jalandhar,Doaba Punjab,31.1833,75.4361,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,6
+311140075320001,Jalandhar,Doaba Punjab,31.1944,75.5333,Dug Well,Unconfined,14.5,106,1992,2022,20,9,True,31
+311146075442801,Kapurthala,Doaba Punjab,31.1961,75.7411,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,5
+311155075422001,Kapurthala,Doaba Punjab,31.1986,75.7056,Dug Well,unknown,16.0,41,1992,2003,9,0,False,12
+311215075183002,Jalandhar,Doaba Punjab,31.2042,75.3083,Tube Well,Unconfined,75.0,8,2012,2023,1,0,False,2
+311250075053001,Kapurthala,Doaba Punjab,31.2139,75.0917,Dug Well,unknown,4.09,1,1990,1990,0,0,False,1
+311310075120001,Kapurthala,Doaba Punjab,31.2194,75.2,Tube Well,Confined,243.0,98,1996,2024,19,14,True,29
+311310075120002,Kapurthala,Doaba Punjab,31.2194,75.2,Tube Well,Unconfined,103.0,47,2012,2024,9,6,True,13
+311344075070701,Kapurthala,Doaba Punjab,31.2289,75.1186,Tube Well,Unconfined,75.0,17,2012,2022,3,3,False,7
+311345075464501,Kapurthala,Doaba Punjab,31.2292,75.7792,Tube Well,Confined,301.7,72,1996,2023,16,13,True,22
+311345075464502,Kapurthala,Doaba Punjab,31.2292,75.7792,Tube Well,Unconfined,81.0,47,1990,2024,7,4,False,13
+311345075464503,Kapurthala,Doaba Punjab,31.2292,75.7792,Tube Well,unknown,96.0,17,2012,2023,2,1,False,3
+311345075464504,Kapurthala,Doaba Punjab,31.2292,75.7792,Tube Well,unknown,301.7,14,2012,2023,1,0,False,3
+311400075320001,Jalandhar,Doaba Punjab,31.2333,75.5333,Tube Well,Unconfined,45.0,47,2001,2023,6,6,True,20
+311410075311501,Jalandhar,Doaba Punjab,31.2361,75.5208,Dug Well,unknown,14.59,33,1990,1998,6,0,False,9
+311415075191501,Kapurthala,Doaba Punjab,31.2375,75.3208,Tube Well,Unconfined,50.0,12,2014,2022,2,2,False,5
+311415075394501,Jalandhar,Doaba Punjab,31.2375,75.6625,Tube Well,Unconfined,75.0,11,2013,2018,2,2,False,6
+311445075121501,Kapurthala,Doaba Punjab,31.2458,75.2042,Tube Well,Unconfined,75.0,17,2012,2022,3,3,False,7
+311445075423001,Kapurthala,Doaba Punjab,31.2458,75.7083,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,5
+311450075160501,Kapurthala,Doaba Punjab,31.2472,75.2681,Tube Well,Unconfined,50.0,1,2014,2014,0,0,False,1
+311545075293001,Jalandhar,Doaba Punjab,31.2625,75.4917,Tube Well,Confined,350.0,39,2013,2024,8,6,True,12
+311545075293002,Jalandhar,Doaba Punjab,31.2625,75.4917,Tube Well,Semi-Confined,165.0,37,2012,2022,7,6,True,11
+311545075293003,Jalandhar,Doaba Punjab,31.2625,75.4917,Tube Well,Unconfined,50.0,40,2012,2023,7,6,True,12
+311600075310001,Jalandhar,Doaba Punjab,31.2667,75.5167,Tube Well,Unconfined,75.0,18,2012,2022,3,3,False,8
+311610075173001,Kapurthala,Doaba Punjab,31.2694,75.2917,Tube Well,Unconfined,50.0,12,2014,2022,2,2,False,5
+311615075494501,Kapurthala,Doaba Punjab,31.2708,75.8292,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,5
+311630075441501,Kapurthala,Doaba Punjab,31.275,75.7375,Tube Well,Unconfined,75.0,17,2012,2022,3,3,False,7
+311722075473301,Kapurthala,Doaba Punjab,31.2894,75.7925,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,5
+311730075125001,Kapurthala,Doaba Punjab,31.2917,75.2139,Tube Well,Unconfined,75.0,9,2014,2018,2,2,False,5
+311745075120001,Kapurthala,Doaba Punjab,31.2958,75.2,Tube Well,Unconfined,68.1,37,2012,2022,7,6,True,11
+311800075252001,Kapurthala,Doaba Punjab,31.3,75.4222,Tube Well,Unconfined,50.0,7,2014,2018,2,2,False,2
+311827075110301,Kapurthala,Doaba Punjab,31.3075,75.1842,Dug Well,unknown,7.1,12,1990,1998,3,0,False,3
+311845075160501,Kapurthala,Doaba Punjab,31.3125,75.2681,Tube Well,Unconfined,50.0,12,2014,2022,2,2,False,5
+311850075272801,Jalandhar,Doaba Punjab,31.3139,75.4578,Dug Well,unknown,12.03,5,1990,1991,1,0,False,2
+311855075240001,Kapurthala,Doaba Punjab,31.3153,75.4,Tube Well,Unconfined,75.0,17,2012,2022,3,3,False,7
+311900075292001,Jalandhar,Doaba Punjab,31.3167,75.4889,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+311930075352001,Jalandhar,Doaba Punjab,31.325,75.5889,Tube Well,Confined,302.72,81,1996,2023,16,12,True,23
+311930075352002,Jalandhar,Doaba Punjab,31.325,75.5889,Tube Well,Confined,168.0,30,2012,2024,6,5,True,7
+311930075352003,Jalandhar,Doaba Punjab,31.325,75.5889,Tube Well,Unconfined,46.0,43,1990,2022,8,5,True,11
+311930075383001,Jalandhar,Doaba Punjab,31.325,75.6417,Tube Well,Unconfined,75.0,19,2012,2022,3,3,False,8
+312000075091001,Kapurthala,Doaba Punjab,31.3333,75.1528,Tube Well,Unconfined,75.0,3,2012,2022,0,0,False,2
+312008075382201,Jalandhar,Doaba Punjab,31.3356,75.6394,Dug Well,unknown,15.45,21,1990,1996,5,0,False,7
+312200075274501,Jalandhar,Doaba Punjab,31.3667,75.4625,Dug Well,unknown,10.7,25,1990,1996,4,0,False,7
+312200075274502,Jalandhar,Doaba Punjab,31.3667,75.4625,Dug Well,Unconfined,15.0,29,2001,2018,4,3,False,11
+312210075225001,Kapurthala,Doaba Punjab,31.3694,75.3806,Tube Well,Confined,271.0,76,1997,2024,15,11,True,25
+312210075225002,Kapurthala,Doaba Punjab,31.3694,75.3806,Tube Well,Unconfined,56.0,60,1990,2024,10,5,True,13
+312220076384501,Jalandhar,Doaba Punjab,31.3725,76.646,unknown,unknown,,3,2023,2024,0,0,False,2
+312220076384502,Jalandhar,Doaba Punjab,31.3725,76.646,unknown,unknown,,2,2023,2024,0,0,False,2
+312220076384601,Jalandhar,Doaba Punjab,31.3725,76.6462,unknown,unknown,,2,2023,2024,0,0,False,2
+312245075391001,Jalandhar,Doaba Punjab,31.3792,75.6528,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,5
+312315075193501,Kapurthala,Doaba Punjab,31.3875,75.3264,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,5
+312348075141001,Kapurthala,Doaba Punjab,31.3967,75.2361,Tube Well,Unconfined,75.0,17,2012,2022,3,3,False,7
+312350075290501,Jalandhar,Doaba Punjab,31.3972,75.4847,Tube Well,Unconfined,75.0,16,2014,2022,3,3,False,6
+312400075343001,Jalandhar,Doaba Punjab,31.4,75.575,Tube Well,Unconfined,75.0,19,2012,2022,3,3,False,8
+312430075145001,Kapurthala,Doaba Punjab,31.4083,75.2472,Tube Well,Unconfined,75.0,11,2014,2018,2,2,False,5
+312430075152001,Kapurthala,Doaba Punjab,31.4083,75.2556,Tube Well,Unconfined,50.0,6,2014,2015,2,2,False,2
+312443075412701,Jalandhar,Doaba Punjab,31.4119,75.6908,Dug Well,unknown,7.3,20,1990,1996,4,0,False,7
+312520075423001,Jalandhar,Doaba Punjab,31.4222,75.7083,Tube Well,Semi-Confined,127.0,73,1996,2024,14,10,True,18
+312520075423002,Jalandhar,Doaba Punjab,31.4222,75.7083,Tube Well,Semi-Confined,303.36,45,2012,2024,9,6,True,13
+312520075423003,Jalandhar,Doaba Punjab,31.4222,75.7083,Tube Well,Unconfined,39.0,70,1990,2023,15,6,True,12
+312545075395001,Jalandhar,Doaba Punjab,31.4292,75.6639,Dug Well,Unconfined,27.0,117,1992,2023,27,11,True,32
+312610075295501,Jalandhar,Doaba Punjab,31.4361,75.4986,Tube Well,Confined,229.0,102,1996,2024,22,14,True,29
+312610075295502,Jalandhar,Doaba Punjab,31.4361,75.4986,Tube Well,Unconfined,80.0,72,1990,2024,16,6,True,13
+312705075221601,Kapurthala,Doaba Punjab,31.4514,75.3711,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,5
+312715075374501,Jalandhar,Doaba Punjab,31.4542,75.6292,Dug Well,unknown,11.5,55,1990,2003,12,0,False,14
+312715075411501,Jalandhar,Doaba Punjab,31.4542,75.6875,Tube Well,Unconfined,50.0,12,2014,2022,2,2,False,5
+312719075174501,Kapurthala,Doaba Punjab,31.4553,75.2958,Tube Well,Unconfined,75.0,17,2012,2022,3,3,False,7
+312730075260001,Kapurthala,Doaba Punjab,31.4583,75.4333,Tube Well,Unconfined,75.0,17,2012,2022,3,3,False,7
+312745075340501,Jalandhar,Doaba Punjab,31.4625,75.5681,Tube Well,Unconfined,75.0,13,2014,2022,2,2,False,6
+312815075454501,Jalandhar,Doaba Punjab,31.4708,75.7625,Dug Well,Unconfined,16.5,53,2005,2024,10,7,True,9
+313040075375501,Jalandhar,Doaba Punjab,31.5111,75.6319,Tube Well,Unconfined,75.0,14,2014,2022,2,2,False,5
+313100075210001,Kapurthala,Doaba Punjab,31.5167,75.35,Dug Well,unknown,9.0,56,1990,2022,10,2,False,14
+313145075352001,Jalandhar,Doaba Punjab,31.5292,75.5889,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,5
+313205075302001,Kapurthala,Doaba Punjab,31.5347,75.5056,Tube Well,Confined,303.0,42,2012,2022,8,6,True,11
+313205075302002,Kapurthala,Doaba Punjab,31.5347,75.5056,Tube Well,Unconfined,264.0,37,2012,2022,7,6,True,11
+313205075302003,Kapurthala,Doaba Punjab,31.5347,75.5056,Tube Well,Unconfined,265.0,67,2005,2022,14,12,True,18
+313228075225001,Kapurthala,Doaba Punjab,31.5411,75.3806,Tube Well,Unconfined,75.0,18,2012,2022,3,3,False,7
+313245075255501,Kapurthala,Doaba Punjab,31.5458,75.4319,Tube Well,Unconfined,75.0,14,2012,2022,2,2,False,4
+313300075380001,Jalandhar,Doaba Punjab,31.55,75.6333,Tube Well,Unconfined,75.0,4,2017,2022,0,0,False,2
+313358075383501,Jalandhar,Doaba Punjab,31.5661,75.6431,Dug Well,unknown,8.5,27,1990,2003,4,0,False,6
+313415075341601,Kapurthala,Doaba Punjab,31.5708,75.5711,Tube Well,Confined,350.0,39,2014,2023,6,3,False,10
+313415075341602,Kapurthala,Doaba Punjab,31.5708,75.5711,Tube Well,Semi-Confined,230.0,39,2014,2024,5,3,False,11
+313415075341603,Kapurthala,Doaba Punjab,31.5708,75.5711,Tube Well,Unconfined,75.0,39,2014,2024,6,3,False,11
+313415075341604,Kapurthala,Doaba Punjab,31.5708,75.5711,Tube Well,Unconfined,70.0,23,2014,2024,2,1,False,9
+313428075331801,Kapurthala,Doaba Punjab,31.5744,75.555,Tube Well,Unconfined,75.0,17,2012,2022,3,3,False,7
+313550075374501,Jalandhar,Doaba Punjab,31.5972,75.6292,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,5
+313610075390001,Jalandhar,Doaba Punjab,31.6028,75.65,Tube Well,Unconfined,40.0,43,2012,2023,8,5,True,12
+313610075390002,Jalandhar,Doaba Punjab,31.6028,75.65,Tube Well,Semi-Confined,250.0,43,2012,2023,9,6,True,12
+313612075390001,Jalandhar,Doaba Punjab,31.6033,75.65,Tube Well,Confined,350.0,42,2012,2024,8,5,True,13
+313615075351601,Kapurthala,Doaba Punjab,31.6042,75.5878,Tube Well,Confined,300.0,47,2012,2024,9,6,True,13
+313615075351602,Kapurthala,Doaba Punjab,31.6042,75.5878,Tube Well,Semi-Confined,150.0,46,2012,2023,9,6,True,12
+313615075351603,Kapurthala,Doaba Punjab,31.6042,75.5878,Tube Well,Unconfined,100.0,45,2012,2024,9,6,True,13
+313640075282001,Kapurthala,Doaba Punjab,31.6111,75.4722,Tube Well,Unconfined,75.0,7,2017,2022,1,1,False,2
+313644075313001,Kapurthala,Doaba Punjab,31.6122,75.525,Tube Well,Unconfined,75.0,15,2014,2022,3,3,False,5
+AAXI011,Sangrur,Central Punjab,30.6256,76.8494,Piezometer,unknown,200.0,1,2024,2024,0,0,False,1
+AAXI012,Moga,Central Punjab,30.7282,75.0724,Piezometer,unknown,200.0,1,2023,2023,0,0,False,1
+AAXI038,Patiala,Central Punjab,29.8411,76.1497,Piezometer,unknown,168.0,2,2023,2023,0,0,False,1
+AAXI040,Patiala,Central Punjab,29.8414,76.1494,Piezometer,unknown,200.0,1,2023,2023,0,0,False,1
+AAXI043,Patiala,Central Punjab,30.1847,76.5133,Piezometer,unknown,300.0,2,2023,2024,0,0,False,2
+AAXI049,Patiala,Central Punjab,30.1847,76.5133,Piezometer,unknown,200.0,1,2024,2024,0,0,False,1
+AAXI060,Moga,Central Punjab,30.7282,75.0714,Piezometer,unknown,300.0,1,2023,2023,0,0,False,1
+AAXI082,Moga,Central Punjab,30.7282,75.0714,Piezometer,unknown,100.0,1,2023,2023,0,0,False,1
+AAXI107,Yamunanagar,Haryana belt,29.9811,77.2183,Piezometer,unknown,25.0,1,2024,2024,0,0,False,1
+AAXI112,Patiala,Central Punjab,30.1847,76.5133,Piezometer,unknown,300.0,2,2023,2024,0,0,False,2
+AAXI137,Patiala,Central Punjab,29.8417,76.1497,Piezometer,unknown,100.0,2,2023,2023,0,0,False,1
+AAXI145,Jalandhar,Doaba Punjab,31.1113,75.3849,Piezometer,unknown,100.0,1,2023,2023,0,0,False,1
+AAXI163,Patiala,Central Punjab,30.26,76.43,Piezometer,unknown,300.0,3,2023,2024,0,0,False,2
+CGWBHR06,Ambala,Haryana belt,30.0888,76.6104,unknown,unknown,,1,2023,2023,0,0,False,1
+CGWBHR07,Ambala,Haryana belt,30.0888,76.6104,unknown,unknown,,1,2023,2023,0,0,False,1
+CGWBHR08,Ambala,Haryana belt,30.0888,76.6104,unknown,unknown,,1,2023,2023,0,0,False,1
+CGWBHR174,Panipat,Haryana belt,29.2648,77.0508,unknown,unknown,,2,2023,2024,0,0,False,2
+CGWBHR176,Panipat,Haryana belt,29.2648,77.0508,unknown,unknown,,2,2023,2024,0,0,False,2
+CGWBHR209,Ludhiana,Central Punjab,30.6964,75.5789,unknown,unknown,,1,2023,2023,0,0,False,1
+CGWBHR220,Sonipat,Haryana belt,29.0306,77.1295,unknown,unknown,,1,2024,2024,0,0,False,1
+CGWBHR46,Sangrur,Central Punjab,30.2092,75.8631,unknown,unknown,,1,2023,2023,0,0,False,1
+CGWBHR48,Sangrur,Central Punjab,30.2092,75.8631,unknown,unknown,,1,2023,2023,0,0,False,1
+CGWBHR54,Sangrur,Central Punjab,30.2092,75.8631,unknown,unknown,,1,2023,2023,0,0,False,1
+CGWBHR70,Jind,Haryana belt,29.1499,76.4133,unknown,unknown,,1,2023,2023,0,0,False,1
+CGWBHR71,Jind,Haryana belt,29.1499,76.4133,unknown,unknown,,1,2023,2023,0,0,False,1
+CGWBHR72,Jind,Haryana belt,29.1499,76.4133,unknown,unknown,,1,2023,2023,0,0,False,1
+CGWBPB100,Kapurthala,Doaba Punjab,31.5362,75.5083,unknown,unknown,,3,2023,2024,0,0,False,2
+CGWBPB101,Kapurthala,Doaba Punjab,31.5362,75.5083,unknown,unknown,,2,2023,2023,0,0,False,1
+CGWBPB102,Kapurthala,Doaba Punjab,31.5362,75.5083,unknown,unknown,,2,2023,2023,0,0,False,1
+CGWBPB154,Patiala,Central Punjab,30.8781,76.4286,unknown,unknown,,1,2023,2023,0,0,False,1
+CGWBPB155,Patiala,Central Punjab,30.8781,76.4286,unknown,unknown,,2,2023,2023,0,0,False,1
+CGWBPB178,Sangrur,Central Punjab,30.4808,75.9364,unknown,unknown,,1,2023,2023,0,0,False,1
+CGWBPBMADHO1,Jalandhar,Doaba Punjab,31.1985,75.3113,unknown,unknown,,2,2023,2024,0,0,False,2
+CGWBPBMADHO2,Jalandhar,Doaba Punjab,31.1985,75.3113,unknown,unknown,,1,2023,2023,0,0,False,1

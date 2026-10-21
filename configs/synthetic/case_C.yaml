@@ -1,0 +1,16 @@
+# Case C: well-posed case; the M2-A gate. A canal strip and three strong pumping clusters create sideways
+# head gradients (visible cones), so T can be identified.
+defaults: [base.yaml]
+case: C
+extras:
+  canal:
+    line_km: [[5.0, 15.0], [55.0, 50.0]]    # straight canal from (x, y) to (x, y)
+    half_width_km: 2.0
+    seepage_m_per_year: 0.3
+    model_knows: true                     # the model's R includes the canal
+  clusters:
+    centres_km: [[18.0, 42.0], [40.0, 22.0], [30.0, 52.0]]   # all >= 10 km from the canal
+    sigma_km: 2.5
+    peak_multiplier: 3.0                  # Q is 3x the background at each cluster centre
+designs:
+  m60: {n_wells: 60, schedule: monthly}

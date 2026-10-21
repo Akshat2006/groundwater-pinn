@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "groundwater-pinn"
+version = "0.1.0"
+description = "Zoned physics-informed neural networks for groundwater level forecasting in sparsely monitored aquifers"
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+include = ["src*", "synthetic*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "gpu: needs a CUDA GPU (skipped when none is available)",
+    "data: needs files in data/raw (skipped when they are missing)",
+]

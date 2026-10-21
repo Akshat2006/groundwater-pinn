@@ -1,0 +1,17 @@
+# Case D: mismatched assumptions (anti "inverse crime"; reported, not gated). The truth has things the
+# model is not told about: canal seepage, irrigation return flow, patchy and village-scale pumping; the
+# model's land-use input is coarsened and noisy.
+defaults: [base.yaml]
+case: D
+extras:
+  canal:
+    line_km: [[5.0, 15.0], [55.0, 50.0]]
+    half_width_km: 2.0
+    seepage_m_per_year: 0.3
+    model_knows: false
+  return_flow_fraction: 0.2         # 20% of pumped water seeps back down (unknown to the model)
+  patches: {scale_km: 7.0, amplitude: 0.3}       # ±30% pumping patches 5–10 km across
+  hotspots: {n: 10, sigma_km: 0.8, peak_multiplier: 3.0}   # village-scale hot spots
+  landuse_input: {coarsen_km: 5, noise_sd: 0.05}           # what the model sees instead of a(x, y)
+designs:
+  q30: {n_wells: 30, schedule: quarterly}

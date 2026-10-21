@@ -1,0 +1,25 @@
+# Data: raw downloads are large and come from scripts/ (see data/raw/SOURCES.md)
+data/raw/*
+!data/raw/SOURCES.md
+data/interim/*
+data/processed/*
+data/synthetic/
+!data/**/.gitkeep
+
+# Run outputs (configs + metrics are small, checkpoints are not)
+reports/runs/*
+!reports/runs/.gitkeep
+*.pt
+*.ckpt
+reports/env_install.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ipynb_checkpoints/
+build/
+dist/
+pinn_code.zip

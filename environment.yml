@@ -1,0 +1,17 @@
+# Local environment (laptop / college GPU).
+#   conda env create -f environment.yml
+#   conda activate pinn
+#   pip install -e .
+# PyTorch comes from the cu126 wheel index: those builds still include kernels for older GPUs
+# such as the GTX 1050 (Pascal, sm_61); the newer CUDA 12.8+ builds dropped them.
+# Exact versions that were tested are in requirements-lock.txt.
+name: pinn
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/cu126
+      - torch
+      - -r requirements.txt

@@ -1,0 +1,9 @@
+# Case B: two zones with different S and T; checks that zoning can find them (E17)
+defaults: [base.yaml]
+case: B
+zones:
+  split_x_m: 30000.0              # west zone | east zone
+  west: {S: 0.08, T_m2_day: 800.0}
+  east: {S: 0.16, T_m2_day: 2500.0}
+designs:
+  q30: {n_wells: 30, schedule: quarterly}
