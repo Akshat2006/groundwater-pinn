@@ -27,6 +27,16 @@ FIG = ROOT / "reports" / "figures"
 BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
 INK, MUTED, GRID = "#0b0b0b", "#52514e", "#e4e3df"
 TOL = 0.10
+DIAG_TEXT = {  # diagnostic runs (notebooks/colab_m2_diagnostics.ipynb): what each one changes
+    ("d1", "diag"): "Gate case (C, 60 wells) read quarterly instead of monthly",
+    ("d2", "diag"): "Case A (no pumping clusters, no canal), 60 wells, monthly",
+    ("run3", "diag_frozen5k"): "Settling stage with S, T frozen: 5,000 steps instead of 500",
+    ("run3", "diag_prior130"): "Report-style prior on S and T, deliberately 30% too high (weight 0.1)",
+    ("run3", "diag_fixT1950"): "T fixed at 1,950 (30% too high); only S and pumping learned",
+    ("run3", "diag_w10"): "Data weight 10 instead of 100",
+    ("run4", "diag_w10"): "Noisy data (0.3 m), data weight 10 instead of 100",
+    ("run4", "diag_w1"): "Noisy data (0.3 m), data weight 1 instead of 100",
+}
 
 
 def style(ax):
@@ -168,8 +178,24 @@ def main() -> None:
               f"(same settings, different random seed and well layout)" if len(final)
               else ("PASSED" if passed else "NOT PASSED YET"))
 
-    matrix = df[df.run != "run1"].copy()
+    is_diag = df.tag.str.startswith("diag") & (df.run != "run1")
+    diag = df[is_diag]
+    matrix = df[(df.run != "run1") & ~is_diag].copy()
     matrix["order"] = matrix.run.str[3:].astype(int)
+    base = matrix.drop_duplicates("run", keep="last").set_index("run")
+    dlines = ["| Change | Compared with | S | T | Pumping, seasons | Pumping, total | Hidden-well level error |",
+              "|---|---|---|---|---|---|---|"]
+    for _, r in diag.iterrows():
+        what = DIAG_TEXT.get((r.run, r.tag), r.note)
+        if r.run in base.index:
+            b = base.loc[r.run]
+            ref = (f"{r.run}: S {pct(b.S_rel_err)}, T {pct(b.T_rel_err)}, "
+                   f"seasons {100 * b.Q_net_season_mean_abs_err:.0f}%, {b.head_rmse_test_m:.2f} m")
+        else:
+            ref = "gate run (run1)"
+        dlines.append(f"| {what} | {ref} | {pct(r.S_rel_err)} | {pct(r.T_rel_err)} | "
+                      f"{100 * r.Q_net_season_mean_abs_err:.0f}% | {pct(r.Q_net_total_rel_err)} | "
+                      f"{r.head_rmse_test_m:.2f} m |")
     mlines = ["| Run | What it tests | S | T | Pumping, seasons | Pumping, total | Hidden-well level error | S change, last 4k Adam steps |",
               "|---|---|---|---|---|---|---|---|"]
     for _, r in matrix.sort_values("order").iterrows():
@@ -255,6 +281,12 @@ def main() -> None:
            "|---|---|---|---|",
            *r_sens,
            ""] if r_sens else []),
+        *(["## Diagnostic runs (why the realistic cases fail)",
+           "",
+           "Each run changes one thing relative to the run it is compared with. They start from S = 0.20 and T = 3,000, like all runs.",
+           "",
+           *dlines,
+           ""] if len(diag) else []),
         "## What the metrics mean",
         "",
         "- **S, T:** relative error of the recovered storage and ease of flow.",

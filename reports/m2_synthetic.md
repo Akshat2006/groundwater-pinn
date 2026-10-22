@@ -13,7 +13,7 @@
 - T
 - pumping per season
 
-**Gate status: passed on 1 of 2 runs with the final settings (same settings, different random seed and well layout).**
+**Gate status: passed on 1 of 3 runs with the final settings (same settings, different random seed and well layout).**
 
 Errors are the PINN estimate relative to the truth (−34% = 34% too low). Full runs have 20k or 40k joint steps;
 8k runs were quick comparisons.
@@ -39,7 +39,16 @@ Errors are the PINN estimate relative to the truth (−34% = 34% too low). Full 
 | run1 | a_smooth7, 20k joint steps | -29% | -5% | 36% | -10% | 0.13 m | ❌ |
 | run1 | a6_matched_smoothing, 20k joint steps | -19% | -3% | 15% | -7% | 0.11 m | ❌ |
 | run1 | a7_warmup_40k, 40k joint steps | -10% | -0% | 14% | -4% | 0.07 m | ❌ |
+| d1 | diag, 40k joint steps | -6% | +2% | 49% | -2% | 0.10 m | n/a |
+| d2 | diag, 40k joint steps | -13% | -12% | 6% | -5% | 0.06 m | n/a |
+| run4 | diag_w10, 40k joint steps | -90% | -100% | 41% | -40% | 0.67 m | n/a |
+| run3 | diag_frozen5k, 40k joint steps | -14% | -17% | 51% | -6% | 0.10 m | n/a |
 | run1 | a9_a7_plus_lbfgs, 40k joint steps | -5% | +2% | 9% | -1% | 0.09 m | ✅ |
+| run3 | diag_prior130, 40k joint steps | +29% | +30% | 58% | +12% | 0.08 m | n/a |
+| run3 | diag_fixT1950, 40k joint steps | -2% | +30% | 50% | -0% | 0.11 m | n/a |
+| run3 | diag_w10, 40k joint steps | -25% | -33% | 52% | -11% | 0.13 m | n/a |
+| run4 | diag_w1, 40k joint steps | -46% | -55% | 47% | -20% | 0.16 m | n/a |
+| run1 | diag_seed2, 40k joint steps | -11% | +1% | 14% | -4% | 0.06 m | ❌ |
 
 ![trajectory](figures/m2_gate_trajectory.png)
 
@@ -69,6 +78,7 @@ Likely cause: the 31-day time window still mixes May with the start of paddy pum
 |---|---|---|---|---|---|---|
 | seed1 | -5% | -1% | 15% (worst 56%) | -2% | +0% | ❌ |
 | a9_a7_plus_lbfgs | -5% | +2% | 9% (worst 42%) | -1% | +1% | ✅ |
+| diag_seed2 | -11% | +1% | 14% (worst 48%) | -4% | +1% | ❌ |
 
 The *S change* column shows how much S changed over the last 4,000 Adam steps before L-BFGS. A large value means S was still
 climbing when training stopped, so the final value depends on how long training ran rather than on a settled answer.
@@ -97,6 +107,21 @@ If recharge R is wrong by a factor, theory (PLAN.md §2.1) says S and pumping sh
 |---|---|---|---|
 | R × 0.8 (run6) | 0.77 | 0.79 | 0.80 |
 | R × 1.2 (run7) | 1.18 | 1.20 | 1.20 |
+
+## Diagnostic runs (why the realistic cases fail)
+
+Each run changes one thing relative to the run it is compared with. They start from S = 0.20 and T = 3,000, like all runs.
+
+| Change | Compared with | S | T | Pumping, seasons | Pumping, total | Hidden-well level error |
+|---|---|---|---|---|---|---|
+| Gate case (C, 60 wells) read quarterly instead of monthly | gate run (run1) | -6% | +2% | 49% | -2% | 0.10 m |
+| Case A (no pumping clusters, no canal), 60 wells, monthly | gate run (run1) | -13% | -12% | 6% | -5% | 0.06 m |
+| Noisy data (0.3 m), data weight 10 instead of 100 | run4: S -97%, T -100%, seasons 41%, 1.57 m | -90% | -100% | 41% | -40% | 0.67 m |
+| Settling stage with S, T frozen: 5,000 steps instead of 500 | run3: S -37%, T -79%, seasons 46%, 0.15 m | -14% | -17% | 51% | -6% | 0.10 m |
+| Report-style prior on S and T, deliberately 30% too high (weight 0.1) | run3: S -37%, T -79%, seasons 46%, 0.15 m | +29% | +30% | 58% | +12% | 0.08 m |
+| T fixed at 1,950 (30% too high); only S and pumping learned | run3: S -37%, T -79%, seasons 46%, 0.15 m | -2% | +30% | 50% | -0% | 0.11 m |
+| Data weight 10 instead of 100 | run3: S -37%, T -79%, seasons 46%, 0.15 m | -25% | -33% | 52% | -11% | 0.13 m |
+| Noisy data (0.3 m), data weight 1 instead of 100 | run4: S -97%, T -100%, seasons 41%, 1.57 m | -46% | -55% | 47% | -20% | 0.16 m |
 
 ## What the metrics mean
 
