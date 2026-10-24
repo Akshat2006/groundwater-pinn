@@ -2,7 +2,8 @@
 training:
   fix_T: true                 # T from the CGWB reports (configs/priors.yaml); M2 diagnostics: S and pumping stay
                               # accurate with T 30% wrong, while sparse data cannot pin T down
-  well_offsets: {weight: 1.0, sigma_m: 3.0, sigma_noise_m: 1.0}   # per-well corrections for elevation-model error
+  well_offsets: {weight: 100.0, sigma_m: 3.0, sigma_noise_m: 1.0}   # per-well corrections for elevation error; weight 100 x the
+                              # Gaussian prior: laptop check gave a 2.6 m spread (weight 1: 15.8 m, flattened surface)
   weighting: {type: fixed, init: 10.0, alpha: 0.1, every: 100}   # data weight; M2 noise runs: 100 chases noise
   n_colloc: 8192              # larger domain and 20 years (synthetic: 60 x 60 km, 10 years)
   lbfgs_colloc: 16384
