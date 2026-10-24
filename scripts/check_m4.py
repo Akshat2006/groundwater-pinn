@@ -53,7 +53,7 @@ def plot_k(table: pd.DataFrame, elbow: int, chosen: int) -> None:
     for ax, col, title in ((axes[0], "inertia", "Within-zone spread (lower = tighter zones)"),
                            (axes[1], "silhouette", "Silhouette (higher = better separated)")):
         ax.plot(table.k, table[col], color=ZONE_COLORS[0], lw=2, marker="o", ms=4)
-        for k, name in ((elbow, "elbow"), (chosen, "chosen")):
+        for k, name in ((elbow, "elbow"), (chosen, "used (zoning preview)")):
             v = table.loc[table.k == k, col].iloc[0]
             ax.plot([k], [v], "o", ms=9, mfc="none", mec=INK, mew=1.2)
             ax.annotate(name, (k, v), xytext=(6, 6), textcoords="offset points", fontsize=7, color=INK)
@@ -128,8 +128,9 @@ def main() -> None:
     zcfg = load_config(ROOT / "configs" / "zoning.yaml")
     scfg = load_config(ROOT / "configs" / "splits.yaml")
     summ = json.loads((proc / "zoning_summary.json").read_text(encoding="utf-8"))
-    L, K = summ["main_layout"], summ["main_k"]
-    lay = summ["layouts"][str(L)]
+    L, K, METHOD = summ["main_layout"], summ["main_k"], summ["main_method"]
+    root = summ["layouts"][str(L)]
+    lay = root["methods"][METHOD]
     main = lay["zones"][str(K)]
     k_eff = main["k"]
     master = pd.read_parquet(proc / "master.parquet")
@@ -138,7 +139,7 @@ def main() -> None:
     ds = xr.open_dataset(proc / "static_1km.nc").load()
     zones = xr.open_dataset(proc / "zones.nc").load()
     mask = zones["mask"].values.astype(bool)
-    zmap = zones.zone.sel(layout=L, k=K).values
+    zmap = zones.zone.sel({"method": METHOD, "layout": L, "k": K}).values
 
     shallow_head = master[(master.depth_class == "shallow") & master.head_m.notna()]
     wells["has_head"] = wells.well_id.isin(shallow_head.well_id) & (wells.depth_class == "shallow")
@@ -146,7 +147,7 @@ def main() -> None:
     feats["zone"] = w.loc[feats.index, "zone_behaviour"]
     feats["split_space"] = w.loc[feats.index, "split_space"]
 
-    plot_k(pd.DataFrame(lay["k_table"]), lay["elbow_k"], lay["chosen_k"])
+    plot_k(pd.DataFrame(lay["k_table"]), lay["elbow_k"], K)
     plot_map(zmap, mask, ds, wells, k_eff)
     plot_features(feats[feats.zone.notna()].astype({"zone": int}), k_eff)
 
@@ -182,25 +183,45 @@ def main() -> None:
     ztab.to_csv(TAB / "m4_zones.csv", index=False)
 
     sweep = []
-    for lo, l in summ["layouts"].items():
-        for kk, s in l["zones"].items():
-            if int(kk) == 1:
-                continue
-            sweep.append({"Layout": lo, "k asked": kk + (" (chosen)" if int(kk) == l["chosen_k"] else ""),
-                          "Zones after merging": s["k"], "Smallest zone (wells)": min(s["wells_per_zone"].values()),
-                          "Map accuracy, unseen blocks": f"{100 * s['cv_accuracy']:.0f}%",
-                          "Guessing the biggest zone": f"{100 * s['chance_accuracy']:.0f}%",
-                          "Patches (total)": sum(s["patches"].values())})
+    for lo, lr in summ["layouts"].items():
+        for meth, l in lr["methods"].items():
+            for kk, s in l["zones"].items():
+                if int(kk) == 1:
+                    continue
+                sweep.append({"Method": meth, "Layout": lo,
+                              "k asked": kk + (" (rule's pick)" if int(kk) == l["chosen_k"] else ""),
+                              "Zones after merging": s["k"], "Smallest zone (wells)": min(s["wells_per_zone"].values()),
+                              "Map accuracy, unseen blocks": f"{100 * s['cv_accuracy']:.0f}%",
+                              "Guessing the biggest zone": f"{100 * s['chance_accuracy']:.0f}%",
+                              "Patches (total)": sum(s["patches"].values())})
     sweep = pd.DataFrame(sweep)
 
     splits = pd.DataFrame([{"Layout": lo, **{f"{s} wells": l["split_counts"][s] for s in ("train", "val", "test")},
                             **{f"{s} Tier 1": l["tier1_counts"][s] for s in ("train", "val", "test")},
-                            "Wells clustered": l["n_cluster_wells"], "Chosen k": l["chosen_k"]}
+                            "Wells clustered": l["n_cluster_wells"]}
                            for lo, l in summ["layouts"].items()])
-    n_elig = sum(lay["split_counts"].values())
+    n_elig = sum(root["split_counts"].values())
+    preview = json.loads((proc / "zoning_preview.json").read_text(encoding="utf-8")) if (proc / "zoning_preview.json").exists() else None
     min_zone = min(main["wells_per_zone"].values())
     ok_size = min_zone >= zcfg["min_zone_wells"]
 
+    km = summ["layouts"][str(L)]["methods"].get("kmeans")
+    km_main = km["zones"][str(km["chosen_k"])] if km else None
+    method_text = {
+        "contiguous": "connected regions: Ward clustering of trend and seasonal swing, where a well can only join a "
+                      "group through its nearest neighbours, so each zone is one connected area",
+        "kmeans": "k-means on trend, seasonal swing and monsoon response; map from static features",
+    }[METHOD]
+    if preview:
+        preview_lines = [
+            f"  - On the pre-set measure (single between-reading changes) the gain is {preview['bucket_gain_pct']:+.1f}% vs no zones, so the rule's verdict is *{preview['verdict']}*. That measure turned out to be dominated by reading noise.",
+            f"  - On level change over the years (added after the first run), this zoning is the best candidate: {preview['longterm_gain_pct']:+.1f}% vs no zones."]
+        preview_done = (f"| Early zoning preview | ✅ `reports/zoning_preview.md`: *{preview['verdict']}* on the pre-set measure "
+                        f"({preview['bucket_gain_pct']:+.1f}%), {preview['longterm_gain_pct']:+.1f}% on change over the years |")
+    else:
+        preview_lines, preview_done = [], "| Early zoning preview | ⏳ run `scripts/zoning_preview.py` |"
+    km_text = (f" Their map puts an unseen well in its own behaviour zone only {100 * km_main['cv_accuracy']:.0f}% of the time,"
+               f" against {100 * km_main['chance_accuracy']:.0f}% by guessing the biggest zone." if km_main else "")
     md = [
         "# M4 report: zoning",
         "",
@@ -208,11 +229,15 @@ def main() -> None:
         "",
         "## Summary",
         "",
-        f"- **Zones:** {k_eff} zones on the main layout (k = {K} asked, small zones merged). Smallest zone: {min_zone} wells. Every zone meets the minimum of {zcfg['min_zone_wells']}.",
-        f"- **Zone map:** saved as `data/processed/zone_map.tif` and `zones.gpkg`. Zones for every layout and every k of the sweep are in `zones.nc`.",
-        f"- **Assignment accuracy:** {100 * main['cv_accuracy']:.0f}%, against {100 * main['chance_accuracy']:.0f}% for always guessing the biggest zone. **The map rule is barely better than guessing.**",
-        "- **Why:** well behaviour is only partly a regional pattern. The long-term trend is the most mappable feature, but even it is only about one-third predictable in an unseen 20 km block. The monsoon response is not predictable at all (see *Is behaviour a map?* below).",
-        "- **What this means:** zones describe real differences between the wells that have history, but a held-out well or an unmonitored place often lands in the wrong zone. This is weakness 2 in the brief (§6.4), now measured. The early zoning preview (after the M5 baselines) will show whether zoning still helps prediction.",
+        f"- **Zones used:** {k_eff} zones on the main layout, built as {method_text}. Smallest zone: {min_zone} wells (minimum {zcfg['min_zone_wells']}).",
+        "- **How the zoning was chosen:** two methods and several k were built, and the **early zoning preview** picked this one on validation blocks only (`reports/zoning_preview.md`).",
+        *preview_lines,
+        *([f"- **Trade-off:** these zones are scattered ({sum(main['patches'].values())} patches) and the map puts an unseen well in its own behaviour zone only {100 * main['cv_accuracy']:.0f}% of the time (guessing the biggest zone: {100 * main['chance_accuracy']:.0f}%). Even so, they improved predictions at unseen wells in the preview: a roughly right zone still carries the regional decline rate. Behaviour is only partly a map (§6).",
+           "- **Robustness note:** in the preview, k-means scores varied a lot between k = 3, 4 and 5, while connected regions gave a steady gain at every k. The winning score is probably an optimistic draw; the test-set gain is likely smaller."]
+          if METHOD == "kmeans" else
+          ["- **Why not k-means:** k-means zones are scattered." + km_text
+           + " Trend and swing are regional patterns, but only about a third predictable in an unseen 20 km block, and the monsoon response is noise (§6)."]),
+        "- **Zone map:** saved as `data/processed/zone_map.tif` and `zones.gpkg`. Every layout, method and k of the sweep is in `zones.nc`.",
         "",
         "## 1. Spatial block splits",
         "",
@@ -234,15 +259,20 @@ def main() -> None:
         "",
         f"{len(feats)} wells have features. The median well falls {abs(feats.trend_m_per_yr.median()):.2f} m a year, and the fastest falls {abs(feats.trend_m_per_yr.min()):.1f} m a year.",
         "",
-        "Before clustering, each feature is clipped to its 2nd–98th percentile and standardised, so all three count equally.",
+        "Before clustering, each feature is clipped to its 2nd–98th percentile and standardised, so each counts equally.",
         "",
-        "## 3. Choosing the number of zones",
+        "## 3. Two zoning methods",
         "",
-        "k-means is run for k = 2 to 12 on the training wells of each layout. The rule was fixed before looking at the zones: take the *elbow* (the k after which more zones stop tightening the groups much), then the best *silhouette* among the elbow and its two neighbours.",
+        "| Method | Groups wells by | Zone of a new place |",
+        "|---|---|---|",
+        "| k-means | trend, seasonal swing, monsoon response | random forest on location, elevation, land cover and canals, then smoothed |",
+        "| connected regions | trend and seasonal swing (monsoon response left out: noise, §6), but only through spatial neighbours, so every zone is one connected area | majority zone of the 5 nearest training wells, then smoothed |",
         "",
-        f"Zones smaller than {zcfg['min_zone_wells']} wells are then merged into the zone with the nearest centre. Zones are numbered from the steepest decline (zone 1) to the slowest.",
+        "For each, k runs from 2 to 12. A rule fixed before looking at the zones picks a k: take the *elbow* (the k after which more zones stop tightening the groups much), then the best *silhouette* among the elbow and its two neighbours.",
         "",
-        f"Main layout: elbow k = {lay['elbow_k']}, chosen k = {lay['chosen_k']}, giving {k_eff} zones after merging.",
+        f"Zones smaller than {zcfg['min_zone_wells']} wells are merged into the most similar zone (for connected regions: a neighbouring one). Zones are numbered from the steepest decline (zone 1) to the slowest.",
+        "",
+        f"The early zoning preview compared k = 3, 4, 5 and the rule's pick for both methods, and selected **{METHOD}, k = {K}**. The chart shows the k-selection scores for this method on the main layout.",
         "",
         "![k selection](figures/m4_k_selection.png)",
         "",
@@ -256,20 +286,17 @@ def main() -> None:
         "",
         "![zone map](figures/m4_zone_map.png)",
         "",
-        "## 5. How the map is made, and how often it assigns the right zone",
+        "## 5. Map accuracy",
         "",
-        "1. A random forest learns each training well's zone from features known everywhere: easting, northing, elevation, cropland, built-up and tree cover, distance to the nearest canal, and canal density. Values are read from the well's 1 km cell.",
-        f"2. It labels every 1 km cell of the 16 districts plus a {zcfg['map']['mask_buffer_km']} km buffer.",
-        f"3. A {zcfg['map']['window']} × {zcfg['map']['window']} km majority filter removes speckle, and patches under {zcfg['map']['min_patch_km2']} km² join the zone around them.",
-        "4. Every well, including held-out ones, takes the zone of its map cell.",
-        "",
-        "**Assignment accuracy** is measured the way the map will be used. The training wells are split into 5 groups of whole 20 km blocks. For each group, the map is rebuilt without it, and we check whether its wells land in their own behaviour zone.",
+        "The training wells are split into 5 groups of whole 20 km blocks. For each group, the map is rebuilt without it, and we check whether its wells land in their own zone.",
         "",
         "*Guessing the biggest zone* is the score of calling every well the most common zone, so only accuracy above it means the map has learned something.",
         "",
+        "**This accuracy is not comparable between the two methods.** Connected-region zones are partly defined by location, so a location-based map agrees with them almost by construction. Whether a zone says something useful about an unseen well is what the zoning preview measures.",
+        "",
         *md_table(sweep),
         "",
-        "## 6. Is behaviour a map? (why accuracy is low)",
+        "## 6. Is behaviour a map?",
         "",
         "For each feature, the table shows two things:",
         "- *Alike* columns: how similar wells are at different distances apart (a correlation: 1 = identical, 0 = unrelated).",
@@ -279,8 +306,8 @@ def main() -> None:
         "",
         "**Reading:**",
         "- **Trend and seasonal swing are regional patterns.** Neighbouring wells are fairly alike, and the likeness fades to nothing by about 40 km. But with wells about 6 km apart and blocks of 20 km, only about a third of the trend can be predicted in an unseen block.",
-        "- **The monsoon response is noise at the well level.** It is a slope through only 5–14 points per well, so it differs randomly between neighbours.",
-        "- **Both ways of predicting score the same,** whether from static features or from the 5 nearest wells. So a better classifier would not help much. The limit is how patchy the behaviour is relative to the well spacing.",
+        "- **The monsoon response is noise at the well level.** It is a slope through only 5–14 points per well, so it differs randomly between neighbours. It is left out of the connected-region zoning.",
+        "- **Both ways of predicting score the same,** whether from static features or from the 5 nearest wells. The limit is how patchy behaviour is relative to the well spacing, not the classifier.",
         "",
         "## 7. Done criteria (PLAN.md §5 M4)",
         "",
@@ -288,12 +315,13 @@ def main() -> None:
         "|---|---|",
         f"| Every zone has at least 10–15 training wells | {'✅' if ok_size else '❌'} smallest zone: {min_zone} wells |",
         "| Zone map saved | ✅ `zone_map.tif`, `zones.gpkg`, `zones.nc` |",
-        f"| Assignment accuracy reported | ✅ {100 * main['cv_accuracy']:.0f}% (guessing: {100 * main['chance_accuracy']:.0f}%) — **below the 60% warning level in the risk register** |",
-        "| Early zoning preview | ⏳ needs the M5 baselines (zoned vs unzoned random forest and bucket model on validation blocks) |",
+        f"| Assignment accuracy reported | ✅ {100 * main['cv_accuracy']:.0f}% (guessing: {100 * main['chance_accuracy']:.0f}%); not comparable between methods, see §5 |",
+        preview_done,
         "",
         "## Plain-language glossary",
         "",
         "- **k-means:** sorts wells into k groups so that wells in a group have similar features.",
+        "- **Ward clustering:** joins the two most similar groups step by step until k are left; here only neighbouring groups may join.",
         "- **Spatial block hold-out:** hiding whole areas, not single wells, so the test measures prediction in places the model has never seen.",
         "- **Correlation:** from −1 to 1; how strongly two sets of numbers move together.",
         "- **R²:** the share of the differences between wells that a prediction explains (1 = all, 0 = none).",

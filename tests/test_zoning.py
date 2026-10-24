@@ -6,7 +6,7 @@ from src.evaluation.splits import spatial_block_split
 from src.features.behaviour import behaviour_features
 from src.utils.config import data_dir
 from src.zoning.assign import absorb_small_patches, majority_filter
-from src.zoning.cluster import choose_k, cluster_wells, merge_small_zones, order_by
+from src.zoning.cluster import choose_k, cluster_wells, merge_small_zones, neighbour_graph, order_by
 
 
 def fake_master(n_wells=3, years=range(2005, 2023), seed=0):
@@ -97,7 +97,27 @@ def test_zoning_outputs():
     used = m[(m.depth_class == "shallow") & m.head_m.notna()]
     assert used.split_space.notna().all() and used.zone_map.notna().all()
     for lay in summ["layouts"].values():
-        for z in lay["zones"].values():
-            assert min(z["wells_per_zone"].values()) >= 12
+        for meth in lay["methods"].values():
+            for z in meth["zones"].values():
+                assert min(z["wells_per_zone"].values()) >= 12
     # held-out wells never define a zone
     assert m.loc[m.split_space.isin(["val", "test"]), "zone_behaviour"].isna().all()
+
+
+def test_contiguous_zones_are_connected_in_the_neighbour_graph():
+    """A strip of wells whose two ends behave alike: k-means would put both ends in one zone, the connected-region
+    method must keep every zone one connected piece."""
+    from scipy.sparse.csgraph import connected_components
+    rng = np.random.default_rng(4)
+    xy = np.column_stack([rng.uniform(0, 150, 120), rng.uniform(0, 20, 120)])
+    X = (np.where((xy[:, 0] > 50) & (xy[:, 0] < 100), 3.0, 0.0) + rng.normal(0, 0.1, 120))[:, None]
+    g = neighbour_graph(xy, 6)
+    assert connected_components(g, directed=False)[0] == 1
+    lab = merge_small_zones(cluster_wells(X, 3, method="contiguous", graph=g), X, 12, g)
+    assert lab.max() + 1 == 3
+    for z in np.unique(lab):
+        idx = np.flatnonzero(lab == z)
+        assert connected_components(g[idx][:, idx], directed=False)[0] == 1
+    km = cluster_wells(X, 2, method="kmeans")
+    ends = km[(xy[:, 0] < 50)][0], km[(xy[:, 0] > 100)][0]
+    assert ends[0] == ends[1]                                   # k-means joins the two separate ends

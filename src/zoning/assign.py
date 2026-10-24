@@ -7,6 +7,9 @@
 3. A majority filter (each cell takes the most common zone within a square window) removes speckle, then patches
    smaller than `min_patch_km2` are absorbed by the zone that surrounds them most.
 4. Wells, including held-out ones, take the zone of their map cell. This is the only rule used for prediction.
+
+For connected-region zones (src/zoning/cluster.py, method "contiguous") step 1 uses location only: each cell takes
+the majority zone of its 5 nearest training wells (kind="nearest").
 """
 from __future__ import annotations
 
@@ -15,11 +18,13 @@ import pandas as pd
 import xarray as xr
 from scipy import ndimage
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
 
 from src.utils.geo import Grid
 
 STATIC = ["x_km", "y_km", "elev_m", "lc_cropland_frac", "lc_builtup_frac", "lc_tree_frac", "canal_dist_km",
           "canal_density_km_per_km2"]
+LOCATION = ["x_km", "y_km"]
 
 
 def grid_of(ds: xr.Dataset) -> Grid:
@@ -63,7 +68,9 @@ def well_features(ds: xr.Dataset, mask: np.ndarray, x, y, names=STATIC) -> np.nd
 
 
 def fit_zone_classifier(F: np.ndarray, labels: np.ndarray, seed: int = 0, n_estimators: int = 500,
-                        min_samples_leaf: int = 3) -> RandomForestClassifier:
+                        min_samples_leaf: int = 3, kind: str = "forest"):
+    if kind == "nearest":
+        return KNeighborsClassifier(n_neighbors=min(5, len(labels))).fit(F, labels)
     clf = RandomForestClassifier(n_estimators=n_estimators, min_samples_leaf=min_samples_leaf,
                                  class_weight="balanced", random_state=seed, n_jobs=-1)
     return clf.fit(F, labels)
@@ -123,22 +130,22 @@ def count_patches(zone_map: np.ndarray, mask: np.ndarray) -> pd.Series:
 
 
 def map_assignment_cv(ds: xr.Dataset, mask: np.ndarray, x, y, labels: np.ndarray, groups: np.ndarray,
-                      n_folds: int = 5, seed: int = 0, **map_kw) -> np.ndarray:
+                      n_folds: int = 5, seed: int = 0, kind: str = "forest", names=STATIC, **map_kw) -> np.ndarray:
     """Leave-blocks-out check of the whole map rule: for each fold, fit on the other folds' wells, build the map,
     and read the zone at the left-out wells. Returns the predicted zone per well (compare with `labels`)."""
     rng = np.random.default_rng(seed)
     ug = rng.permutation(np.unique(groups))
     fold_of = {g: i % n_folds for i, g in enumerate(ug)}
     fold = np.array([fold_of[g] for g in groups])
-    F = well_features(ds, mask, x, y)
+    F = well_features(ds, mask, x, y, names)
     pred = np.zeros(len(labels), int)
     clf_kw = {k: map_kw.pop(k) for k in ("n_estimators", "min_samples_leaf") if k in map_kw}
     for f in range(n_folds):
         tr, te = fold != f, fold == f
         if not te.any():
             continue
-        clf = fit_zone_classifier(F[tr], labels[tr], seed=seed, **clf_kw)
-        zm = build_zone_map(clf, ds, mask, **map_kw)
+        clf = fit_zone_classifier(F[tr], labels[tr], seed=seed, kind=kind, **clf_kw)
+        zm = build_zone_map(clf, ds, mask, names=names, **map_kw)
         pred[te] = assign_zone(zm, ds, mask, np.asarray(x)[te], np.asarray(y)[te])
     return pred
 

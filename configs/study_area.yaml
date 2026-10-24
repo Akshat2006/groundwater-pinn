@@ -42,6 +42,7 @@ qc:                     # src/features/head.py
   outlier_m: 20.0       # vs median of the 4 nearest-in-time readings (+1 m per year of gap)
   deep_depth_m: 150.0   # wells this deep (or confined, or nested M/D) are "deep", not in the main analysis
   telemetry_max_dtw_m: 150.0
+  max_km_outside_district: 10.0   # farther = coordinate error in the source (e.g. Jandu Singha: 76 km); readings unused
 
 recharge:
   rif: 0.22             # GEC-2015 report Table 4 (p. 31): Indo-Gangetic alluvium 22% (range 20-25%)

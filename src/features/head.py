@@ -26,7 +26,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-UNUSABLE = ("duplicate", "nonpositive", "out_of_range", "below_bottom", "spike", "outlier")
+UNUSABLE = ("duplicate", "nonpositive", "out_of_range", "below_bottom", "spike", "outlier", "bad_location")
 SEASONS = {1: "jan", 2: "jan", 3: "pre", 4: "pre", 5: "pre", 6: "pre",
            7: "aug", 8: "aug", 9: "aug", 10: "post", 11: "post", 12: "post"}
 
@@ -111,7 +111,7 @@ def add_head(df: pd.DataFrame, ground_elev_m: np.ndarray) -> pd.DataFrame:
     df["ground_elev_m"] = ground_elev_m
     head = df["ground_elev_m"] - df["dtw_m"]
     df["head_m"] = head.where(df["usable"] & ~df["is_dry"])
-    df["bottom_head_m"] = (df["ground_elev_m"] - df["well_depth_m"]).where(df["is_dry"])
+    df["bottom_head_m"] = (df["ground_elev_m"] - df["well_depth_m"]).where(df["is_dry"] & df["usable"])
     return df
 
 

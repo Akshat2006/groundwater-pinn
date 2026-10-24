@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 
-from src.data.boundaries import load_districts, rasterize_districts
+from src.data.boundaries import km_outside_district, load_districts, rasterize_districts
 from src.data.canals import canal_layers, distance_to_canal, load_canals
 from src.data.cgwb import assemble_manual, depth_class, nest_level, telemetry_daily
 from src.data.imd import load_rain, rain_at_points
@@ -128,6 +128,11 @@ def build_all(cfg: dict, raw: Path, out: Path, verbose: bool = True) -> dict:
     wells["ground_elev_m"] = bilinear(static.elev_m.values, grid, wells.x_m, wells.y_m)
     wells["dem30_elev_m"] = dem_at_points(raw / "dem", wells.lon, wells.lat)
     wells["in_study_area"] = grid.sample(static.district_id.values, wells.x_m, wells.y_m) > 0
+    # coordinates far outside the well's own district are typing errors in the source: the well's elevation and
+    # neighbours would be wrong, so its readings are not used (district outlines differ by a few km between sources)
+    wells["km_outside_district"] = km_outside_district(districts, wells.district, wells.x_m, wells.y_m)
+    bad_loc = wells.well_id[wells.km_outside_district > q["max_km_outside_district"]]
+    m.loc[m.well_id.isin(bad_loc), ["qc_flag", "usable"]] = ["bad_location", False]
     for k in ("cropland", "builtup", "tree"):
         wells[f"lu_{k}_frac"] = grid.sample(static[f"lc_{k}_frac"].values, wells.x_m, wells.y_m)
     wells["canal_dist_km"] = distance_to_canal(canals, wells.x_m, wells.y_m)

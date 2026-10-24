@@ -19,7 +19,7 @@
 - **Shallow wells** (unconfined aquifer): 1012. These are the main analysis.
 - **Deep wells** (confined / semi-confined, nested medium or deep piezometers, or ≥ 150 m deep): 221. These are excluded from the main analysis because they tap a different aquifer layer.
 - **Tier 1** (shallow, ≥ 5 training years with both a pre- and post-monsoon head): **188 wells**. These are the zoning wells (M4).
-- **Shallow wells with ≥1 usable head:** train 843, validation 390, test 770.
+- **Shallow wells with ≥1 usable head:** train 842, validation 390, test 766.
 
 **Correction to G0.** G0 counted 193 Tier-1 wells as "unconfined or unknown aquifer". But many nested
 piezometers named "... M" or "... D" (medium/deep, median depth about 200-300 m) have a *blank* aquifer field, so G0 wrongly
@@ -34,20 +34,20 @@ included some of them. With the depth class above, Tier 1 is 188. This is still 
 | Ambala | 78 | 60 | 9 | 3 | 615 | 527 | 25 | 173 |
 | Barnala | 27 | 23 | 5 | 0 | 177 | 294 | 18 | 57 |
 | Fatehgarh Sahib | 51 | 45 | 10 | 2 | 166 | 644 | 50 | 159 |
-| Jalandhar | 103 | 77 | 11 | 4 | 750 | 864 | 69 | 209 |
+| Jalandhar | 103 | 77 | 11 | 4 | 750 | 864 | 69 | 207 |
 | Jind | 86 | 79 | 19 | 0 | 1,090 | 919 | 62 | 232 |
-| Kaithal | 71 | 55 | 14 | 0 | 687 | 655 | 52 | 198 |
+| Kaithal | 71 | 55 | 14 | 0 | 687 | 655 | 52 | 197 |
 | Kapurthala | 55 | 42 | 5 | 0 | 143 | 527 | 25 | 119 |
 | Karnal | 152 | 133 | 11 | 0 | 0 | 535 | 66 | 141 |
 | Kurukshetra | 111 | 94 | 9 | 0 | 153 | 500 | 30 | 159 |
 | Ludhiana | 107 | 89 | 11 | 0 | 339 | 1,056 | 99 | 258 |
 | Moga | 43 | 37 | 7 | 0 | 148 | 439 | 34 | 96 |
 | Panipat | 57 | 42 | 9 | 1 | 355 | 481 | 43 | 145 |
-| Patiala | 87 | 67 | 17 | 4 | 404 | 977 | 74 | 253 |
-| Sangrur | 70 | 50 | 6 | 2 | 134 | 478 | 44 | 114 |
+| Patiala | 87 | 67 | 17 | 4 | 404 | 977 | 74 | 250 |
+| Sangrur | 70 | 50 | 6 | 2 | 134 | 470 | 44 | 114 |
 | Sonipat | 81 | 79 | 31 | 3 | 1,299 | 1,371 | 93 | 312 |
 | Yamunanagar | 54 | 40 | 14 | 0 | 619 | 562 | 59 | 194 |
-| Total | 1,233 | 1,012 | 188 | 19 | 7,079 | 10,829 | 843 | 2,819 |
+| Total | 1,233 | 1,012 | 188 | 19 | 7,079 | 10,821 | 843 | 2,813 |
 
 ![coverage](figures/m3_coverage.png)
 
@@ -55,7 +55,7 @@ included some of them. With the depth class above, Tier 1 is 188. This is still 
 
 | Flag | Readings | Meaning | Used? |
 |---|---|---|---|
-| ok | 26,571 | passes all checks | yes |
+| ok | 26,547 | passes all checks | yes |
 | suspect_jump | 15 | a lasting step of > 15 m from the previous reading | yes, flagged |
 | spike | 350 | one or two readings > 5 m away from both neighbours, which agree | no |
 | outlier | 29 | > 20 m (+1 m per year of gap) from the well's nearest-in-time readings | no |
@@ -75,7 +75,7 @@ or below the bottom, so only that bound is kept (no head value). By well type:
 | Tube Well | 14 | 0.1% |
 | unknown | 0 | 0.0% |
 
-**Sanity check (PLAN.md M3: no 20 m jumps):** among shallow wells, 13 of 20,567 consecutive
+**Sanity check (PLAN.md M3: no 20 m jumps):** among shallow wells, 13 of 20,558 consecutive
 head changes exceed 20 m (81 exceed 10 m). 9 of the 20 m changes span a gap of
 more than 3 years between readings, which fits real long-term decline (about 1 m a year here). The rest are a handful
 of messy wells, kept but flagged where the step is within a year. Spot-check plot of 10 random Tier-1 wells:

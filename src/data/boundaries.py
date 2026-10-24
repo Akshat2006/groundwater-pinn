@@ -38,3 +38,16 @@ def rasterize_districts(districts: gpd.GeoDataFrame, grid: Grid) -> np.ndarray:
     north_up = rasterize(shapes, out_shape=(grid.ny, grid.nx), transform=grid.transform_north_up(),
                          fill=0, dtype="int16")
     return north_up[::-1].copy()
+
+
+def km_outside_district(districts: gpd.GeoDataFrame, names, x, y) -> np.ndarray:
+    """Distance (km) from each point to the polygon of the district it is listed in: 0 inside, NaN if unknown.
+    A few CGWB stations have coordinates tens of km from their own district (typing errors in the source)."""
+    from shapely.geometry import Point
+    geom = {_key(n): g for n, g in zip(districts.district, districts.geometry)}
+    out = np.full(len(x), np.nan)
+    for i, (n, xi, yi) in enumerate(zip(names, x, y)):
+        g = geom.get(_key(n))
+        if g is not None:
+            out[i] = g.distance(Point(xi, yi)) / 1000.0
+    return out

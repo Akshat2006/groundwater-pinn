@@ -1,11 +1,24 @@
 # Zoning (PLAN.md §2.3, §2.5, §5 M4). Run: python scripts/build_zones.py, then python scripts/check_m4.py
-features: [amplitude_m, trend_m_per_yr, monsoon_resp_m_per_100mm]   # src/features/behaviour.py
 min_years: 5            # training years with both a pre- and a post-monsoon reading (= Tier 1)
 winsor_pct: 2           # clip each feature to its 2nd-98th percentile before standardising
-k_range: [2, 12]        # k-means candidates; rule in src/zoning/cluster.py (elbow, then best silhouette ±1)
+k_range: [2, 12]        # candidates; rule in src/zoning/cluster.py (elbow, then best silhouette ±1)
 min_zone_wells: 12      # smaller zones are merged into the nearest one (brief: at least 10-15 wells)
-sweep_k: [1, 3, 5, 8]   # experiment E8 (zone-count sweep); 1 = one region = the unzoned PINN
+sweep_k: [1, 3, 4, 5, 6, 8]   # experiment E8 (zone-count sweep) + early-preview candidates; 1 = unzoned
 seed: 0
+
+methods:                # both are built; the early zoning preview (scripts/zoning_preview.py) picks one
+  kmeans:               # behaviour zones; map from static features (random forest)
+    features: [amplitude_m, trend_m_per_yr, monsoon_resp_m_per_100mm]
+    map_from: forest
+  contiguous:           # connected regions (risk-register fallback); map from the nearest training wells.
+    # The monsoon response is left out: it is not predictable in unseen blocks (R² ~0, reports/m4_zoning.md §6).
+    features: [amplitude_m, trend_m_per_yr]
+    map_from: nearest
+    neighbours: 6       # nearest-neighbour graph that keeps zones connected
+
+# The zoning used downstream (master.parquet zone columns, zone_map.tif, zones.gpkg). Set from the early zoning
+# preview on validation blocks only (reports/zoning_preview.md); k: chosen = the k picked by the rule above.
+main: {method: kmeans, k: 5}     # early zoning preview, 2026-10-24 (after the bad-location QC fix): lowest validation error on both measures
 
 classifier: {n_estimators: 500, min_samples_leaf: 3}   # random forest: static features -> zone
 map:

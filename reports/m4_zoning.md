@@ -4,23 +4,25 @@
 
 ## Summary
 
-- **Zones:** 4 zones on the main layout (k = 7 asked, small zones merged). Smallest zone: 18 wells. Every zone meets the minimum of 12.
-- **Zone map:** saved as `data/processed/zone_map.tif` and `zones.gpkg`. Zones for every layout and every k of the sweep are in `zones.nc`.
-- **Assignment accuracy:** 40%, against 41% for always guessing the biggest zone. **The map rule is barely better than guessing.**
-- **Why:** well behaviour is only partly a regional pattern. The long-term trend is the most mappable feature, but even it is only about one-third predictable in an unseen 20 km block. The monsoon response is not predictable at all (see *Is behaviour a map?* below).
-- **What this means:** zones describe real differences between the wells that have history, but a held-out well or an unmonitored place often lands in the wrong zone. This is weakness 2 in the brief (§6.4), now measured. The early zoning preview (after the M5 baselines) will show whether zoning still helps prediction.
+- **Zones used:** 4 zones on the main layout, built as k-means on trend, seasonal swing and monsoon response; map from static features. Smallest zone: 16 wells (minimum 12).
+- **How the zoning was chosen:** two methods and several k were built, and the **early zoning preview** picked this one on validation blocks only (`reports/zoning_preview.md`).
+  - On the pre-set measure (single between-reading changes) the gain is +3.6% vs no zones, so the rule's verdict is *small gain from zoning*. That measure turned out to be dominated by reading noise.
+  - On level change over the years (added after the first run), this zoning is the best candidate: +17.6% vs no zones.
+- **Trade-off:** these zones are scattered (21 patches) and the map puts an unseen well in its own behaviour zone only 38% of the time (guessing the biggest zone: 35%). Even so, they improved predictions at unseen wells in the preview: a roughly right zone still carries the regional decline rate. Behaviour is only partly a map (§6).
+- **Robustness note:** in the preview, k-means scores varied a lot between k = 3, 4 and 5, while connected regions gave a steady gain at every k. The winning score is probably an optimistic draw; the test-set gain is likely smaller.
+- **Zone map:** saved as `data/processed/zone_map.tif` and `zones.gpkg`. Every layout, method and k of the sweep is in `zones.nc`.
 
 ## 1. Spatial block splits
 
 The area is cut into 20 km blocks. Whole blocks are held out: about 18% of wells for testing and 10% for validation (tuning only).
 
-Shares are counted over the 1003 shallow wells with at least one usable water level. Layout 0 is the main layout, fixed in advance. Layouts 1 and 2 are the repeats for experiment E16.
+Shares are counted over the 998 shallow wells with at least one usable water level. Layout 0 is the main layout, fixed in advance. Layouts 1 and 2 are the repeats for experiment E16.
 
-| Layout | train wells | val wells | test wells | train Tier 1 | val Tier 1 | test Tier 1 | Wells clustered | Chosen k |
-|---|---|---|---|---|---|---|---|---|
-| 0 | 762 | 82 | 159 | 129 | 22 | 37 | 129 | 7 |
-| 1 | 763 | 80 | 160 | 138 | 24 | 26 | 138 | 5 |
-| 2 | 765 | 83 | 155 | 142 | 14 | 32 | 142 | 5 |
+| Layout | train wells | val wells | test wells | train Tier 1 | val Tier 1 | test Tier 1 | Wells clustered |
+|---|---|---|---|---|---|---|---|
+| 0 | 764 | 79 | 155 | 131 | 19 | 38 | 131 |
+| 1 | 761 | 82 | 155 | 131 | 21 | 36 | 131 |
+| 2 | 759 | 87 | 152 | 142 | 14 | 32 | 142 |
 
 *Tier 1* = wells with at least 5 training years that have both a pre- and a post-monsoon reading. Only these get behaviour features.
 
@@ -34,15 +36,20 @@ Shares are counted over the 1003 shallow wells with at least one usable water le
 
 188 wells have features. The median well falls 0.40 m a year, and the fastest falls 1.7 m a year.
 
-Before clustering, each feature is clipped to its 2nd–98th percentile and standardised, so all three count equally.
+Before clustering, each feature is clipped to its 2nd–98th percentile and standardised, so each counts equally.
 
-## 3. Choosing the number of zones
+## 3. Two zoning methods
 
-k-means is run for k = 2 to 12 on the training wells of each layout. The rule was fixed before looking at the zones: take the *elbow* (the k after which more zones stop tightening the groups much), then the best *silhouette* among the elbow and its two neighbours.
+| Method | Groups wells by | Zone of a new place |
+|---|---|---|
+| k-means | trend, seasonal swing, monsoon response | random forest on location, elevation, land cover and canals, then smoothed |
+| connected regions | trend and seasonal swing (monsoon response left out: noise, §6), but only through spatial neighbours, so every zone is one connected area | majority zone of the 5 nearest training wells, then smoothed |
 
-Zones smaller than 12 wells are then merged into the zone with the nearest centre. Zones are numbered from the steepest decline (zone 1) to the slowest.
+For each, k runs from 2 to 12. A rule fixed before looking at the zones picks a k: take the *elbow* (the k after which more zones stop tightening the groups much), then the best *silhouette* among the elbow and its two neighbours.
 
-Main layout: elbow k = 6, chosen k = 7, giving 4 zones after merging.
+Zones smaller than 12 wells are merged into the most similar zone (for connected regions: a neighbouring one). Zones are numbered from the steepest decline (zone 1) to the slowest.
+
+The early zoning preview compared k = 3, 4, 5 and the rule's pick for both methods, and selected **kmeans, k = 5**. The chart shows the k-selection scores for this method on the main layout.
 
 ![k selection](figures/m4_k_selection.png)
 
@@ -50,10 +57,10 @@ Main layout: elbow k = 6, chosen k = 7, giving 4 zones after merging.
 
 | Zone | Wells that defined it | Training wells in map zone | Val wells | Test wells | Area (km²) | Patches | Trend (m/yr) | Seasonal swing (m) | Monsoon response (m/100 mm) |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | 18 | 129 | 6 | 28 | 11022 | 8 | -1.26 | -1.63 | +0.03 |
-| 2 | 27 | 257 | 74 | 114 | 17119 | 2 | -0.89 | -1.45 | +0.51 |
-| 3 | 31 | 136 | 0 | 2 | 6985 | 4 | -0.62 | -0.34 | +0.07 |
-| 4 | 53 | 119 | 2 | 15 | 6233 | 4 | -0.02 | +0.77 | +0.24 |
+| 1 | 25 | 151 | 12 | 30 | 11947 | 10 | -1.19 | -1.71 | +0.11 |
+| 2 | 44 | 269 | 29 | 88 | 17733 | 5 | -0.74 | -0.65 | +0.34 |
+| 3 | 16 | 73 | 28 | 23 | 4783 | 2 | -0.05 | +0.61 | +0.53 |
+| 4 | 46 | 155 | 10 | 14 | 6896 | 4 | -0.02 | +0.76 | +0.17 |
 
 *Training wells in map zone* = every shallow well in a training block that has training-period readings and falls inside the zone on the map. These are the wells the zone's PINN will learn from.
 
@@ -61,31 +68,49 @@ Main layout: elbow k = 6, chosen k = 7, giving 4 zones after merging.
 
 ![zone map](figures/m4_zone_map.png)
 
-## 5. How the map is made, and how often it assigns the right zone
+## 5. Map accuracy
 
-1. A random forest learns each training well's zone from features known everywhere: easting, northing, elevation, cropland, built-up and tree cover, distance to the nearest canal, and canal density. Values are read from the well's 1 km cell.
-2. It labels every 1 km cell of the 16 districts plus a 5 km buffer.
-3. A 7 × 7 km majority filter removes speckle, and patches under 50 km² join the zone around them.
-4. Every well, including held-out ones, takes the zone of its map cell.
-
-**Assignment accuracy** is measured the way the map will be used. The training wells are split into 5 groups of whole 20 km blocks. For each group, the map is rebuilt without it, and we check whether its wells land in their own behaviour zone.
+The training wells are split into 5 groups of whole 20 km blocks. For each group, the map is rebuilt without it, and we check whether its wells land in their own zone.
 
 *Guessing the biggest zone* is the score of calling every well the most common zone, so only accuracy above it means the map has learned something.
 
-| Layout | k asked | Zones after merging | Smallest zone (wells) | Map accuracy, unseen blocks | Guessing the biggest zone | Patches (total) |
-|---|---|---|---|---|---|---|
-| 0 | 3 | 3 | 18 | 55% | 47% | 26 |
-| 0 | 5 | 4 | 20 | 36% | 43% | 17 |
-| 0 | 7 (chosen) | 4 | 18 | 40% | 41% | 18 |
-| 0 | 8 | 5 | 12 | 39% | 40% | 25 |
-| 1 | 3 | 3 | 27 | 54% | 49% | 10 |
-| 1 | 5 (chosen) | 5 | 17 | 36% | 34% | 31 |
-| 1 | 8 | 6 | 17 | 36% | 31% | 33 |
-| 2 | 3 | 3 | 28 | 49% | 51% | 6 |
-| 2 | 5 (chosen) | 5 | 12 | 39% | 35% | 33 |
-| 2 | 8 | 5 | 18 | 36% | 30% | 23 |
+**This accuracy is not comparable between the two methods.** Connected-region zones are partly defined by location, so a location-based map agrees with them almost by construction. Whether a zone says something useful about an unseen well is what the zoning preview measures.
 
-## 6. Is behaviour a map? (why accuracy is low)
+| Method | Layout | k asked | Zones after merging | Smallest zone (wells) | Map accuracy, unseen blocks | Guessing the biggest zone | Patches (total) |
+|---|---|---|---|---|---|---|---|
+| kmeans | 0 | 3 | 3 | 16 | 50% | 52% | 19 |
+| kmeans | 0 | 4 | 4 | 18 | 44% | 40% | 22 |
+| kmeans | 0 | 5 | 4 | 16 | 38% | 35% | 21 |
+| kmeans | 0 | 6 | 5 | 16 | 33% | 34% | 21 |
+| kmeans | 0 | 7 (rule's pick) | 5 | 15 | 34% | 32% | 25 |
+| kmeans | 0 | 8 | 6 | 13 | 41% | 33% | 34 |
+| contiguous | 0 | 3 | 3 | 14 | 94% | 73% | 3 |
+| contiguous | 0 | 4 (rule's pick) | 4 | 14 | 85% | 53% | 4 |
+| contiguous | 0 | 5 | 4 | 14 | 85% | 53% | 4 |
+| contiguous | 0 | 6 | 5 | 14 | 79% | 39% | 5 |
+| contiguous | 0 | 8 | 5 | 14 | 79% | 39% | 5 |
+| kmeans | 1 | 3 | 3 | 27 | 53% | 48% | 12 |
+| kmeans | 1 | 4 (rule's pick) | 4 | 18 | 45% | 38% | 21 |
+| kmeans | 1 | 5 | 5 | 17 | 40% | 34% | 23 |
+| kmeans | 1 | 6 | 6 | 14 | 36% | 31% | 29 |
+| kmeans | 1 | 8 | 7 | 12 | 29% | 28% | 42 |
+| contiguous | 1 | 3 | 3 | 21 | 90% | 64% | 3 |
+| contiguous | 1 | 4 | 4 | 15 | 89% | 53% | 4 |
+| contiguous | 1 | 5 | 4 | 15 | 89% | 53% | 4 |
+| contiguous | 1 | 6 (rule's pick) | 4 | 15 | 89% | 53% | 4 |
+| contiguous | 1 | 8 | 4 | 15 | 89% | 53% | 4 |
+| kmeans | 2 | 3 | 3 | 22 | 48% | 51% | 6 |
+| kmeans | 2 | 4 | 4 | 21 | 44% | 37% | 18 |
+| kmeans | 2 | 5 (rule's pick) | 5 | 12 | 38% | 35% | 28 |
+| kmeans | 2 | 6 | 5 | 19 | 39% | 32% | 27 |
+| kmeans | 2 | 8 | 5 | 17 | 37% | 32% | 21 |
+| contiguous | 2 | 3 | 3 | 26 | 83% | 48% | 4 |
+| contiguous | 2 | 4 | 3 | 26 | 83% | 48% | 4 |
+| contiguous | 2 | 5 | 3 | 26 | 83% | 48% | 4 |
+| contiguous | 2 | 6 (rule's pick) | 3 | 26 | 83% | 48% | 4 |
+| contiguous | 2 | 8 | 4 | 19 | 83% | 48% | 5 |
+
+## 6. Is behaviour a map?
 
 For each feature, the table shows two things:
 - *Alike* columns: how similar wells are at different distances apart (a correlation: 1 = identical, 0 = unrelated).
@@ -99,21 +124,22 @@ For each feature, the table shows two things:
 
 **Reading:**
 - **Trend and seasonal swing are regional patterns.** Neighbouring wells are fairly alike, and the likeness fades to nothing by about 40 km. But with wells about 6 km apart and blocks of 20 km, only about a third of the trend can be predicted in an unseen block.
-- **The monsoon response is noise at the well level.** It is a slope through only 5–14 points per well, so it differs randomly between neighbours.
-- **Both ways of predicting score the same,** whether from static features or from the 5 nearest wells. So a better classifier would not help much. The limit is how patchy the behaviour is relative to the well spacing.
+- **The monsoon response is noise at the well level.** It is a slope through only 5–14 points per well, so it differs randomly between neighbours. It is left out of the connected-region zoning.
+- **Both ways of predicting score the same,** whether from static features or from the 5 nearest wells. The limit is how patchy behaviour is relative to the well spacing, not the classifier.
 
 ## 7. Done criteria (PLAN.md §5 M4)
 
 | Criterion | Status |
 |---|---|
-| Every zone has at least 10–15 training wells | ✅ smallest zone: 18 wells |
+| Every zone has at least 10–15 training wells | ✅ smallest zone: 16 wells |
 | Zone map saved | ✅ `zone_map.tif`, `zones.gpkg`, `zones.nc` |
-| Assignment accuracy reported | ✅ 40% (guessing: 41%) — **below the 60% warning level in the risk register** |
-| Early zoning preview | ⏳ needs the M5 baselines (zoned vs unzoned random forest and bucket model on validation blocks) |
+| Assignment accuracy reported | ✅ 38% (guessing: 35%); not comparable between methods, see §5 |
+| Early zoning preview | ✅ `reports/zoning_preview.md`: *small gain from zoning* on the pre-set measure (+3.6%), +17.6% on change over the years |
 
 ## Plain-language glossary
 
 - **k-means:** sorts wells into k groups so that wells in a group have similar features.
+- **Ward clustering:** joins the two most similar groups step by step until k are left; here only neighbouring groups may join.
 - **Spatial block hold-out:** hiding whole areas, not single wells, so the test measures prediction in places the model has never seen.
 - **Correlation:** from −1 to 1; how strongly two sets of numbers move together.
 - **R²:** the share of the differences between wells that a prediction explains (1 = all, 0 = none).
