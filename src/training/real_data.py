@@ -125,3 +125,25 @@ def well_offsets_m(model, wells: pd.Index) -> pd.Series:
 
 def safe_name(s: str) -> str:
     return re.sub(r"[^A-Za-z0-9_.-]+", "_", s)
+
+
+def load_real_run(run_dir, static: xr.Dataset, device="cpu"):
+    """Rebuild a trained real-data ZonePINN from its run folder (config.yaml, normaliser.json, model.pt)."""
+    import json
+    from pathlib import Path
+
+    import yaml
+
+    from src.models.pinn import Normaliser, ZonePINN
+
+    run_dir = Path(run_dir)
+    cfg = yaml.safe_load((run_dir / "config.yaml").read_text())
+    norm = Normaliser.from_dict(json.loads((run_dir / "normaliser.json").read_text()))
+    landuse = GridField(static.lc_cropland_frac.fillna(0).values, static.x.values, static.y.values, device=device)
+    state = torch.load(run_dir / "model.pt", map_location=device)
+    qcfg = {**cfg["q_net"], "lu_mean": float(landuse.values.mean()), "lu_std": float(landuse.values.std()) or 1.0}
+    model = ZonePINN({**cfg, "q_net": qcfg}, norm, landuse, 0.1, 1000.0).to(device)
+    if "well_offset" in state:
+        model.well_offset = torch.nn.Parameter(torch.zeros_like(state["well_offset"]))
+    model.load_state_dict(state)
+    return model.eval(), cfg
