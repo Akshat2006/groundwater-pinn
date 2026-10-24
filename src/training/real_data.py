@@ -8,7 +8,8 @@ observed rainfall and the learned pumping (a hindcast), not by data.
 Inputs per zone:
 - wells: training-block wells whose *map* zone is the zone (the same rule held-out places use);
 - domain: the zone's cells on the zone map (collocation points are drawn inside it);
-- recharge: 0.22 × IMD daily rain, regridded to `rain_res_m` and smoothed over `smooth_days`;
+- recharge: 0.22 × IMD daily rain (0.25°, ~25 km), regridded to `rain_res_m` (10 km: no detail lost, little memory)
+  and smoothed over `smooth_days`;
 - land use: cropland fraction on the 1 km grid (input to the pumping network);
 - T: fixed at the CGWB report value for the zone (configs/priors.yaml); S starts at the GEC norm 0.12.
 """
@@ -71,7 +72,7 @@ def recharge_grid(rain: xr.DataArray, x_edges: tuple[float, float], y_edges: tup
 
 
 def zone_inputs(train: pd.DataFrame, zone_cells: np.ndarray, static: xr.Dataset, rain: xr.DataArray, priors: dict,
-                cfg: dict, t_end: str = "2024-12-31", device="cpu", rain_res_m: float = 5000.0) -> ZoneData:
+                cfg: dict, t_end: str = "2024-12-31", device="cpu", rain_res_m: float = 10000.0) -> ZoneData:
     """ZoneData for the wells in `train` (already restricted to the zone) and the zone's map cells."""
     x, y = static.x.values, static.y.values
     res = float(static.attrs.get("res_m", x[1] - x[0]))
