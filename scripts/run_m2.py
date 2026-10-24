@@ -42,6 +42,7 @@ RUNS = {
     # diagnostics: which difference between run1 (passes) and run3 (fails) breaks recovery?
     "d1": dict(case="C", n_wells=60, schedule="quarterly", note="diagnostic: gate case, quarterly readings"),
     "d2": dict(case="A", n_wells=60, schedule="monthly", note="diagnostic: case A (no clusters), 60 wells monthly"),
+    "d3": dict(case="A", n_wells=30, schedule="monthly", note="diagnostic: 30 wells monthly (can ~30 frequent sensors resolve seasons?)"),
 }
 
 

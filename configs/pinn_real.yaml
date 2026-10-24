@@ -1,0 +1,11 @@
+# Real-data overrides on top of configs/pinn.yaml (M6/M7). Run: python scripts/run_real.py ...
+training:
+  fix_T: true                 # T from the CGWB reports (configs/priors.yaml); M2 diagnostics: S and pumping stay
+                              # accurate with T 30% wrong, while sparse data cannot pin T down
+  well_offsets: {weight: 1.0, sigma_m: 3.0}   # per-well level corrections for elevation-model error
+  weighting: {type: fixed, init: 10.0, alpha: 0.1, every: 100}   # data weight; M2 noise runs: 100 chases noise
+  n_colloc: 8192              # larger domain and 20 years (synthetic: 60 x 60 km, 10 years)
+  lbfgs_colloc: 16384
+  stages: {data_only: 3000, physics_frozen: 5000, joint: 40000, lbfgs: 1000}
+q_net:
+  doy_at_t0: 0                # t = 0 is 1 January 2005

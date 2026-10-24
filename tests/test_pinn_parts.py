@@ -137,3 +137,36 @@ def test_fix_T_holds_T_and_prior_runs_through_lbfgs():
     assert res.info["T"] == pytest.approx(2000.0, rel=1e-5)
     assert res.info["S"] != pytest.approx(0.2, rel=1e-6)          # S still learns
     assert "prior" in res.history.columns and np.isfinite(res.history["prior"].dropna()).all()
+
+
+def test_well_offsets_absorb_a_constant_shift_per_well():
+    """Two wells read the same surface, one shifted by +3 m (elevation error): the offset takes the shift."""
+    from synthetic.generate import build_case
+    from synthetic.pinn_data import zone_from_synthetic
+    from synthetic.sample_wells import sample_wells
+    from src.training.trainer import train_zone
+
+    small = {"grid": {"nx": 12, "ny": 12, "dx_m": 1000.0, "dy_m": 1000.0},
+             "time": {"spinup_days": 30, "record_start": "2000-01-01", "record_end": "2000-12-31"}}
+    ds = build_case(load_config(REPO_ROOT / "configs" / "synthetic" / "case_A.yaml", overrides=small))
+    wells = sample_wells(ds, 8, "monthly", seed=0, n_hidden=0, margin_m=1500)
+    ids = pd.Index(wells.well_id.unique())
+    shift = np.where(wells.well_id == ids[0], 3.0, 0.0)
+    wells = wells.assign(head_m=wells.head_m + shift)
+    zone = zone_from_synthetic(ds, wells, 0.12, 1500.0)
+    ok = wells[wells.split_space.eq("train") & ~wells.is_dry & wells.head_m.notna()]
+    zone.well_index, zone.n_wells = ids.get_indexer(ok.well_id), len(ids)
+    cfg = load_config(REPO_ROOT / "configs" / "pinn.yaml", overrides={
+        "h_net": {"width": 16, "depth": 2},
+        "training": {"n_colloc": 128, "fix_T": True, "well_offsets": {"weight": 0.1, "sigma_m": 5.0},
+                     "stages": {"data_only": 400, "physics_frozen": 0, "joint": 0, "lbfgs": 0}, "log_every": 100}})
+    res = train_zone(cfg, zone, seed=0, device="cpu", verbose=False)
+    off = res.model.well_offset.detach().numpy() * res.model.norm.h.std
+    assert off[0] - np.median(off[1:]) > 1.5                     # the shifted well carries most of the 3 m
+
+
+def test_report_T_and_time_axis():
+    from src.training.real_data import report_T, t_days
+    assert report_T({"T": [400, 1600]}, 1500) == pytest.approx(800.0)
+    assert report_T({"T": 2200}, 1500) == 2200.0 and report_T({"T": None}, 1500) == 1500.0
+    assert t_days(pd.to_datetime(["2005-01-01", "2005-01-11"])).tolist() == [0.5, 10.5]

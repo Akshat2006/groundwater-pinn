@@ -9,6 +9,11 @@ Stages:
 
 Loss in stages 2–4: L_pde + λ·L_data (+ censored + prior). λ comes from the gradient-size rule in
 weighting.py (or is fixed if training.weighting.type = "fixed").
+
+Optional per-well offsets (training.well_offsets.weight > 0, real data): each well gets a constant correction to
+its measured level, with a gentle penalty (sd `sigma_m`). It absorbs the error of the elevation model at the well
+(PLAN.md §2.8 item 10), so the network's surface need not bend to fit each well's elevation error. A place
+without a well gets offset 0.
 """
 from __future__ import annotations
 
@@ -48,6 +53,8 @@ class ZoneData:
     T_prior: float | None = None
     dry: dict | None = None           # {"x_m", "y_m", "t_days", "bottom_m"} for censored readings
     mask: torch.Tensor | None = None  # optional zone mask over the bounding box
+    well_index: np.ndarray | None = None   # per reading: index 0..n_wells-1 of its well (for per-well offsets)
+    n_wells: int = 0
 
 
 @dataclass
@@ -82,6 +89,21 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
 
     xyt_obs = norm.to_norm(tens(zone.x_m), tens(zone.y_m), tens(zone.t_days))
     h_obs_n = norm.h.transform(tens(zone.head_m)).unsqueeze(-1)
+    ocfg = tcfg.get("well_offsets", {"weight": 0.0})
+    use_offsets = ocfg.get("weight", 0.0) > 0 and zone.well_index is not None
+    if use_offsets:
+        model.well_offset = torch.nn.Parameter(torch.zeros(zone.n_wells, device=device))
+        w_idx = torch.as_tensor(zone.well_index, dtype=torch.long, device=device)
+        off_scale = norm.h.std / ocfg.get("sigma_m", 3.0)        # penalty = mean((offset_m / sigma_m)²)
+
+    def h_at_obs(idx=None):
+        h = model.head_norm(xyt_obs if idx is None else xyt_obs[idx])
+        if use_offsets:
+            h = h + model.well_offset[w_idx if idx is None else w_idx[idx]].unsqueeze(-1)
+        return h
+
+    def offset_penalty():
+        return ocfg["weight"] * torch.mean((model.well_offset * off_scale) ** 2) if use_offsets else 0.0
     if zone.dry:
         xyt_dry = norm.to_norm(tens(zone.dry["x_m"]), tens(zone.dry["y_m"]), tens(zone.dry["t_days"]))
         bottom_n = norm.h.transform(tens(zone.dry["bottom_m"])).unsqueeze(-1)
@@ -89,6 +111,8 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
     sampler = CollocationSampler(tcfg["n_colloc"], device, zone.mask, gen)
 
     net_params = list(model.h_net.parameters()) + list(model.q_net.parameters())
+    if use_offsets:
+        net_params.append(model.well_offset)
     opt = torch.optim.Adam([{"params": net_params, "lr": tcfg["lr"]},
                             {"params": [model.log_S, model.log_T], "lr": tcfg["lr_params"]}])
     wcfg = tcfg.get("weighting", {"type": "gradnorm"})
@@ -107,9 +131,9 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
     def losses(physics: bool):
         if batch and batch < len(xyt_obs):
             idx = torch.randint(len(xyt_obs), (batch,), device=device, generator=gen)
-            l_data = data_loss(model.head_norm(xyt_obs[idx]), h_obs_n[idx])
+            l_data = data_loss(h_at_obs(idx), h_obs_n[idx])
         else:
-            l_data = data_loss(model.head_norm(xyt_obs), h_obs_n)
+            l_data = data_loss(h_at_obs(), h_obs_n)
         out = {"data": l_data}
         if zone.dry:
             out["censored"] = censored_loss(model.head_norm(xyt_dry), bottom_n)
@@ -143,7 +167,8 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
                 total = L["pde"] + lam * L["data"]
             else:
                 lam, total = float("nan"), L["data"]
-            total = total + L.get("censored", 0.0) * (lam if physics else 1.0) + pcfg.get("weight", 0.0) * L.get("prior", 0.0)
+            total = (total + L.get("censored", 0.0) * (lam if physics else 1.0) + pcfg.get("weight", 0.0) * L.get("prior", 0.0)
+                     + (lam if physics else 1.0) * offset_penalty())
             total.backward()
             opt.step()
             if step % log_every == 0 or i == n_steps - 1:
@@ -168,7 +193,7 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
 
         def closure():
             lb.zero_grad(set_to_none=True)
-            t = pde_loss(model.residual(fixed_pts.clone(), R_fixed)) + lam * data_loss(model.head_norm(xyt_obs), h_obs_n)
+            t = pde_loss(model.residual(fixed_pts.clone(), R_fixed)) + lam * (data_loss(h_at_obs(), h_obs_n) + offset_penalty())
             if use_prior:
                 t = t + pcfg["weight"] * prior_loss(model.log_S, model.log_T, zone.S_prior, zone.T_prior, pcfg["sigma_log"])
             t.backward()

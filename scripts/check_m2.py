@@ -38,6 +38,7 @@ V2_BEFORE = {  # the same run with the old 500-step settling stage (same seed an
 DIAG_TEXT = {  # diagnostic runs (notebooks/colab_m2_diagnostics.ipynb): what each one changes
     ("d1", "diag"): "Gate case (C, 60 wells) read quarterly instead of monthly",
     ("d2", "diag"): "Case A (no pumping clusters, no canal), 60 wells, monthly",
+    ("d3", "diag"): "Case A, 30 wells, monthly (stand-in for ~30 daily telemetry sensors)",
     ("run3", "diag_frozen5k"): "Settling stage with S, T frozen: 5,000 steps instead of 500",
     ("run3", "diag_prior130"): "Report-style prior on S and T, deliberately 30% too high (weight 0.1)",
     ("run3", "diag_fixT1950"): "T fixed at 1,950 (30% too high); only S and pumping learned",
