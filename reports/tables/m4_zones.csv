@@ -1,0 +1,5 @@
+Zone,Wells that defined it,Training wells in map zone,Val wells,Test wells,Area (km²),Patches,Trend (m/yr),Seasonal swing (m),Monsoon response (m/100 mm)
+1,18,129,6,28,11022,8,-1.26,-1.63,+0.03
+2,27,257,74,114,17119,2,-0.89,-1.45,+0.51
+3,31,136,0,2,6985,4,-0.62,-0.34,+0.07
+4,53,119,2,15,6233,4,-0.02,+0.77,+0.24

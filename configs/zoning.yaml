@@ -1,0 +1,15 @@
+# Zoning (PLAN.md §2.3, §2.5, §5 M4). Run: python scripts/build_zones.py, then python scripts/check_m4.py
+features: [amplitude_m, trend_m_per_yr, monsoon_resp_m_per_100mm]   # src/features/behaviour.py
+min_years: 5            # training years with both a pre- and a post-monsoon reading (= Tier 1)
+winsor_pct: 2           # clip each feature to its 2nd-98th percentile before standardising
+k_range: [2, 12]        # k-means candidates; rule in src/zoning/cluster.py (elbow, then best silhouette ±1)
+min_zone_wells: 12      # smaller zones are merged into the nearest one (brief: at least 10-15 wells)
+sweep_k: [1, 3, 5, 8]   # experiment E8 (zone-count sweep); 1 = one region = the unzoned PINN
+seed: 0
+
+classifier: {n_estimators: 500, min_samples_leaf: 3}   # random forest: static features -> zone
+map:
+  mask_buffer_km: 5     # map the district outlines plus this buffer
+  window: 7             # majority filter, cells (7 x 7 km)
+  min_patch_km2: 50     # smaller patches join the zone around them
+cv_folds: 5             # leave-blocks-out check of the map rule (assignment accuracy)

@@ -1,0 +1,8 @@
+# Spatial block hold-out (PLAN.md §2.6, §5 M5). Whole ~20 km blocks of wells are held out, so a test well
+# never has a training well from its own block. Layout 0 is the main layout, fixed in advance; layouts 1 and 2
+# are the repeats for experiment E16.
+block_km: 20
+test_frac: 0.175        # share of eligible wells (shallow, at least one usable head) in test blocks
+val_frac: 0.10          # validation blocks: tuning only
+tol: 0.025              # accepted deviation from each target share
+layouts: [0, 1, 2]      # seed of each layout (grid offset + block order)

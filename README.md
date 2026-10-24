@@ -60,5 +60,6 @@ reports/      results, tables, figures, run logs
 |---|---|
 | M0 setup + G0 data check + literature check | done (2026-10-17) |
 | M1 synthetic aquifer (finite-difference solver) | done (2026-10-17), see `reports/m1_solver.md` |
-| M2 single-zone PINN on synthetic data | gate passed on 1 of 2 seeds; realistic cases fail, diagnostics running (`reports/m2_synthetic.md`) |
+| M2 single-zone PINN on synthetic data | gate passed on 1 of 3 seeds; diagnostics done: a 5,000-step settling stage (now default) rescues the realistic case (S −14%, T −17%); re-check batch `notebooks/colab_m2_recheck.ipynb` pending (`reports/m2_synthetic.md`) |
 | M3 real-data pipeline | built (2026-10-22): `python scripts/build_master.py`, report `reports/m3_data_gaps.md` |
+| M4 zoning | built (2026-10-24): `python scripts/build_zones.py` then `scripts/check_m4.py`, report `reports/m4_zoning.md`. 4 zones; zone map assigns held-out wells barely better than guessing (40% vs 41%): decision pending |
