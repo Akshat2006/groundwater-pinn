@@ -13,7 +13,7 @@
 - T
 - pumping per season
 
-**Gate status: passed on 1 of 3 runs with the final settings (same settings, different random seed and well layout).**
+**Gate status: passed on 0 of 3 runs with the current settings (5,000-step settling stage) (same settings, different random seed and well layout).**
 
 Errors are the PINN estimate relative to the truth (−34% = 34% too low). Full runs have 20k or 40k joint steps;
 8k runs were quick comparisons.
@@ -49,6 +49,14 @@ Errors are the PINN estimate relative to the truth (−34% = 34% too low). Full 
 | run3 | diag_w10, 40k joint steps | -25% | -33% | 52% | -11% | 0.13 m | n/a |
 | run4 | diag_w1, 40k joint steps | -46% | -55% | 47% | -20% | 0.16 m | n/a |
 | run1 | diag_seed2, 40k joint steps | -11% | +1% | 14% | -4% | 0.06 m | ❌ |
+| run1 | v2_seed0, 40k joint steps | -5% | +2% | 11% | -1% | 0.08 m | ❌ |
+| run3 | v2, 40k joint steps | -14% | -17% | 51% | -6% | 0.10 m | n/a |
+| run1 | v2_seed1, 40k joint steps | -6% | -1% | 12% | -2% | 0.07 m | ❌ |
+| run3 | v2_fixT1950, 40k joint steps | -6% | +30% | 60% | -2% | 0.10 m | n/a |
+| run9 | v2, 40k joint steps | -41% | -100% | 42% | -18% | 0.70 m | n/a |
+| run10 | v2, 40k joint steps | -52% | -100% | 43% | -34% | 0.65 m | n/a |
+| run1 | v2_seed2, 40k joint steps | -8% | +3% | 19% | -3% | 0.06 m | ❌ |
+| run4 | v2_w1, 40k joint steps | -45% | -49% | 52% | -19% | 0.15 m | n/a |
 
 ![trajectory](figures/m2_gate_trajectory.png)
 
@@ -76,9 +84,9 @@ Likely cause: the 31-day time window still mixes May with the start of paddy pum
 
 | Run | S | T | Pumping, seasons | Pumping, total | S change, last 4k Adam steps | Gate |
 |---|---|---|---|---|---|---|
-| seed1 | -5% | -1% | 15% (worst 56%) | -2% | +0% | ❌ |
-| a9_a7_plus_lbfgs | -5% | +2% | 9% (worst 42%) | -1% | +1% | ✅ |
-| diag_seed2 | -11% | +1% | 14% (worst 48%) | -4% | +1% | ❌ |
+| v2_seed0 | -5% | +2% | 11% (worst 46%) | -1% | +1% | ❌ |
+| v2_seed1 | -6% | -1% | 12% (worst 48%) | -2% | +2% | ❌ |
+| v2_seed2 | -8% | +3% | 19% (worst 61%) | -3% | -1% | ❌ |
 
 The *S change* column shows how much S changed over the last 4,000 Adam steps before L-BFGS. A large value means S was still
 climbing when training stopped, so the final value depends on how long training ran rather than on a settled answer.
@@ -107,6 +115,21 @@ If recharge R is wrong by a factor, theory (PLAN.md §2.1) says S and pumping sh
 |---|---|---|---|
 | R × 0.8 (run6) | 0.77 | 0.79 | 0.80 |
 | R × 1.2 (run7) | 1.18 | 1.20 | 1.20 |
+
+## Re-check with the longer settling stage (current default)
+
+After the diagnostics, the stage where S and T are held fixed was lengthened from 500 to 5,000 steps. These runs repeat the key cases with that setting; *Before* is the same run with the old setting.
+
+| Run | What it tests | Before: S / T / seasons / total | Now: S | T | Pumping, seasons | Pumping, total | Hidden-well level error |
+|---|---|---|---|---|---|---|---|
+| run1 (v2_seed0) | GATE (M2-A): well-posed, restricted q_net | -5% / +2% / 9% / -1% | -5% | +2% | 11% | -1% | 0.08 m |
+| run1 (v2_seed1) | GATE (M2-A): well-posed, restricted q_net | -5% / -1% / 15% / -2% | -6% | -1% | 12% | -2% | 0.07 m |
+| run1 (v2_seed2) | GATE (M2-A): well-posed, restricted q_net | -11% / +1% / 14% / -4% | -8% | +3% | 19% | -3% | 0.06 m |
+| run10 (v2) | mismatched truth, R x0.8 | -53% / -100% / 37% / -35% | -52% | -100% | 43% | -34% | 0.65 m |
+| run3 (v2) | realistic sampling, clean | -37% / -79% / 46% / -19% | -14% | -17% | 51% | -6% | 0.10 m |
+| run3 (v2_fixT1950) | realistic case with T fixed 30% too high (the real-data set-up) | -2% / +30% / 50% / -0% | -6% | +30% | 60% | -2% | 0.10 m |
+| run4 (v2_w1) | 0.3 m noise, data weight 1 | -46% / -55% / 47% / -20% | -45% | -49% | 52% | -19% | 0.15 m |
+| run9 (v2) | mismatched truth (reported, not gated) | -43% / -100% / 41% / -18% | -41% | -100% | 42% | -18% | 0.70 m |
 
 ## Diagnostic runs (why the realistic cases fail)
 
