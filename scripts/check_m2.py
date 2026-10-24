@@ -27,6 +27,14 @@ FIG = ROOT / "reports" / "figures"
 BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
 INK, MUTED, GRID = "#0b0b0b", "#52514e", "#e4e3df"
 TOL = 0.10
+V2_TEXT = {  # re-check runs (notebooks/colab_m2_recheck.ipynb)
+    ("run3", "v2_fixT1950"): "realistic case with T fixed 30% too high (the real-data set-up)",
+    ("run4", "v2_w1"): "0.3 m noise, data weight 1",
+}
+V2_BEFORE = {  # the same run with the old 500-step settling stage (same seed and well layout)
+    ("run1", "v2_seed0"): "a9_a7_plus_lbfgs", ("run1", "v2_seed1"): "seed1", ("run1", "v2_seed2"): "diag_seed2",
+    ("run3", "v2_fixT1950"): "diag_fixT1950", ("run4", "v2_w1"): "diag_w1",
+}
 DIAG_TEXT = {  # diagnostic runs (notebooks/colab_m2_diagnostics.ipynb): what each one changes
     ("d1", "diag"): "Gate case (C, 60 wells) read quarterly instead of monthly",
     ("d2", "diag"): "Case A (no pumping clusters, no canal), 60 wells, monthly",
@@ -173,14 +181,17 @@ def main() -> None:
                      f"{100 * r.Q_net_season_mean_abs_err:.0f}% | {pct(r.Q_net_total_rel_err)} | "
                      f"{r.head_rmse_test_m:.2f} m | {gate_txt} |")
     passed = bool(gate.gate_pass.any())
-    final = gate[gate.lbfgs_steps > 0]
-    status = (f"passed on {int(final.gate_pass.sum())} of {len(final)} runs with the final settings "
+    v2_gate = gate[gate.tag.str.startswith("v2")]
+    final = v2_gate if len(v2_gate) else gate[(gate.lbfgs_steps > 0) & ~gate.tag.str.startswith("v2")]
+    settings = "the current settings (5,000-step settling stage)" if len(v2_gate) else "the final settings"
+    status = (f"passed on {int(final.gate_pass.sum())} of {len(final)} runs with {settings} "
               f"(same settings, different random seed and well layout)" if len(final)
               else ("PASSED" if passed else "NOT PASSED YET"))
 
     is_diag = df.tag.str.startswith("diag") & (df.run != "run1")
+    is_v2 = df.tag.str.startswith("v2")
     diag = df[is_diag]
-    matrix = df[(df.run != "run1") & ~is_diag].copy()
+    matrix = df[(df.run != "run1") & ~is_diag & ~is_v2].copy()
     matrix["order"] = matrix.run.str[3:].astype(int)
     base = matrix.drop_duplicates("run", keep="last").set_index("run")
     dlines = ["| Change | Compared with | S | T | Pumping, seasons | Pumping, total | Hidden-well level error |",
@@ -203,6 +214,17 @@ def main() -> None:
                       f"{100 * r.Q_net_season_mean_abs_err:.0f}% | {pct(r.Q_net_total_rel_err)} | "
                       f"{r.head_rmse_test_m:.2f} m | {pct(r.S_drift)} |")
     by_run = matrix.drop_duplicates("run", keep="last").set_index("run")
+    vlines = ["| Run | What it tests | Before: S / T / seasons / total | Now: S | T | Pumping, seasons | Pumping, total | Hidden-well level error |",
+              "|---|---|---|---|---|---|---|---|"]
+    old = df[~is_v2].drop_duplicates(["run", "tag"], keep="last").set_index(["run", "tag"])
+    for _, r in df[is_v2].sort_values(["run", "tag"]).iterrows():
+        key = (r.run, V2_BEFORE.get((r.run, r.tag), ""))
+        ref = old.loc[key] if key in old.index else None
+        was = (f"{pct(ref.S_rel_err)} / {pct(ref.T_rel_err)} / {100 * ref.Q_net_season_mean_abs_err:.0f}% / "
+               f"{pct(ref.Q_net_total_rel_err)}" if ref is not None else "n/a")
+        vlines.append(f"| {r.run} ({r.tag}) | {V2_TEXT.get((r.run, r.tag), r.note)} | {was} | {pct(r.S_rel_err)} | "
+                      f"{pct(r.T_rel_err)} | {100 * r.Q_net_season_mean_abs_err:.0f}% | {pct(r.Q_net_total_rel_err)} | "
+                      f"{r.head_rmse_test_m:.2f} m |")
     r_sens = []
     if {"run3", "run6", "run7"} <= set(by_run.index):
         base = by_run.loc["run3"]
@@ -281,6 +303,12 @@ def main() -> None:
            "|---|---|---|---|",
            *r_sens,
            ""] if r_sens else []),
+        *(["## Re-check with the longer settling stage (current default)",
+           "",
+           "After the diagnostics, the stage where S and T are held fixed was lengthened from 500 to 5,000 steps. These runs repeat the key cases with that setting; *Before* is the same run with the old setting.",
+           "",
+           *vlines,
+           ""] if is_v2.any() else []),
         *(["## Diagnostic runs (why the realistic cases fail)",
            "",
            "Each run changes one thing relative to the run it is compared with. They start from S = 0.20 and T = 3,000, like all runs.",

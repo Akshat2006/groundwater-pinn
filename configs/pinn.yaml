@@ -1,5 +1,6 @@
 # PINN architecture and training (PLAN.md §2.4, §6.3). Experiment configs override parts of this.
-# Defaults = the settings that passed the M2 gate (attempt 9, reports/m2_synthetic.md).
+# Defaults = the settings that passed the M2 gate (attempt 9, reports/m2_synthetic.md), except the settling stage
+# (physics_frozen), lengthened 500 -> 5000 after the M2 diagnostics (run3: S -37% -> -14%, T -79% -> -17%).
 h_net: {width: 64, depth: 6, act: tanh, n_harmonics: 2}
 q_net:
   width: 16
@@ -14,7 +15,7 @@ q_net:
 training:
   n_colloc: 4096                  # fresh random PDE points every step
   batch_data: 0                   # 0 = all readings every step
-  stages: {data_only: 3000, physics_frozen: 500, joint: 40000, lbfgs: 1000}
+  stages: {data_only: 3000, physics_frozen: 5000, joint: 40000, lbfgs: 1000}   # frozen 500 -> 5000 after the M2 diagnostics
   lr: 1.0e-3
   lr_params: 0.02                 # log S, log T
   lr_final_factor: 0.3            # joint stage decays to lr × this
