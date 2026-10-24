@@ -23,7 +23,8 @@ sys.path.insert(0, str(ROOT))
 from src.evaluation.metrics import fraction_improved, paired_wilcoxon, per_well, rmse, summary  # noqa: E402
 from src.utils.config import data_dir, runs_dir  # noqa: E402
 
-BASELINE_BEST = {"A": ["persistence", "seasonal trend"], "B": ["kriging", "LightGBM"], "C": ["trend + kriging", "LightGBM"]}
+BASELINE_BEST = {"A": ["persistence", "seasonal trend"], "B": ["kriging", "depth kriging", "LightGBM"],
+                 "C": ["trend + kriging", "depth trend + kriging", "LightGBM"]}
 
 
 def md_table(df: pd.DataFrame) -> list[str]:

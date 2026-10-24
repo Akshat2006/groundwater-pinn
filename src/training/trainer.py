@@ -55,6 +55,16 @@ class ZoneData:
     mask: torch.Tensor | None = None  # optional zone mask over the bounding box
     well_index: np.ndarray | None = None   # per reading: index 0..n_wells-1 of its well (for per-well offsets)
     n_wells: int = 0
+    base: GridField | None = None     # optional terrain base [m] and its Laplacian [1/m] (see ZonePINN)
+    lap_base: GridField | None = None
+
+    def base_m(self, x_m, y_m) -> np.ndarray:
+        """Terrain base at points as a numpy array (zeros without one)."""
+        if self.base is None:
+            return np.zeros(len(x_m))
+        dev = self.base.values.device
+        t = [torch.as_tensor(np.asarray(v, dtype=np.float32), device=dev) for v in (x_m, y_m)]
+        return self.base(*t).squeeze(-1).cpu().numpy().astype(float)
 
 
 @dataclass
@@ -68,7 +78,7 @@ class TrainResult:
 def make_normaliser(zone: ZoneData, flux_scale_m_per_day: float) -> Normaliser:
     b = zone.bounds
     return Normaliser(MinMaxScaler(*b["x"]), MinMaxScaler(*b["y"]), MinMaxScaler(*b["t"]),
-                      StandardScaler.fit(zone.head_m), flux_scale_m_per_day)
+                      StandardScaler.fit(zone.head_m - zone.base_m(zone.x_m, zone.y_m)), flux_scale_m_per_day)
 
 
 def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = None,
@@ -82,13 +92,15 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
     lu_vals = zone.landuse.values
     qcfg.setdefault("lu_mean", float(lu_vals.mean()))
     qcfg.setdefault("lu_std", float(lu_vals.std()) or 1.0)
-    model = ZonePINN({**cfg, "q_net": qcfg}, norm, zone.landuse, zone.S_init, zone.T_init).to(device)
+    model = ZonePINN({**cfg, "q_net": qcfg}, norm, zone.landuse, zone.S_init, zone.T_init,
+                     zone.base, zone.lap_base).to(device)
 
     def tens(a):
         return torch.as_tensor(np.asarray(a, dtype=np.float32), device=device)
 
+    # the network models head − base (base = 0 without a terrain surface), so targets are shifted the same way
     xyt_obs = norm.to_norm(tens(zone.x_m), tens(zone.y_m), tens(zone.t_days))
-    h_obs_n = norm.h.transform(tens(zone.head_m)).unsqueeze(-1)
+    h_obs_n = norm.h.transform(tens(zone.head_m - zone.base_m(zone.x_m, zone.y_m))).unsqueeze(-1)
     ocfg = tcfg.get("well_offsets", {"weight": 0.0})
     use_offsets = ocfg.get("weight", 0.0) > 0 and zone.well_index is not None
     if use_offsets:
@@ -111,7 +123,7 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
         return off_coef * torch.mean(model.well_offset ** 2) if use_offsets else 0.0
     if zone.dry:
         xyt_dry = norm.to_norm(tens(zone.dry["x_m"]), tens(zone.dry["y_m"]), tens(zone.dry["t_days"]))
-        bottom_n = norm.h.transform(tens(zone.dry["bottom_m"])).unsqueeze(-1)
+        bottom_n = norm.h.transform(tens(zone.dry["bottom_m"] - zone.base_m(zone.dry["x_m"], zone.dry["y_m"]))).unsqueeze(-1)
     gen = torch.Generator(device=device).manual_seed(seed)
     sampler = CollocationSampler(tcfg["n_colloc"], device, zone.mask, gen)
 
@@ -146,7 +158,7 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
             pts = sampler.sample()
             out["pde"] = pde_loss(model.residual(pts, R_at(pts)))
             if use_prior:
-                out["prior"] = prior_loss(model.log_S, model.log_T, zone.S_prior, zone.T_prior, pcfg["sigma_log"])
+                out["prior"] = prior_loss(torch.log(model.S), model.log_T, zone.S_prior, zone.T_prior, pcfg["sigma_log"])
         return out
 
     rows, step, t0 = [], 0, time.time()
@@ -200,7 +212,7 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
             lb.zero_grad(set_to_none=True)
             t = pde_loss(model.residual(fixed_pts.clone(), R_fixed)) + lam * (data_loss(h_at_obs(), h_obs_n) + offset_penalty())
             if use_prior:
-                t = t + pcfg["weight"] * prior_loss(model.log_S, model.log_T, zone.S_prior, zone.T_prior, pcfg["sigma_log"])
+                t = t + pcfg["weight"] * prior_loss(torch.log(model.S), model.log_T, zone.S_prior, zone.T_prior, pcfg["sigma_log"])
             t.backward()
             return t
         lb.step(closure)

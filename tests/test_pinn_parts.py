@@ -165,6 +165,38 @@ def test_well_offsets_absorb_a_constant_shift_per_well():
     assert off[0] - np.median(off[1:]) > 1.5                     # the shifted well carries most of the 3 m
 
 
+def test_S_range_squash_starts_at_S_init_and_stays_inside():
+    cfg = load_config(REPO_ROOT / "configs" / "pinn.yaml", overrides={"training": {"S_range": [0.05, 0.2]}})
+    norm = Normaliser(MinMaxScaler(0, 20_000), MinMaxScaler(0, 20_000), MinMaxScaler(0, 730),
+                      StandardScaler(220.0, 2.0), 1e-3)
+    x = np.arange(500.0, 20_000, 1000)
+    model = ZonePINN(cfg, norm, GridField(np.full((20, 20), 0.5), x, x), 0.12, 1500.0)
+    assert float(model.S) == pytest.approx(0.12, rel=1e-5)
+    for v in (-50.0, 50.0):
+        model.log_S.data.fill_(v)
+        assert 0.05 - 1e-6 <= float(model.S) <= 0.2 + 1e-6
+
+
+def test_terrain_base_adds_to_head_and_enters_the_pde_as_a_source():
+    """head = base + network; the residual equals the base-free residual with R + T·∇²base."""
+    cfg = load_config(REPO_ROOT / "configs" / "pinn.yaml")
+    norm = Normaliser(MinMaxScaler(0, 20_000), MinMaxScaler(0, 20_000), MinMaxScaler(0, 730),
+                      StandardScaler(0.0, 2.0), 1e-3)
+    x = np.arange(500.0, 20_000, 1000)
+    X, Y = np.meshgrid(x, x)
+    base = GridField(250.0 + 1e-3 * X, x, x)
+    lap = GridField(np.full((20, 20), 2e-8), x, x)
+    land = GridField(np.full((20, 20), 0.5), x, x)
+    torch.manual_seed(0)
+    plain = ZonePINN(cfg, norm, land, 0.12, 1500.0)
+    with_base = ZonePINN(cfg, norm, land, 0.12, 1500.0, base, lap)
+    with_base.load_state_dict(plain.state_dict())
+    pts = norm.to_norm(torch.tensor([3e3, 9e3]), torch.tensor([4e3, 15e3]), torch.tensor([170.0, 300.0]))
+    torch.testing.assert_close(with_base.head(pts) - plain.head(pts), torch.tensor([[253.0], [259.0]]))
+    R = torch.full((2, 1), 1e-4)
+    torch.testing.assert_close(with_base.residual(pts.clone(), R), plain.residual(pts.clone(), R + 1500.0 * 2e-8))
+
+
 def test_report_T_and_time_axis():
     from src.training.real_data import report_T, t_days
     assert report_T({"T": [400, 1600]}, 1500) == pytest.approx(800.0)

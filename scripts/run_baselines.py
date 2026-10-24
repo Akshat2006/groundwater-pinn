@@ -12,6 +12,7 @@ C = held-out blocks in later years. Every model learns only from training-block 
 | ordinary kriging per survey | B | other wells measured in the same survey |
 | trend + kriging | C | each training well's seasonal trend carried forward, then kriged to the target place |
 | random forest, LightGBM | A, B, C | location, land cover, time, rainfall |
+| depth kriging, depth trend + kriging | B, C | as above, but on depth to water; the target's ground elevation is added back (how CGWB maps water levels) |
 """
 import sys
 from pathlib import Path
@@ -29,8 +30,8 @@ from src.utils.config import data_dir, load_config  # noqa: E402
 
 TASK_MODELS = {
     "A": ["persistence", "seasonal mean", "seasonal trend", "random forest", "LightGBM"],
-    "B": ["kriging", "random forest", "LightGBM"],
-    "C": ["trend + kriging", "random forest", "LightGBM"],
+    "B": ["kriging", "depth kriging", "random forest", "LightGBM"],
+    "C": ["trend + kriging", "depth trend + kriging", "random forest", "LightGBM"],
 }
 TASK_NAME = {"A": "A: forecast at monitored wells", "B": "B: unmonitored places", "C": "C: unmonitored places, later years"}
 
@@ -50,7 +51,14 @@ def trend_then_krige(train: pd.DataFrame, target: pd.DataFrame) -> pd.Series:
     return kriging.ordinary_kriging(pseudo, target)
 
 
+def via_depth(model: str, train: pd.DataFrame, target: pd.DataFrame) -> pd.Series:
+    """The same model on head − ground elevation (= minus depth to water); the target's elevation is added back."""
+    return predict(model, train.assign(head_m=train.head_m - train.ground_elev_m), target) + target.ground_elev_m
+
+
 def predict(model: str, train: pd.DataFrame, target: pd.DataFrame) -> pd.Series:
+    if model.startswith("depth "):
+        return via_depth(model.removeprefix("depth "), train, target)
     if model == "persistence":
         return naive.persistence(train, target)
     if model == "seasonal mean":

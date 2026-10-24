@@ -22,9 +22,11 @@ Test results use the observed rainfall of the test years for every model, so the
 | A: forecast at monitored wells | random forest | 4.92 m | 3.30 m | 3.05 m | -2.98 | 5.05 m (±0.13) | 2102 / 578 | 100% |
 | A: forecast at monitored wells | LightGBM | 4.77 m | 3.19 m | 2.67 m | -3.51 | 4.87 m (±0.10) | 2102 / 578 | 100% |
 | B: unmonitored places | kriging | 9.38 m | 7.18 m | 5.55 m | -8.17 | 11.11 m (±2.55) | 1799 / 134 | 100% |
+| B: unmonitored places | depth kriging | 8.01 m | 6.42 m | 6.90 m | -12.00 | 8.75 m (±1.08) | 1799 / 134 | 100% |
 | B: unmonitored places | random forest | 8.14 m | 6.66 m | 5.42 m | -7.56 | 8.91 m (±1.66) | 1799 / 134 | 100% |
 | B: unmonitored places | LightGBM | 7.95 m | 6.42 m | 4.98 m | -5.65 | 8.63 m (±1.19) | 1799 / 134 | 100% |
 | C: unmonitored places, later years | trend + kriging | 10.77 m | 7.87 m | 5.17 m | -13.66 | 14.01 m (±3.84) | 479 / 124 | 100% |
+| C: unmonitored places, later years | depth trend + kriging | 10.21 m | 8.18 m | 7.12 m | -34.67 | 11.09 m (±0.81) | 479 / 124 | 100% |
 | C: unmonitored places, later years | random forest | 9.20 m | 7.21 m | 6.12 m | -11.86 | 10.90 m (±1.65) | 479 / 124 | 100% |
 | C: unmonitored places, later years | LightGBM | 9.26 m | 7.31 m | 5.95 m | -13.22 | 10.76 m (±1.33) | 479 / 124 | 100% |
 
@@ -42,9 +44,11 @@ Best baseline per task (mean RMSE over the 3 layouts): **A: persistence**; **B: 
 | A: forecast at monitored wells | random forest | 2.59 m | 1.78 m | 1.32 m | -2.06 | 2.47 m (±0.10) | 626 / 302 | 100% |
 | A: forecast at monitored wells | LightGBM | 2.52 m | 1.76 m | 1.40 m | -1.71 | 2.50 m (±0.04) | 626 / 302 | 100% |
 | B: unmonitored places | kriging | 9.59 m | 7.91 m | 7.36 m | -39.41 | 9.73 m (±0.25) | 793 / 60 | 100% |
+| B: unmonitored places | depth kriging | 8.08 m | 7.02 m | 7.77 m | -35.34 | 8.08 m (±0.63) | 793 / 60 | 100% |
 | B: unmonitored places | random forest | 9.15 m | 7.77 m | 7.29 m | -21.57 | 8.82 m (±0.76) | 793 / 60 | 100% |
 | B: unmonitored places | LightGBM | 7.94 m | 6.60 m | 6.10 m | -18.49 | 8.38 m (±1.02) | 793 / 60 | 100% |
 | C: unmonitored places, later years | trend + kriging | 8.57 m | 7.28 m | 7.11 m | -96.48 | 8.20 m (±0.86) | 68 / 25 | 100% |
+| C: unmonitored places, later years | depth trend + kriging | 10.88 m | 9.40 m | 10.32 m | -190.44 | 8.20 m (±2.32) | 68 / 25 | 100% |
 | C: unmonitored places, later years | random forest | 11.07 m | 8.95 m | 8.15 m | -164.75 | 9.06 m (±1.75) | 68 / 25 | 100% |
 | C: unmonitored places, later years | LightGBM | 10.32 m | 8.48 m | 6.80 m | -178.39 | 8.86 m (±1.33) | 68 / 25 | 100% |
 

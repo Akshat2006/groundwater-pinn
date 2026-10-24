@@ -57,6 +57,7 @@ Errors are the PINN estimate relative to the truth (−34% = 34% too low). Full 
 | run10 | v2, 40k joint steps | -52% | -100% | 43% | -34% | 0.65 m | n/a |
 | run1 | v2_seed2, 40k joint steps | -8% | +3% | 19% | -3% | 0.06 m | ❌ |
 | run4 | v2_w1, 40k joint steps | -45% | -49% | 52% | -19% | 0.15 m | n/a |
+| d3 | diag, 40k joint steps | -15% | -18% | 8% | -7% | 0.09 m | n/a |
 
 ![trajectory](figures/m2_gate_trajectory.png)
 
@@ -145,6 +146,7 @@ Each run changes one thing relative to the run it is compared with. They start f
 | T fixed at 1,950 (30% too high); only S and pumping learned | run3: S -37%, T -79%, seasons 46%, 0.15 m | -2% | +30% | 50% | -0% | 0.11 m |
 | Data weight 10 instead of 100 | run3: S -37%, T -79%, seasons 46%, 0.15 m | -25% | -33% | 52% | -11% | 0.13 m |
 | Noisy data (0.3 m), data weight 1 instead of 100 | run4: S -97%, T -100%, seasons 41%, 1.57 m | -46% | -55% | 47% | -20% | 0.16 m |
+| Case A, 30 wells, monthly (stand-in for ~30 daily telemetry sensors) | gate run (run1) | -15% | -18% | 8% | -7% | 0.09 m |
 
 ## What the metrics mean
 

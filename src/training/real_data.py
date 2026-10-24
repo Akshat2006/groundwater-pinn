@@ -11,7 +11,8 @@ Inputs per zone:
 - recharge: 0.22 × IMD daily rain (0.25°, ~25 km), regridded to `rain_res_m` (10 km: no detail lost, little memory)
   and smoothed over `smooth_days`;
 - land use: cropland fraction on the 1 km grid (input to the pumping network);
-- T: fixed at the CGWB report value for the zone (configs/priors.yaml); S starts at the GEC norm 0.12.
+- T: fixed at the CGWB report value for the zone (configs/priors.yaml); S starts at the GEC norm 0.12;
+- terrain base (h_net.terrain_sigma_km): the network models head minus smoothed elevation (see ZonePINN).
 """
 from __future__ import annotations
 
@@ -57,6 +58,23 @@ def zone_T(static: xr.Dataset, cells: np.ndarray, priors: dict) -> float:
     return float(np.exp(np.log(vals).mean()))
 
 
+def terrain_base(static: xr.Dataset, sigma_km: float, device="cpu") -> tuple[GridField, GridField]:
+    """Smoothed elevation [m] and its Laplacian [1/m] on the 1 km grid (Gaussian, `sigma_km`, NaN-aware).
+    Wells in held-out blocks showed the water table follows the land at the scale of tens of km: interpolating
+    depth to water beats interpolating head (validation, all 3 layouts)."""
+    from scipy.ndimage import gaussian_filter
+
+    E = static.elev_m.values.astype(float)
+    ok = np.isfinite(E)
+    res = float(static.attrs.get("res_m", static.x.values[1] - static.x.values[0]))
+    s = sigma_km * 1000.0 / res
+    B = gaussian_filter(np.where(ok, E, 0.0), s) / np.maximum(gaussian_filter(ok.astype(float), s), 1e-6)
+    P = np.pad(B, 1, mode="edge")
+    lap = (P[1:-1, 2:] + P[1:-1, :-2] + P[2:, 1:-1] + P[:-2, 1:-1] - 4 * B) / res**2
+    x, y = static.x.values, static.y.values
+    return GridField(B, x, y, device=device), GridField(lap, x, y, device=device)
+
+
 def recharge_grid(rain: xr.DataArray, x_edges: tuple[float, float], y_edges: tuple[float, float], res_m: float,
                   t_end: pd.Timestamp, rif: float, smooth_days: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """(time, y, x) recharge in m/day on a regular UTM grid covering the box, days from T_START to t_end."""
@@ -88,6 +106,8 @@ def zone_inputs(train: pd.DataFrame, zone_cells: np.ndarray, static: xr.Dataset,
     R, rx, ry = recharge_grid(rain, bx, by, rain_res_m, pd.Timestamp(t_end), priors["rif"],
                               cfg["training"]["recharge_smooth_days"])
     T_fixed = zone_T(static, zone_cells, priors)
+    sigma = cfg["h_net"].get("terrain_sigma_km")
+    base, lap = terrain_base(static, sigma, device) if sigma else (None, None)
     return ZoneData(
         x_m=ok.x_m.values, y_m=ok.y_m.values, t_days=t_days(ok.date), head_m=ok.head_m.values,
         bounds={"x": bx, "y": by, "t": (0.0, t_hi)},
@@ -97,7 +117,7 @@ def zone_inputs(train: pd.DataFrame, zone_cells: np.ndarray, static: xr.Dataset,
         dry=None if dry.empty else {"x_m": dry.x_m.values, "y_m": dry.y_m.values, "t_days": t_days(dry.date),
                                     "bottom_m": dry.bottom_head_m.values},
         mask=torch.as_tensor(zone_cells[r0:r1, c0:c1], device=device),
-        well_index=wells.get_indexer(ok.well_id), n_wells=len(wells),
+        well_index=wells.get_indexer(ok.well_id), n_wells=len(wells), base=base, lap_base=lap,
     )
 
 
@@ -142,7 +162,9 @@ def load_real_run(run_dir, static: xr.Dataset, device="cpu"):
     landuse = GridField(static.lc_cropland_frac.fillna(0).values, static.x.values, static.y.values, device=device)
     state = torch.load(run_dir / "model.pt", map_location=device)
     qcfg = {**cfg["q_net"], "lu_mean": float(landuse.values.mean()), "lu_std": float(landuse.values.std()) or 1.0}
-    model = ZonePINN({**cfg, "q_net": qcfg}, norm, landuse, 0.1, 1000.0).to(device)
+    sigma = cfg["h_net"].get("terrain_sigma_km")
+    base, lap = terrain_base(static, sigma, device) if sigma else (None, None)
+    model = ZonePINN({**cfg, "q_net": qcfg}, norm, landuse, 0.1, 1000.0, base, lap).to(device)
     if "well_offset" in state:
         model.well_offset = torch.nn.Parameter(torch.zeros_like(state["well_offset"]))
     model.load_state_dict(state)

@@ -54,9 +54,19 @@ class Normaliser:
 
 
 class ZonePINN(nn.Module):
-    def __init__(self, cfg: dict, norm: Normaliser, landuse: GridField, S_init: float, T_init: float):
+    """Optional real-data extras:
+    - `base` (+ its Laplacian `lap_base`): a fixed smooth terrain surface [m]. The network then models head − base,
+      so in the gaps between wells the water table follows the land (depth to water is far smoother in space
+      than head). The PDE still acts on the full head: T∇²base is passed to the residual as a known source.
+    - training.S_range [lo, hi]: S is kept inside this range (log-uniform squash). Real data push S towards 0
+      when the network fits noise (M2 noise runs; real batch 1), which switches the time physics off.
+    """
+
+    def __init__(self, cfg: dict, norm: Normaliser, landuse: GridField, S_init: float, T_init: float,
+                 base: GridField | None = None, lap_base: GridField | None = None):
         super().__init__()
         self.norm, self.sc, self.landuse = norm, norm.phys_scales(), landuse
+        self.base, self.lap_base = base, lap_base
         h_cfg, q_cfg = cfg["h_net"], cfg["q_net"]
         self.n_harm_q = q_cfg.get("n_harmonics", 2)
         # season input for pumping: "harmonics" (smooth annual waves) or "month" (one-hot calendar month,
@@ -71,7 +81,14 @@ class ZonePINN(nn.Module):
         n_feat = 1 + n_season + (3 if self.q_mode == "full" else 0)
         self.q_net = QNet(n_feat, q_cfg["width"], q_cfg["depth"], q_cfg.get("q_scale_m_day", norm.flux_scale_m_per_day),
                           self.q_mode, q_cfg.get("act", "tanh"))
-        self.log_S = nn.Parameter(torch.tensor(math.log(S_init)))
+        S_range = cfg.get("training", {}).get("S_range")
+        self.S_log_range = None if S_range is None else (math.log(S_range[0]), math.log(S_range[1]))
+        if self.S_log_range is None:
+            self.log_S = nn.Parameter(torch.tensor(math.log(S_init)))
+        else:                                   # log_S holds the unsquashed value: log S = lo + (hi − lo)·sigmoid(log_S)
+            lo, hi = self.S_log_range
+            u = min(max((math.log(S_init) - lo) / (hi - lo), 1e-4), 1 - 1e-4)
+            self.log_S = nn.Parameter(torch.tensor(math.log(u / (1 - u))))
         self.log_T = nn.Parameter(torch.tensor(math.log(T_init)))
         # In the PDE residual, Q is averaged over the same running-mean window as the recharge, so both
         # sources are compared at the same time resolution (see recharge.py). 1 = off.
@@ -80,7 +97,10 @@ class ZonePINN(nn.Module):
 
     @property
     def S(self) -> Tensor:
-        return torch.exp(self.log_S)
+        if self.S_log_range is None:
+            return torch.exp(self.log_S)
+        lo, hi = self.S_log_range
+        return torch.exp(lo + (hi - lo) * torch.sigmoid(self.log_S))
 
     @property
     def T(self) -> Tensor:
@@ -91,7 +111,14 @@ class ZonePINN(nn.Module):
 
     def head(self, xyt_n: Tensor) -> Tensor:
         """Head in metres."""
-        return self.norm.h.inverse(self.h_net(xyt_n))
+        return self.norm.h.inverse(self.h_net(xyt_n)) + self.base_at(xyt_n)
+
+    def base_at(self, xyt_n: Tensor) -> Tensor | float:
+        """Terrain base [m] at the points (0 without one)."""
+        if self.base is None:
+            return 0.0
+        x_m, y_m, _ = self.norm.to_phys(xyt_n)
+        return self.base(x_m, y_m)
 
     def pumping(self, xyt_n: Tensor) -> Tensor:
         """Q [m/day] at the points."""
@@ -124,6 +151,9 @@ class ZonePINN(nn.Module):
         xyt_n = xyt_n.requires_grad_(True)
         h_n = self.h_net(xyt_n)
         Q = self.pumping_window_mean(xyt_n)
+        if self.lap_base is not None:            # S h_t − T(∇²net + ∇²base) − R + Q: the base term joins R
+            x_m, y_m, _ = self.norm.to_phys(xyt_n.detach())
+            R = R + self.T * self.lap_base(x_m, y_m)
         out = pde_residual(h_n, xyt_n, self.S, self.T, R, Q, self.sc, return_terms=return_terms)
         if return_terms:
             res, terms = out
