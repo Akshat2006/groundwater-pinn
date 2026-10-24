@@ -11,7 +11,7 @@ Loss in stages 2–4: L_pde + λ·L_data (+ censored + prior). λ comes from the
 weighting.py (or is fixed if training.weighting.type = "fixed").
 
 Optional per-well offsets (training.well_offsets.weight > 0, real data): each well gets a constant correction to
-its measured level, with a gentle penalty (sd `sigma_m`). It absorbs the error of the elevation model at the well
+its measured level, with a Gaussian prior of spread `sigma_m` against reading noise `sigma_noise_m`. It absorbs the error of the elevation model at the well
 (PLAN.md §2.8 item 10), so the network's surface need not bend to fit each well's elevation error. A place
 without a well gets offset 0.
 """
@@ -94,7 +94,12 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
     if use_offsets:
         model.well_offset = torch.nn.Parameter(torch.zeros(zone.n_wells, device=device))
         w_idx = torch.as_tensor(zone.well_index, dtype=torch.long, device=device)
-        off_scale = norm.h.std / ocfg.get("sigma_m", 3.0)        # penalty = mean((offset_m / sigma_m)²)
+        # Gaussian prior on offsets, on the same footing as the data term: with reading noise sigma_noise and
+        # offset spread sigma_m, the most likely fit minimises  Σ err² / sigma_noise² + Σ offset² / sigma_m².
+        # Divided by N / sigma_noise² (data_loss is a mean over N readings, in normalised units) that is
+        # data_loss + (sigma_noise / sigma_m)² · (n_wells / N) · mean(offset²), offsets in normalised units.
+        off_coef = (ocfg.get("weight", 1.0) * (ocfg.get("sigma_noise_m", 1.0) / ocfg.get("sigma_m", 3.0)) ** 2
+                    * zone.n_wells / len(zone.head_m))
 
     def h_at_obs(idx=None):
         h = model.head_norm(xyt_obs if idx is None else xyt_obs[idx])
@@ -103,7 +108,7 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
         return h
 
     def offset_penalty():
-        return ocfg["weight"] * torch.mean((model.well_offset * off_scale) ** 2) if use_offsets else 0.0
+        return off_coef * torch.mean(model.well_offset ** 2) if use_offsets else 0.0
     if zone.dry:
         xyt_dry = norm.to_norm(tens(zone.dry["x_m"]), tens(zone.dry["y_m"]), tens(zone.dry["t_days"]))
         bottom_n = norm.h.transform(tens(zone.dry["bottom_m"])).unsqueeze(-1)
