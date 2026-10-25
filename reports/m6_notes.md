@@ -121,3 +121,17 @@ Recharge was rain only, although CLAUDE.md §6.4 item 6 asks for canal seepage.
 - regional at half and double strength (`tbc05`, `tbc2`), as sensitivity only.
 
 **Rule fixed before the results:** canals are kept if regional `tbc` scores lower than regional `tb_off1`. The zoned design is then chosen as before, with canals if kept. Final runs (5 seeds × 3 layouts) follow in batch 4 with the settings decided here.
+
+## Post-processing checks for places with no well (2026-10-25, validation, layout 0)
+
+**Residual kriging** (krige each training well's correction to the unseen places and add it). Variants fixed before looking; scratch script, no retraining.
+
+| Run | No correction (B / C) | Krige learned offsets | Krige mean training residual |
+|---|---|---|---|
+| regional `tb_off1` | 9.51 / 11.31 | 9.39 / 11.18 | 9.48 / 11.29 |
+| regional `tb` | 10.46 / 10.78 | 10.46 / 10.77 | 10.50 / 10.82 |
+| per-zone `tb` | 19.18 / 12.47 | 19.19 / 12.46 | 19.22 / 12.50 |
+
+Gain at most 1.3%. The corrections are not smooth in space at well spacing (as in M4: neighbour correlation ~0.1), so kriging cannot carry them to new places. Kept only as an optional secondary row in the final tables (same step for every PINN, so it does not change zoned vs regional).
+
+**Averaging the PINN with a baseline** (equal weights, no tuning), Task B: with depth kriging 8.38, with LightGBM 8.20, against LightGBM alone 7.94. Errors of the PINN and the baselines are strongly correlated (0.63–0.76): all methods miss the *same* wells. Most of the Task B error is local variation that none of the inputs explain (water levels differ by 31 m between B wells), so no post-processing closes the gap to LightGBM. Not adopted.
