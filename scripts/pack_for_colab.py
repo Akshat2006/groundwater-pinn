@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SKIP_DIRS = {".venv", ".git", "__pycache__", ".pytest_cache", ".ipynb_checkpoints"}   # anywhere
 SKIP_PREFIXES = [("data", "raw"), ("data", "interim"), ("data", "synthetic"), ("reports", "runs")]
-SKIP_SUFFIXES = {".pyc", ".pt", ".ckpt", ".log", ".zip", ".docx"}   # .docx: personal documents in the repo root
+SKIP_SUFFIXES = {".pyc", ".pt", ".ckpt", ".log", ".zip", ".docx", ".pdf"}   # .docx/.pdf: personal documents in the repo root
 
 
 def main() -> None:

@@ -16,11 +16,13 @@ training:
   n_colloc: 8192              # larger domain and 20 years (synthetic: 60 x 60 km, 10 years)
   lbfgs_colloc: 16384
   stages: {data_only: 3000, physics_frozen: 5000, joint: 40000, lbfgs: 1000}
-canal_seepage:                # extra recharge along canals (CLAUDE.md §6.4 item 6), off by default (strength 0).
+canal_seepage:                # extra recharge along canals (CLAUDE.md §6.4 item 6).
                               # Validation wells within 2 km of a canal sit 6.1 m above the regional PINN (far: 0.6 m);
                               # training wells' corrections: +1.7 m near, -0.95 m far. GEC-2015 Table 9: unlined canals in
                               # normal soils 17.5 ham/day per million m² of wetted area = 0.175 m/day.
-  strength: 0                 # 1 = the norm with the assumptions below; area mean ~0.025 m/yr (rain recharge ~0.14)
+  strength: 1                 # 1 = the norm with the assumptions below; area mean ~0.025 m/yr (rain recharge ~0.14).
+                              # Batch 3 (tag tbc), pre-set rule on validation: score 2.22 vs 2.27 without -> kept.
+                              # Half / double (tbc05, tbc2) are sensitivity only, not chosen from.
   seepage_m_per_day: 0.175
   wetted_m: 10                # assumed wetted perimeter of the mapped channels
   days_per_yr: 180            # assumed canal running days (rotational supply)

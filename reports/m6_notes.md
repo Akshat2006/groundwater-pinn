@@ -135,3 +135,36 @@ Recharge was rain only, although CLAUDE.md §6.4 item 6 asks for canal seepage.
 Gain at most 1.3%. The corrections are not smooth in space at well spacing (as in M4: neighbour correlation ~0.1), so kriging cannot carry them to new places. Kept only as an optional secondary row in the final tables (same step for every PINN, so it does not change zoned vs regional).
 
 **Averaging the PINN with a baseline** (equal weights, no tuning), Task B: with depth kriging 8.38, with LightGBM 8.20, against LightGBM alone 7.94. Errors of the PINN and the baselines are strongly correlated (0.63–0.76): all methods miss the *same* wells. Most of the Task B error is local variation that none of the inputs explain (water levels differ by 31 m between B wells), so no post-processing closes the gap to LightGBM. Not adopted.
+
+## Real batch 3 (validation, layout 0, seed 0)
+
+Typical error (RMSE) in metres. "Wells improved" = share of wells whose own error is smaller than with the regional PINN of the same setting; p = Wilcoxon paired test across wells (below 0.05 = unlikely to be luck).
+
+| Model | A (monitored, 2019) | B (no well) | C (no well, 2019) | Score |
+|---|---|---|---|---|
+| regional `tb_off1` (no canals) | 2.03 | 9.51 | 11.31 | 2.27 |
+| regional `tbc` (canals, GEC norm) | 2.03 | 9.12 | 10.78 | **2.22** |
+| regional `tbc05` / `tbc2` (half / double canals, sensitivity) | 2.02 / 2.03 | 8.92 / 7.56 | 10.89 / 9.61 | not chosen from |
+| per-zone networks `tb_off1` | 2.09 | 11.21 | 12.06 | 2.51 |
+| **shared zoned** `tb_off1` | 2.15 | 8.43 | 11.01 | 2.19 |
+| **shared zoned** `tbc` | 2.16 | **8.00** | 10.27 | **2.15** |
+| baselines: persistence / LightGBM / trend + kriging | 1.90 | 7.94 | 8.57 | |
+
+**Rules applied (fixed before the runs):**
+- Canals kept: regional `tbc` 2.22 < `tb_off1` 2.27. `canal_seepage.strength` default is now 1.
+- Zoned design: shared (2.15) beats per-zone (2.51). Shared `tbc` goes to the final runs.
+
+**Zoned (shared) vs regional, both with canals:**
+- Task B: 8.00 vs 9.12 m (12% lower); 75% of wells improved, p < 0.001.
+- Task C: 10.27 vs 10.78 m (5% lower); 76% of wells improved, p = 0.045.
+- Task A: 2.16 vs 2.03 m (6% higher); 52% of wells improved, p = 0.87 (no consistent difference per well).
+
+Sharing one water-level network fixed the per-zone failure at unseen places (B 11.2 → 8.4 m), as expected from PLAN.md risk #7.
+
+**Against the baselines (shared `tbc`):** Task B 8.00 vs LightGBM 7.94 (level in RMSE, but LightGBM better on 60% of wells, p = 0.14), beats depth kriging (8.08) and kriging (9.59). Task C: behind trend + kriging (8.57).
+
+**Learned parameters:** S stays at the lower bound 0.072 in 3 of 4 zones (zone 4: 0.076–0.087). Pumping 0.20–0.23 m/yr over 2005–2018; canal recharge adds 0.028 m/yr on average.
+
+**Caveats:** one seed, one layout, 60 validation wells in task B. Double canal seepage scored best of all on B (7.56), which suggests the GEC-norm assumptions may be on the low side; it is reported as sensitivity, not adopted.
+
+**Next:** batch 4 (`notebooks/colab_real_batch4.ipynb`): regional and shared `tbc`, 5 seeds × 3 layouts; then the test set is scored once (`predict_real.py --stage test`, `check_m6.py --stage test --ref-tag tbc`).
