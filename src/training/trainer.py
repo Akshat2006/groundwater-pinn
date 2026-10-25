@@ -58,6 +58,7 @@ class ZoneData:
     base: GridField | None = None     # optional terrain base [m] and its Laplacian [1/m] (see ZonePINN)
     lap_base: GridField | None = None
     zone_w: list | None = None        # shared zoned model: one indicator GridField per zone; S_init, T_init per zone
+    canal: GridField | None = None    # optional canal seepage recharge [m/day], static, added to `recharge`
 
     def base_m(self, x_m, y_m) -> np.ndarray:
         """Terrain base at points as a numpy array (zeros without one)."""
@@ -146,7 +147,8 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
 
     def R_at(xyt_n):
         x_m, y_m, t_d = norm.to_phys(xyt_n)
-        return zone.recharge(x_m, y_m, t_d)
+        R = zone.recharge(x_m, y_m, t_d)
+        return R if zone.canal is None else R + zone.canal(x_m, y_m)
 
     def losses(physics: bool):
         if batch and batch < len(xyt_obs):

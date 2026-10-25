@@ -237,3 +237,20 @@ def test_report_T_and_time_axis():
     assert report_T({"T": [400, 1600]}, 1500) == pytest.approx(800.0)
     assert report_T({"T": 2200}, 1500) == 2200.0 and report_T({"T": None}, 1500) == 1500.0
     assert t_days(pd.to_datetime(["2005-01-01", "2005-01-11"])).tolist() == [0.5, 10.5]
+
+
+def test_canal_recharge_follows_the_gec_formula():
+    """Recharge = density × wetted area per km × seepage factor × running days / year, spread without losing water."""
+    import xarray as xr
+    from src.training.real_data import canal_recharge
+
+    x = np.arange(500.0, 30_000, 1000)
+    dens = np.zeros((30, 30))
+    dens[15, :] = 1.0                                     # one canal: 1 km per km² along a row
+    st = xr.Dataset({"canal_density_km_per_km2": (("y", "x"), dens)}, coords={"x": x, "y": x})
+    ccfg = {"strength": 1.0, "seepage_m_per_day": 0.175, "wetted_m": 10, "days_per_yr": 180, "sigma_km": 0}
+    R = canal_recharge(st, ccfg).values[0].numpy()
+    per_km2 = 10 * 1000 * 0.175 * 180 / 365.25 / 1e6
+    assert R[15, 3] == pytest.approx(per_km2, rel=1e-5) and R[3, 3] == 0
+    spread = canal_recharge(st, {**ccfg, "sigma_km": 2, "strength": 2.0}).values[0].numpy()
+    assert spread.sum() == pytest.approx(2 * R.sum(), rel=1e-3) and spread[13, 3] > 0

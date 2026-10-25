@@ -98,3 +98,26 @@ All 8 runs finished. Validation, layout 0, seed 0. Score = A / 1.90 + B / 7.94 (
 - Final regional `tb_off1` runs: seeds 1–4 on layout 0, seeds 0–4 on layouts 1 and 2.
 
 **Rule fixed before batch 3 results:** per-zone (E7) vs shared (E20), both `tb_off1`, layout 0, seed 0: the lower score A / 1.90 + B / 7.94 becomes "ours" and gets the final runs (5 seeds × 3 layouts). The other design is reported on validation as a design comparison. The primary result (zoned vs regional PINN, Task B, test, 3 layouts) is unchanged.
+
+### Batch 3 revised: canal seepage added, final runs moved to batch 4
+
+Recharge was rain only, although CLAUDE.md §6.4 item 6 asks for canal seepage.
+
+**Evidence that it is missing:**
+- Validation Task B wells within 2 km of a canal: the regional `tb_off1` PINN is 6.1 m too low on average (29 wells). Farther away: 0.6 m (31 wells).
+- Training wells' per-well corrections: +1.7 m near canals, −0.95 m far.
+- Long-term trend: −0.34 m/yr near canals, −0.43 m/yr far.
+
+**How it is added (`canal_seepage` in `configs/pinn_real.yaml`, `real_data.canal_recharge`):**
+- GEC-2015 formula: recharge = wetted area × seepage factor × running days.
+- Table 9 norm: unlined canals in normal soils, 17.5 ham/day per million m² of wetted area. Assumed: wetted perimeter 10 m, 180 running days a year.
+- OSM canal density, spread with a 2 km Gaussian.
+- Result: area mean about 0.025 m/yr (rain recharge about 0.14 m/yr); 0.066 m/yr within 2 km of a canal.
+
+**Size check on training wells only:** a 20–50 year finite-difference run with this source gives a near/far bump of 2.0–4.1 m, the same size as the 2.7 m gap in the training corrections. So strength 1 (the norm) is used without tuning. Its correlation with individual wells' corrections is weak (0.10–0.17): it explains the group difference, not each well.
+
+**Runs:**
+- regional and shared with strength 1 (`tbc`);
+- regional at half and double strength (`tbc05`, `tbc2`), as sensitivity only.
+
+**Rule fixed before the results:** canals are kept if regional `tbc` scores lower than regional `tb_off1`. The zoned design is then chosen as before, with canals if kept. Final runs (5 seeds × 3 layouts) follow in batch 4 with the settings decided here.

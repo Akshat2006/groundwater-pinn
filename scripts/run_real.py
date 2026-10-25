@@ -111,6 +111,8 @@ def run_zone(zone_id, zone_cells, df, static, rain, priors, cfg, args, label, zo
                "train_rmse_m": float(res.history.data_rmse_m.iloc[-1]),
                "pumping_2005_2018_m_per_yr": float(pump[pump.year <= 2018].pumping_m_per_yr.mean()),
                "offset_sd_m": float(offsets.std()) if len(offsets) else None}
+    if zone.canal is not None:                # area-mean canal recharge over the zone, m/yr
+        metrics["canal_recharge_m_per_yr"] = float(zone.canal.values[0].cpu().numpy()[zone_cells].mean() * 365.25)
     if zone_maps is not None:
         metrics.update(S_zones=res.info["S_zones"], T_zones=res.info["T_zones"])
     for (stage, task), g in (preds.groupby(["stage", "task"]) if len(preds) else []):

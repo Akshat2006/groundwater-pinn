@@ -12,7 +12,8 @@ Inputs per zone:
   and smoothed over `smooth_days`;
 - land use: cropland fraction on the 1 km grid (input to the pumping network);
 - T: fixed at the CGWB report value for the zone (configs/priors.yaml); S starts at the GEC norm 0.12;
-- terrain base (h_net.terrain_sigma_km): the network models head minus smoothed elevation (see ZonePINN).
+- terrain base (h_net.terrain_sigma_km): the network models head minus smoothed elevation (see ZonePINN);
+- canal seepage (canal_seepage.strength > 0): extra recharge along canals, from the GEC-2015 norm (canal_recharge).
 """
 from __future__ import annotations
 
@@ -89,6 +90,23 @@ def zone_weight_fields(zmap: np.ndarray, mask: np.ndarray, static: xr.Dataset, d
     return ids, [GridField((z == i).astype(np.float32), x, y, device=device) for i in ids]
 
 
+def canal_recharge(static: xr.Dataset, ccfg: dict, device="cpu") -> GridField:
+    """Canal seepage recharge [m/day, yearly average] on the 1 km grid (GEC-2015: recharge = wetted area × seepage
+    factor × canal running days). Per km of canal: wetted_m × 1000 m² leaking seepage_m_per_day on days_per_yr days.
+    Spread by a Gaussian of sigma_km (the mound under a canal widens by ~2 km a year for T 1500 m²/day, S 0.1) and
+    scaled by `strength` (1 = the norm with these assumptions). OSM misses many small channels, so density is a
+    lower bound."""
+    from scipy.ndimage import gaussian_filter
+
+    dens = np.nan_to_num(static.canal_density_km_per_km2.values.astype(float))   # km of canal per km²
+    res = float(static.attrs.get("res_m", static.x.values[1] - static.x.values[0]))
+    if ccfg.get("sigma_km"):
+        dens = gaussian_filter(dens, ccfg["sigma_km"] * 1000.0 / res)
+    per_km = ccfg["wetted_m"] * 1000.0 * ccfg["seepage_m_per_day"] * ccfg["days_per_yr"] / 365.25   # m³/day per km
+    R = ccfg["strength"] * dens * per_km / 1e6
+    return GridField(R, static.x.values, static.y.values, device=device)
+
+
 def recharge_grid(rain: xr.DataArray, x_edges: tuple[float, float], y_edges: tuple[float, float], res_m: float,
                   t_end: pd.Timestamp, rif: float, smooth_days: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """(time, y, x) recharge in m/day on a regular UTM grid covering the box, days from T_START to t_end."""
@@ -139,6 +157,7 @@ def zone_inputs(train: pd.DataFrame, zone_cells: np.ndarray, static: xr.Dataset,
                                     "bottom_m": dry.bottom_head_m.values},
         mask=torch.as_tensor(zone_cells[r0:r1, c0:c1], device=device),
         well_index=wells.get_indexer(ok.well_id), n_wells=len(wells), base=base, lap_base=lap, zone_w=zone_w,
+        canal=canal_recharge(static, cfg["canal_seepage"], device) if cfg.get("canal_seepage", {}).get("strength") else None,
     )
 
 
