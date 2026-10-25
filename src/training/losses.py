@@ -28,4 +28,4 @@ def pde_loss(residual: Tensor) -> Tensor:
 
 def prior_loss(log_S: Tensor, log_T: Tensor, S_prior: float, T_prior: float, sigma_log: float) -> Tensor:
     s, t = torch.log(torch.tensor(S_prior)), torch.log(torch.tensor(T_prior))
-    return ((log_S - s) ** 2 + (log_T - t) ** 2) / sigma_log**2
+    return (((log_S - s) ** 2).sum() + ((log_T - t) ** 2).sum()) / sigma_log**2

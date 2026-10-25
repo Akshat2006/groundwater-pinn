@@ -39,7 +39,7 @@ def main() -> None:
         model, cfg = load_real_run(d, static)
         df = with_layout(levels, splits, cfg["layout"])
         zone = cfg["zone"]
-        if zone is not None:
+        if zone is not None or cfg.get("shared"):
             a = assign[(assign.method == cfg["method"]) & (assign.layout == cfg["layout"]) & (assign.k == cfg["k"])]
             df["zone_map"] = df.well_id.map(a.set_index("well_id").zone_map)
         offsets = (pd.read_csv(d / "well_offsets.csv", index_col=0).offset_m
@@ -55,8 +55,8 @@ def main() -> None:
             p = predict_heads(model, tgt.x_m.values, tgt.y_m.values, tgt.date)
             if task == "A" and len(offsets):
                 p = p + tgt.well_id.map(offsets).fillna(0.0).to_numpy()
-            new.append(tgt[["well_id", "date", "head_m", "x_m", "y_m"]].assign(task=task, stage=args.stage, pred=p,
-                                                                                zone=zone or 1))
+            new.append(tgt[["well_id", "date", "head_m", "x_m", "y_m"]].assign(
+                task=task, stage=args.stage, pred=p, zone=tgt.zone_map if cfg.get("shared") else (zone or 1)))
         old = pd.read_parquet(d / "predictions.parquet") if (d / "predictions.parquet").exists() else pd.DataFrame()
         if len(old):
             old = old[old.stage != args.stage]

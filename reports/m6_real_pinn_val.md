@@ -4,34 +4,49 @@
 
 ## Water-level errors
 
-| layout | task | model | RMSE | MAE | Median well RMSE | Wells improved vs regional PINN | p-value | Readings / wells |
+| layout | task | model | RMSE | MAE | Median well RMSE | Wells improved vs regional PINN tb_off1 | p-value | Readings / wells |
 |---|---|---|---|---|---|---|---|---|
-| 0 | A | PINN kmeansk5 base (seed 0) | 10.06 m | 5.73 m | 3.66 m | 35% | 0.000 | 601 / 295 |
-| 0 | A | PINN regional base (seed 0) | 4.08 m | 3.11 m | 2.38 m |  |  | 601 / 295 |
-| 0 | A | PINN regional off1 (seed 0) | 2.41 m | 1.78 m | 1.29 m |  |  | 601 / 295 |
-| 0 | A | PINN regional off1000 (seed 0) | 4.82 m | 3.57 m | 2.73 m |  |  | 601 / 295 |
-| 0 | A | PINN regional w1 (seed 0) | 4.19 m | 3.29 m | 2.78 m |  |  | 601 / 295 |
-| 0 | A | PINN regional w100 (seed 0) | 21.48 m | 13.07 m | 7.15 m |  |  | 601 / 295 |
-| 0 | A | baseline: persistence | 1.90 m | 1.34 m | 1.00 m | 73% | 0.000 | 601 / 295 |
-| 0 | A | baseline: seasonal trend | 2.04 m | 1.45 m | 1.31 m | 64% | 0.000 | 601 / 295 |
-| 0 | B | PINN kmeansk5 base (seed 0) | 13.91 m | 10.71 m | 10.16 m | 27% | 0.000 | 793 / 60 |
-| 0 | B | PINN regional base (seed 0) | 9.38 m | 7.73 m | 6.88 m |  |  | 793 / 60 |
-| 0 | B | PINN regional off1 (seed 0) | 12.16 m | 11.33 m | 12.05 m |  |  | 793 / 60 |
-| 0 | B | PINN regional off1000 (seed 0) | 10.22 m | 7.89 m | 6.26 m |  |  | 793 / 60 |
-| 0 | B | PINN regional w1 (seed 0) | 9.85 m | 8.72 m | 9.41 m |  |  | 793 / 60 |
-| 0 | B | PINN regional w100 (seed 0) | 10.15 m | 8.05 m | 8.70 m |  |  | 793 / 60 |
-| 0 | B | baseline: kriging | 9.59 m | 7.91 m | 7.36 m | 47% | 0.941 | 793 / 60 |
-| 0 | B | baseline: depth kriging | 8.08 m | 7.02 m | 7.77 m | 52% | 0.774 | 793 / 60 |
-| 0 | B | baseline: LightGBM | 7.94 m | 6.60 m | 6.10 m | 50% | 0.248 | 793 / 60 |
-| 0 | C | PINN kmeansk5 base (seed 0) | 13.31 m | 11.56 m | 9.75 m | 32% | 0.067 | 68 / 25 |
-| 0 | C | PINN regional base (seed 0) | 11.91 m | 10.00 m | 7.51 m |  |  | 68 / 25 |
-| 0 | C | PINN regional off1 (seed 0) | 13.54 m | 12.60 m | 13.82 m |  |  | 68 / 25 |
-| 0 | C | PINN regional off1000 (seed 0) | 11.75 m | 9.93 m | 7.74 m |  |  | 68 / 25 |
-| 0 | C | PINN regional w1 (seed 0) | 12.99 m | 11.45 m | 10.15 m |  |  | 68 / 25 |
-| 0 | C | PINN regional w100 (seed 0) | 18.90 m | 13.97 m | 12.40 m |  |  | 68 / 25 |
-| 0 | C | baseline: trend + kriging | 8.57 m | 7.28 m | 7.11 m | 60% | 0.113 | 68 / 25 |
-| 0 | C | baseline: depth trend + kriging | 10.88 m | 9.40 m | 10.32 m | 44% | 0.367 | 68 / 25 |
-| 0 | C | baseline: LightGBM | 10.32 m | 8.48 m | 6.80 m | 52% | 0.751 | 68 / 25 |
+| 0 | A | PINN kmeansk5 base (seed 0) | 10.06 m | 5.73 m | 3.66 m | 16% | 0.000 | 601 / 295 |
+| 0 | A | PINN kmeansk5 tb (seed 0) | 2.73 m | 1.95 m | 1.49 m | 38% | 0.000 | 601 / 295 |
+| 0 | A | PINN regional base (seed 0) | 4.08 m | 3.11 m | 2.38 m | 23% | 0.000 | 601 / 295 |
+| 0 | A | PINN regional off1 (seed 0) | 2.41 m | 1.78 m | 1.29 m | 42% | 0.000 | 601 / 295 |
+| 0 | A | PINN regional off1000 (seed 0) | 4.82 m | 3.57 m | 2.73 m | 20% | 0.000 | 601 / 295 |
+| 0 | A | PINN regional sr (seed 0) | 3.30 m | 2.55 m | 2.10 m | 26% | 0.000 | 601 / 295 |
+| 0 | A | PINN regional tb (seed 0) | 2.85 m | 2.17 m | 1.68 m | 31% | 0.000 | 601 / 295 |
+| 0 | A | PINN regional tb_off1 (seed 0) | 2.03 m | 1.49 m | 1.17 m |  |  | 601 / 295 |
+| 0 | A | PINN regional tbw (seed 0) | 3.95 m | 2.79 m | 1.81 m | 30% | 0.000 | 601 / 295 |
+| 0 | A | PINN regional w1 (seed 0) | 4.19 m | 3.29 m | 2.78 m | 19% | 0.000 | 601 / 295 |
+| 0 | A | PINN regional w100 (seed 0) | 21.48 m | 13.07 m | 7.15 m | 7% | 0.000 | 601 / 295 |
+| 0 | A | baseline: persistence | 1.90 m | 1.34 m | 1.00 m | 55% | 0.087 | 601 / 295 |
+| 0 | A | baseline: seasonal trend | 2.04 m | 1.45 m | 1.31 m | 44% | 0.050 | 601 / 295 |
+| 0 | B | PINN kmeansk5 base (seed 0) | 13.91 m | 10.71 m | 10.16 m | 33% | 0.010 | 793 / 60 |
+| 0 | B | PINN kmeansk5 tb (seed 0) | 19.18 m | 14.94 m | 10.30 m | 42% | 0.013 | 793 / 60 |
+| 0 | B | PINN regional base (seed 0) | 9.38 m | 7.73 m | 6.88 m | 57% | 0.306 | 793 / 60 |
+| 0 | B | PINN regional off1 (seed 0) | 12.16 m | 11.33 m | 12.05 m | 17% | 0.000 | 793 / 60 |
+| 0 | B | PINN regional off1000 (seed 0) | 10.22 m | 7.89 m | 6.26 m | 57% | 0.292 | 793 / 60 |
+| 0 | B | PINN regional sr (seed 0) | 9.08 m | 7.24 m | 7.11 m | 57% | 0.266 | 793 / 60 |
+| 0 | B | PINN regional tb (seed 0) | 10.46 m | 8.32 m | 7.35 m | 55% | 0.561 | 793 / 60 |
+| 0 | B | PINN regional tb_off1 (seed 0) | 9.51 m | 8.62 m | 9.23 m |  |  | 793 / 60 |
+| 0 | B | PINN regional tbw (seed 0) | 10.69 m | 8.41 m | 7.13 m | 60% | 0.566 | 793 / 60 |
+| 0 | B | PINN regional w1 (seed 0) | 9.85 m | 8.72 m | 9.41 m | 43% | 0.276 | 793 / 60 |
+| 0 | B | PINN regional w100 (seed 0) | 10.15 m | 8.05 m | 8.70 m | 45% | 0.541 | 793 / 60 |
+| 0 | B | baseline: kriging | 9.59 m | 7.91 m | 7.36 m | 48% | 0.617 | 793 / 60 |
+| 0 | B | baseline: depth kriging | 8.08 m | 7.02 m | 7.77 m | 68% | 0.012 | 793 / 60 |
+| 0 | B | baseline: LightGBM | 7.94 m | 6.60 m | 6.10 m | 73% | 0.004 | 793 / 60 |
+| 0 | C | PINN kmeansk5 base (seed 0) | 13.31 m | 11.56 m | 9.75 m | 36% | 0.263 | 68 / 25 |
+| 0 | C | PINN kmeansk5 tb (seed 0) | 12.47 m | 10.17 m | 8.09 m | 56% | 0.653 | 68 / 25 |
+| 0 | C | PINN regional base (seed 0) | 11.91 m | 10.00 m | 7.51 m | 56% | 0.426 | 68 / 25 |
+| 0 | C | PINN regional off1 (seed 0) | 13.54 m | 12.60 m | 13.82 m | 24% | 0.085 | 68 / 25 |
+| 0 | C | PINN regional off1000 (seed 0) | 11.75 m | 9.93 m | 7.74 m | 56% | 0.672 | 68 / 25 |
+| 0 | C | PINN regional sr (seed 0) | 10.86 m | 9.07 m | 7.13 m | 64% | 0.134 | 68 / 25 |
+| 0 | C | PINN regional tb (seed 0) | 10.78 m | 9.17 m | 7.87 m | 68% | 0.096 | 68 / 25 |
+| 0 | C | PINN regional tb_off1 (seed 0) | 11.31 m | 10.29 m | 10.03 m |  |  | 68 / 25 |
+| 0 | C | PINN regional tbw (seed 0) | 9.92 m | 8.36 m | 7.21 m | 64% | 0.020 | 68 / 25 |
+| 0 | C | PINN regional w1 (seed 0) | 12.99 m | 11.45 m | 10.15 m | 48% | 0.411 | 68 / 25 |
+| 0 | C | PINN regional w100 (seed 0) | 18.90 m | 13.97 m | 12.40 m | 24% | 0.002 | 68 / 25 |
+| 0 | C | baseline: trend + kriging | 8.57 m | 7.28 m | 7.11 m | 76% | 0.001 | 68 / 25 |
+| 0 | C | baseline: depth trend + kriging | 10.88 m | 9.40 m | 10.32 m | 44% | 0.692 | 68 / 25 |
+| 0 | C | baseline: LightGBM | 10.32 m | 8.48 m | 6.80 m | 68% | 0.071 | 68 / 25 |
 
 ## Learned parameters per run
 
@@ -49,6 +64,14 @@ S = storage (GEC norm for alluvium: 0.12; NAQUIM range 0.07–0.15). T is fixed 
 | 0 | regional | w100 | 0 | nan | 0.000 | 1596 | 0.15 | 648 | 1.17 |
 | 0 | regional | off1 | 0 | nan | 0.075 | 1596 | 0.19 | 648 | 1.57 |
 | 0 | regional | off1000 | 0 | nan | 0.018 | 1596 | 0.16 | 648 | 2.72 |
+| 0 | regional | tb | 0 | nan | 0.072 | 1596 | 0.20 | 648 | 1.88 |
+| 0 | kmeansk5 | tb | 0 | 1.0 | 0.072 | 2172 | 0.20 | 151 | 1.10 |
+| 0 | kmeansk5 | tb | 0 | 2.0 | 0.072 | 1487 | 0.22 | 269 | 1.17 |
+| 0 | kmeansk5 | tb | 0 | 3.0 | 0.072 | 1175 | 0.08 | 73 | 0.67 |
+| 0 | kmeansk5 | tb | 0 | 4.0 | 0.072 | 1379 | 0.20 | 155 | 2.20 |
+| 0 | regional | tbw | 0 | nan | 0.020 | 1596 | 0.17 | 648 | 1.74 |
+| 0 | regional | sr | 0 | nan | 0.072 | 1596 | 0.20 | 648 | 2.40 |
+| 0 | regional | tb_off1 | 0 | nan | 0.072 | 1596 | 0.19 | 648 | 1.20 |
 
 ## How to read it
 

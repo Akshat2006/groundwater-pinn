@@ -75,6 +75,20 @@ def terrain_base(static: xr.Dataset, sigma_km: float, device="cpu") -> tuple[Gri
     return GridField(B, x, y, device=device), GridField(lap, x, y, device=device)
 
 
+def zone_weight_fields(zmap: np.ndarray, mask: np.ndarray, static: xr.Dataset, device="cpu"
+                       ) -> tuple[list[int], list[GridField]]:
+    """Zone ids and one 0/1 indicator GridField per zone (shared zoned model). Cells outside the study area take
+    the nearest zone, so the bilinear weights sum to 1 everywhere, also at the area's edge."""
+    from scipy.ndimage import distance_transform_edt
+
+    z = np.where(mask, zmap, 0)
+    _, (ri, ci) = distance_transform_edt(z <= 0, return_indices=True)
+    z = z[ri, ci]
+    ids = sorted(int(v) for v in np.unique(z) if v > 0)
+    x, y = static.x.values, static.y.values
+    return ids, [GridField((z == i).astype(np.float32), x, y, device=device) for i in ids]
+
+
 def recharge_grid(rain: xr.DataArray, x_edges: tuple[float, float], y_edges: tuple[float, float], res_m: float,
                   t_end: pd.Timestamp, rif: float, smooth_days: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """(time, y, x) recharge in m/day on a regular UTM grid covering the box, days from T_START to t_end."""
@@ -90,8 +104,10 @@ def recharge_grid(rain: xr.DataArray, x_edges: tuple[float, float], y_edges: tup
 
 
 def zone_inputs(train: pd.DataFrame, zone_cells: np.ndarray, static: xr.Dataset, rain: xr.DataArray, priors: dict,
-                cfg: dict, t_end: str = "2024-12-31", device="cpu", rain_res_m: float = 10000.0) -> ZoneData:
-    """ZoneData for the wells in `train` (already restricted to the zone) and the zone's map cells."""
+                cfg: dict, t_end: str = "2024-12-31", device="cpu", rain_res_m: float = 10000.0,
+                zone_maps: np.ndarray | None = None) -> ZoneData:
+    """ZoneData for the wells in `train` (already restricted to the zone) and the zone's map cells.
+    `zone_maps` (shared zoned model, PLAN.md E20): the zone map over the whole region; T is then fixed per zone."""
     x, y = static.x.values, static.y.values
     res = float(static.attrs.get("res_m", x[1] - x[0]))
     rows, cols = np.nonzero(zone_cells)
@@ -106,6 +122,11 @@ def zone_inputs(train: pd.DataFrame, zone_cells: np.ndarray, static: xr.Dataset,
     R, rx, ry = recharge_grid(rain, bx, by, rain_res_m, pd.Timestamp(t_end), priors["rif"],
                               cfg["training"]["recharge_smooth_days"])
     T_fixed = zone_T(static, zone_cells, priors)
+    S_init, zone_w = priors["belt"]["S"], None
+    if zone_maps is not None:
+        ids, zone_w = zone_weight_fields(zone_maps, zone_cells, static, device)
+        T_fixed = [zone_T(static, (zone_maps == i) & zone_cells, priors) for i in ids]
+        S_init = [S_init] * len(ids)
     sigma = cfg["h_net"].get("terrain_sigma_km")
     base, lap = terrain_base(static, sigma, device) if sigma else (None, None)
     return ZoneData(
@@ -113,11 +134,11 @@ def zone_inputs(train: pd.DataFrame, zone_cells: np.ndarray, static: xr.Dataset,
         bounds={"x": bx, "y": by, "t": (0.0, t_hi)},
         recharge=GridField(R, rx, ry, np.arange(R.shape[0]) + 0.5, device=device),
         landuse=GridField(static.lc_cropland_frac.fillna(0).values, x, y, device=device),
-        S_init=priors["belt"]["S"], T_init=T_fixed,
+        S_init=S_init, T_init=T_fixed,
         dry=None if dry.empty else {"x_m": dry.x_m.values, "y_m": dry.y_m.values, "t_days": t_days(dry.date),
                                     "bottom_m": dry.bottom_head_m.values},
         mask=torch.as_tensor(zone_cells[r0:r1, c0:c1], device=device),
-        well_index=wells.get_indexer(ok.well_id), n_wells=len(wells), base=base, lap_base=lap,
+        well_index=wells.get_indexer(ok.well_id), n_wells=len(wells), base=base, lap_base=lap, zone_w=zone_w,
     )
 
 
@@ -164,7 +185,14 @@ def load_real_run(run_dir, static: xr.Dataset, device="cpu"):
     qcfg = {**cfg["q_net"], "lu_mean": float(landuse.values.mean()), "lu_std": float(landuse.values.std()) or 1.0}
     sigma = cfg["h_net"].get("terrain_sigma_km")
     base, lap = terrain_base(static, sigma, device) if sigma else (None, None)
-    model = ZonePINN({**cfg, "q_net": qcfg}, norm, landuse, 0.1, 1000.0, base, lap).to(device)
+    S0, T0, zone_w = 0.1, 1000.0, None
+    if cfg.get("shared"):                       # shared zoned model: rebuild the zone weights from the zone map
+        from src.utils.config import data_dir
+        zones = xr.open_dataset(data_dir() / "processed" / "zones.nc").load()
+        zmap = zones.zone.sel({"method": cfg["method"], "layout": cfg["layout"], "k": cfg["k"]}).values
+        _, zone_w = zone_weight_fields(zmap, zones["mask"].values.astype(bool), static, device)
+        S0, T0 = [S0] * len(zone_w), [T0] * len(zone_w)
+    model = ZonePINN({**cfg, "q_net": qcfg}, norm, landuse, S0, T0, base, lap, zone_w).to(device)
     if "well_offset" in state:
         model.well_offset = torch.nn.Parameter(torch.zeros_like(state["well_offset"]))
     model.load_state_dict(state)

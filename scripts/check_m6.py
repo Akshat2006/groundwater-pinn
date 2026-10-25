@@ -1,6 +1,9 @@
 """M6/M7 report: real-data PINNs (regional and zoned) against the baselines on the same readings.
 
-    python scripts/check_m6.py [--stage val|test]   -> reports/m6_real_pinn.md, reports/tables/m6_real_pinn.csv
+    python scripts/check_m6.py [--stage val|test] [--ref-tag tb_off1]   -> reports/m6_real_pinn_<stage>.md, tables/...csv
+
+--ref-tag: the regional PINN setting the others are compared with ("wells improved", p-value); default: first found.
+A shared zoned model (run_real.py --shared, E20) is one run covering every zone.
 
 Groups run folders reports/runs/*_real_* by (layout, model, tag, seed). A zoned model is complete when every zone
 of its zoning has a run with the same tag and seed; its zone predictions are stitched into one set.
@@ -41,7 +44,8 @@ def collect_runs() -> pd.DataFrame:
         cfg = yaml.safe_load((d / "config.yaml").read_text())
         name = d.name.split("_real_", 1)[1]
         tag = name.split(f"_s{cfg['seed']}", 1)[1].lstrip("_") if f"_s{cfg['seed']}" in name else ""
-        model = "regional" if cfg["zone"] is None else f"{cfg['method']}k{cfg['k']}"
+        model = ("regional" if cfg["zone"] is None and not cfg.get("shared")
+                 else f"{cfg['method']}k{cfg['k']}" + (" shared" if cfg.get("shared") else ""))
         m = json.loads((d / "metrics.json").read_text())
         rows.append({"dir": d, "layout": cfg["layout"], "model": model, "zone": cfg["zone"], "seed": cfg["seed"],
                      "tag": tag, "S": m["S"], "T": m["T_fixed"], "pump": m["pumping_2005_2018_m_per_yr"],
@@ -56,6 +60,7 @@ def stitched(group: pd.DataFrame) -> pd.DataFrame:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--stage", default="val", choices=["val", "test"])
+    ap.add_argument("--ref-tag", default=None)
     args = ap.parse_args()
     proc = data_dir() / "processed"
     runs = collect_runs()
@@ -66,7 +71,7 @@ def main() -> None:
 
     models = {}
     for (layout, model, tag, seed), g in runs.groupby(["layout", "model", "tag", "seed"]):
-        if model != "regional":
+        if model != "regional" and not model.endswith("shared"):
             mth, k = re.match(r"(\w+?)k(\d+)$", model).groups()
             need = zsum["layouts"][str(layout)]["methods"][mth]["zones"][k]["k"]
             if g.zone.nunique() < need:
@@ -101,7 +106,8 @@ def main() -> None:
                 common = k if common is None else common.merge(k)
             if common is None or common.empty:
                 continue
-            ref_name = next((n for n in frames if n.startswith("PINN regional")), None)
+            ref_pre = "PINN regional" if args.ref_tag is None else f"PINN regional {args.ref_tag} ("
+            ref_name = next((n for n in frames if n.startswith(ref_pre)), None)
             ref_pw = None
             for name, f in frames.items():
                 f = f.merge(common).drop_duplicates(["well_id", "date"])
@@ -111,22 +117,23 @@ def main() -> None:
                     ref_pw = pw
                 rows.append({"layout": layout, "task": task, "model": name, **s, "_pw": pw})
             for r in rows:
-                if r["layout"] == layout and r["task"] == task and ref_pw is not None and not r["model"].startswith("PINN regional"):
+                if r["layout"] == layout and r["task"] == task and ref_pw is not None and r["model"] != ref_name:
                     r["vs_regional_wells_improved"] = fraction_improved(r["_pw"].rmse, ref_pw.rmse)
                     r["vs_regional_p"] = paired_wilcoxon(r["_pw"].rmse, ref_pw.rmse)[1]
 
     res = pd.DataFrame([{k: v for k, v in r.items() if k != "_pw"} for r in rows])
+    ref_label = "regional PINN" + ("" if args.ref_tag is None else f" {args.ref_tag}")
     tab = ROOT / "reports" / "tables"
     tab.mkdir(parents=True, exist_ok=True)
     res.to_csv(tab / f"m6_real_pinn_{args.stage}.csv", index=False)
     show = res.assign(**{"RMSE": res.rmse_m.map("{:.2f} m".format), "MAE": res.mae_m.map("{:.2f} m".format),
                          "Median well RMSE": res.median_well_rmse_m.map("{:.2f} m".format),
-                         "Wells improved vs regional PINN": res.get("vs_regional_wells_improved", pd.Series(np.nan, index=res.index)).map(
+                         f"Wells improved vs {ref_label}": res.get("vs_regional_wells_improved", pd.Series(np.nan, index=res.index)).map(
                              lambda v: "" if pd.isna(v) else f"{100 * v:.0f}%"),
                          "p-value": res.get("vs_regional_p", pd.Series(np.nan, index=res.index)).map(
                              lambda v: "" if pd.isna(v) else f"{v:.3f}"),
                          "Readings / wells": res.n_readings.astype(str) + " / " + res.n_wells.astype(str)})
-    show = show[["layout", "task", "model", "RMSE", "MAE", "Median well RMSE", "Wells improved vs regional PINN",
+    show = show[["layout", "task", "model", "RMSE", "MAE", "Median well RMSE", f"Wells improved vs {ref_label}",
                  "p-value", "Readings / wells"]]
     par = runs[["layout", "model", "tag", "seed", "zone", "S", "T", "pump", "n_wells", "train_rmse"]].copy()
     par["S"] = par.S.map("{:.3f}".format)

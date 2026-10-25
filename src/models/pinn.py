@@ -60,13 +60,21 @@ class ZonePINN(nn.Module):
       than head). The PDE still acts on the full head: T∇²base is passed to the residual as a known source.
     - training.S_range [lo, hi]: S is kept inside this range (log-uniform squash). Real data push S towards 0
       when the network fits noise (M2 noise runs; real batch 1), which switches the time physics off.
+    - `zone_w` (PLAN.md E20, "shared" zoned model): one indicator field per zone (bilinear, so weights sum to 1
+      and blend over one grid cell at borders). One h_net covers the whole region, so every well informs the
+      water-level surface, while S, T and pumping are set per zone: log_S and log_T become one value per zone,
+      the zone weights join the pumping inputs, and each zone has its own pumping trend. With T changing
+      across a border the ∇T·∇h term is left out (the constant-T-per-zone form of the brief).
     """
 
-    def __init__(self, cfg: dict, norm: Normaliser, landuse: GridField, S_init: float, T_init: float,
-                 base: GridField | None = None, lap_base: GridField | None = None):
+    def __init__(self, cfg: dict, norm: Normaliser, landuse: GridField, S_init, T_init,
+                 base: GridField | None = None, lap_base: GridField | None = None,
+                 zone_w: list[GridField] | None = None):
         super().__init__()
         self.norm, self.sc, self.landuse = norm, norm.phys_scales(), landuse
         self.base, self.lap_base = base, lap_base
+        self.zone_w = zone_w
+        n_z = len(zone_w) if zone_w else 0
         h_cfg, q_cfg = cfg["h_net"], cfg["q_net"]
         self.n_harm_q = q_cfg.get("n_harmonics", 2)
         # season input for pumping: "harmonics" (smooth annual waves) or "month" (one-hot calendar month,
@@ -78,18 +86,23 @@ class ZonePINN(nn.Module):
                           norm.t.centre, norm.t.half, h_cfg.get("n_harmonics", 2))
         self.q_mode = q_cfg.get("mode", "restricted")
         n_season = 12 if self.season_features == "month" else 2 * self.n_harm_q
-        n_feat = 1 + n_season + (3 if self.q_mode == "full" else 0)
+        n_feat = 1 + n_season + (3 if self.q_mode == "full" else 0) + n_z
         self.q_net = QNet(n_feat, q_cfg["width"], q_cfg["depth"], q_cfg.get("q_scale_m_day", norm.flux_scale_m_per_day),
                           self.q_mode, q_cfg.get("act", "tanh"))
+        self.q_trend_z = nn.Parameter(torch.zeros(n_z)) if n_z and self.q_mode == "restricted" else None
+
+        def per_zone(v):                        # scalar, or one value per zone for a shared zoned model
+            v = torch.as_tensor(v, dtype=torch.float32)
+            return v.expand(n_z).clone() if n_z else v.reshape(())
         S_range = cfg.get("training", {}).get("S_range")
         self.S_log_range = None if S_range is None else (math.log(S_range[0]), math.log(S_range[1]))
         if self.S_log_range is None:
-            self.log_S = nn.Parameter(torch.tensor(math.log(S_init)))
+            self.log_S = nn.Parameter(torch.log(per_zone(S_init)))
         else:                                   # log_S holds the unsquashed value: log S = lo + (hi − lo)·sigmoid(log_S)
             lo, hi = self.S_log_range
-            u = min(max((math.log(S_init) - lo) / (hi - lo), 1e-4), 1 - 1e-4)
-            self.log_S = nn.Parameter(torch.tensor(math.log(u / (1 - u))))
-        self.log_T = nn.Parameter(torch.tensor(math.log(T_init)))
+            u = ((torch.log(per_zone(S_init)) - lo) / (hi - lo)).clamp(1e-4, 1 - 1e-4)
+            self.log_S = nn.Parameter(torch.log(u / (1 - u)))
+        self.log_T = nn.Parameter(torch.log(per_zone(T_init)))
         # In the PDE residual, Q is averaged over the same running-mean window as the recharge, so both
         # sources are compared at the same time resolution (see recharge.py). 1 = off.
         self.q_smooth_days = int(q_cfg.get("smooth_days", 1))
@@ -105,6 +118,18 @@ class ZonePINN(nn.Module):
     @property
     def T(self) -> Tensor:
         return torch.exp(self.log_T)
+
+    def zone_weights(self, xyt_n: Tensor) -> Tensor:
+        """(N, n_zones) zone weights at the points (shared zoned model only)."""
+        x_m, y_m, _ = self.norm.to_phys(xyt_n.detach())
+        return torch.cat([f(x_m, y_m) for f in self.zone_w], dim=-1)
+
+    def S_T_at(self, xyt_n: Tensor) -> tuple[Tensor, Tensor]:
+        """S and T at the points: the scalars, or (N, 1) zone blends for a shared zoned model."""
+        if self.zone_w is None:
+            return self.S, self.T
+        w = self.zone_weights(xyt_n)
+        return w @ self.S.unsqueeze(-1), w @ self.T.unsqueeze(-1)
 
     def head_norm(self, xyt_n: Tensor) -> Tensor:
         return self.h_net(xyt_n)
@@ -132,7 +157,13 @@ class ZonePINN(nn.Module):
         feats = [lu, season]
         if self.q_mode == "full":
             feats.insert(0, xyt_n)
-        return self.q_net(torch.cat(feats, dim=-1), t_norm=xyt_n[:, 2:3])
+        if self.zone_w is None:
+            return self.q_net(torch.cat(feats, dim=-1), t_norm=xyt_n[:, 2:3])
+        w = self.zone_weights(xyt_n)
+        q = self.q_net(torch.cat(feats + [w], dim=-1))
+        if self.q_trend_z is not None:          # each zone's own slow trend
+            q = q * torch.exp((w @ self.q_trend_z.unsqueeze(-1)) * xyt_n[:, 2:3])
+        return q
 
     def pumping_window_mean(self, xyt_n: Tensor) -> Tensor:
         """Q averaged over a centred window of `q_smooth_days` (evenly spaced samples), matching the
@@ -151,10 +182,11 @@ class ZonePINN(nn.Module):
         xyt_n = xyt_n.requires_grad_(True)
         h_n = self.h_net(xyt_n)
         Q = self.pumping_window_mean(xyt_n)
+        S, T = self.S_T_at(xyt_n)
         if self.lap_base is not None:            # S h_t − T(∇²net + ∇²base) − R + Q: the base term joins R
             x_m, y_m, _ = self.norm.to_phys(xyt_n.detach())
-            R = R + self.T * self.lap_base(x_m, y_m)
-        out = pde_residual(h_n, xyt_n, self.S, self.T, R, Q, self.sc, return_terms=return_terms)
+            R = R + T * self.lap_base(x_m, y_m)
+        out = pde_residual(h_n, xyt_n, S, T, R, Q, self.sc, return_terms=return_terms)
         if return_terms:
             res, terms = out
             return res, {**terms, "Q": Q}

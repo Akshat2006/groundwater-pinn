@@ -2,6 +2,7 @@
 
     python scripts/run_real.py --regional --seed 0                 # M6: one PINN for the whole area (k = 1)
     python scripts/run_real.py --zone all --seed 0                 # M7: one PINN per zone (zoning from configs)
+    python scripts/run_real.py --shared --seed 0                   # E20: one network, S, T and pumping per zone
     python scripts/run_real.py --zone 2 --steps 500 --tag smoke    # quick check
     options: --layout 0  --method kmeans --k 5  --set training.weighting.init=1  --stage-only val
 
@@ -63,17 +64,19 @@ def yearly_pumping(model, cells: np.ndarray, static: xr.Dataset, years: range) -
     return pd.DataFrame(out)
 
 
-def run_zone(zone_id, zone_cells, df, static, rain, priors, cfg, args, label):
+def run_zone(zone_id, zone_cells, df, static, rain, priors, cfg, args, label, zone_maps=None):
+    """zone_maps: the zone map over the region, for a shared zoned model (zone_id None, zone_cells = whole area)."""
     device = "cuda" if torch.cuda.is_available() else "cpu"
     train = training_rows(df)
     if zone_id is not None:
         train = train[train.zone_map == zone_id]
-    zone = zone_inputs(train, zone_cells, static, rain, priors, cfg, device=device)
+    zone = zone_inputs(train, zone_cells, static, rain, priors, cfg, device=device, zone_maps=zone_maps)
     log = start_run(f"real_{label}" + (f"_{args.tag}" if args.tag else ""),
                     {"label": label, "zone": zone_id, "layout": args.layout, "method": args.method, "k": args.k,
-                     "seed": args.seed, "n_readings": int(len(zone.head_m)), "n_wells": int(zone.n_wells),
-                     "T_fixed": zone.T_init, "S_init": zone.S_init, **cfg})
-    print(f"=== {label}: {zone.n_wells} wells, {len(zone.head_m)} readings, T fixed at {zone.T_init:.0f} m2/day "
+                     "shared": zone_maps is not None, "seed": args.seed, "n_readings": int(len(zone.head_m)),
+                     "n_wells": int(zone.n_wells), "T_fixed": zone.T_init, "S_init": zone.S_init, **cfg})
+    T_txt = ", ".join(f"{v:.0f}" for v in np.atleast_1d(zone.T_init))
+    print(f"=== {label}: {zone.n_wells} wells, {len(zone.head_m)} readings, T fixed at {T_txt} m2/day "
           f"-> {log.dir.name}", flush=True)
     res = train_zone(cfg, zone, seed=args.seed, run_dir=log.dir, device=device)
     model = res.model.eval()
@@ -91,12 +94,16 @@ def run_zone(zone_id, zone_cells, df, static, rain, priors, cfg, args, label):
             p = predict_heads(model, tgt.x_m.values, tgt.y_m.values, tgt.date)
             if task == "A" and len(offsets):
                 p = p + tgt.well_id.map(offsets).fillna(0.0).to_numpy()
-            preds.append(tgt[["well_id", "date", "head_m", "x_m", "y_m"]].assign(task=task, stage=stage, pred=p,
-                                                                                 zone=zone_id or 1))
+            preds.append(tgt[["well_id", "date", "head_m", "x_m", "y_m"]].assign(
+                task=task, stage=stage, pred=p, zone=tgt.zone_map if zone_maps is not None else (zone_id or 1)))
     preds = pd.concat(preds, ignore_index=True) if preds else pd.DataFrame()
     preds.to_parquet(log.dir / "predictions.parquet")
     pump = yearly_pumping(model, zone_cells, static, range(2005, 2025))
     pump.to_csv(log.dir / "pumping_yearly.csv", index=False)
+    if zone_maps is not None:                 # each zone's own pumping estimate
+        ids = sorted(int(z) for z in np.unique(zone_maps[zone_cells]) if z > 0)
+        pd.concat([yearly_pumping(model, (zone_maps == z) & zone_cells, static, range(2005, 2025)).assign(zone=z)
+                   for z in ids]).to_csv(log.dir / "pumping_yearly_zones.csv", index=False)
     if len(offsets):
         offsets.rename("offset_m").to_csv(log.dir / "well_offsets.csv")
     metrics = {"label": label, "zone": zone_id, "seed": args.seed, "S": res.info["S"], "T_fixed": res.info["T"],
@@ -104,6 +111,8 @@ def run_zone(zone_id, zone_cells, df, static, rain, priors, cfg, args, label):
                "train_rmse_m": float(res.history.data_rmse_m.iloc[-1]),
                "pumping_2005_2018_m_per_yr": float(pump[pump.year <= 2018].pumping_m_per_yr.mean()),
                "offset_sd_m": float(offsets.std()) if len(offsets) else None}
+    if zone_maps is not None:
+        metrics.update(S_zones=res.info["S_zones"], T_zones=res.info["T_zones"])
     for (stage, task), g in (preds.groupby(["stage", "task"]) if len(preds) else []):
         metrics[f"{stage}_{task}"] = summary(g, "pred")
     log.log_metrics(metrics)
@@ -116,6 +125,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--zone", default=None, help="zone number, or 'all'")
     ap.add_argument("--regional", action="store_true", help="one PINN for the whole area (k = 1)")
+    ap.add_argument("--shared", action="store_true", help="E20: one network for the whole area, S, T, pumping per zone")
     ap.add_argument("--layout", type=int, default=0)
     ap.add_argument("--method", default=zcfg["main"]["method"])
     ap.add_argument("--k", default=zcfg["main"]["k"])
@@ -153,6 +163,10 @@ def main() -> None:
     a = assign[(assign.method == args.method) & (assign.layout == args.layout) & (assign.k == k)].set_index("well_id")
     df["zone_map"] = df.well_id.map(a.zone_map)
     zmap = zones.zone.sel({"method": args.method, "layout": args.layout, "k": k}).values
+    if args.shared:
+        run_zone(None, mask, df, static, rain, priors, cfg, args, f"L{args.layout}_{args.method}k{k}_shared_s{args.seed}",
+                 zone_maps=zmap)
+        return
     ids = sorted(int(z) for z in np.unique(zmap[mask]) if z > 0)
     todo = ids if args.zone in (None, "all") else [int(args.zone)]
     for z in todo:

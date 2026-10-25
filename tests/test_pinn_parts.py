@@ -197,6 +197,41 @@ def test_terrain_base_adds_to_head_and_enters_the_pde_as_a_source():
     torch.testing.assert_close(with_base.residual(pts.clone(), R), plain.residual(pts.clone(), R + 1500.0 * 2e-8))
 
 
+def test_shared_zoned_model_uses_each_zones_S_T_and_pumping():
+    """E20: one network, S and T per zone; the residual inside a zone equals a one-zone model with that zone's S, T."""
+    from src.training.real_data import zone_weight_fields
+    import xarray as xr
+
+    cfg = {**load_config(REPO_ROOT / "configs" / "pinn.yaml")}
+    cfg["q_net"] = {**cfg["q_net"], "season_features": "month"}
+    norm = Normaliser(MinMaxScaler(0, 20_000), MinMaxScaler(0, 20_000), MinMaxScaler(0, 730),
+                      StandardScaler(0.0, 2.0), 1e-3)
+    x = np.arange(500.0, 20_000, 1000)
+    land = GridField(np.full((20, 20), 0.5), x, x)
+    zmap = np.where(x[None, :] < 10_000, 1, 2) * np.ones((20, 1), int)     # west half zone 1, east half zone 2
+    mask = np.ones((20, 20), bool)
+    mask[:, :2] = False                                                     # outside the area: nearest zone
+    ids, fields = zone_weight_fields(zmap, mask, xr.Dataset(coords={"x": x, "y": x}))
+    assert ids == [1, 2] and float(fields[0](torch.tensor([600.0]), torch.tensor([600.0]))) == 1.0
+    torch.manual_seed(0)
+    shared = ZonePINN(cfg, norm, land, [0.10, 0.14], [800.0, 2500.0], zone_w=fields)
+    pts = norm.to_norm(torch.tensor([3e3, 16e3]), torch.tensor([4e3, 15e3]), torch.tensor([170.0, 300.0]))
+    S, T = shared.S_T_at(pts)
+    torch.testing.assert_close(S, torch.tensor([[0.10], [0.14]]))
+    torch.testing.assert_close(T, torch.tensor([[800.0], [2500.0]]))
+    R = torch.full((2, 1), 1e-4)
+    terms = shared.residual(pts.clone(), R, return_terms=True)[1]
+    torch.testing.assert_close(terms["storage"], S * terms["h_t"])
+    torch.testing.assert_close(terms["lateral"], T * (terms["h_xx"] + terms["h_yy"]))
+    with torch.no_grad():                                 # pumping trend differs per zone
+        shared.q_trend_z.copy_(torch.tensor([0.0, 1.0]))
+    p_late = norm.to_norm(torch.tensor([3e3, 16e3]), torch.tensor([4e3, 4e3]), torch.tensor([700.25, 700.25]))   # same month, a year later
+    p_early = norm.to_norm(torch.tensor([3e3, 16e3]), torch.tensor([4e3, 4e3]), torch.tensor([335.0, 335.0]))
+    ratio = shared.pumping(p_late) / shared.pumping(p_early)
+    torch.testing.assert_close(ratio[0], torch.tensor([1.0]))
+    assert float(ratio[1]) > 1.5
+
+
 def test_report_T_and_time_axis():
     from src.training.real_data import report_T, t_days
     assert report_T({"T": [400, 1600]}, 1500) == pytest.approx(800.0)

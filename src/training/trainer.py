@@ -57,6 +57,7 @@ class ZoneData:
     n_wells: int = 0
     base: GridField | None = None     # optional terrain base [m] and its Laplacian [1/m] (see ZonePINN)
     lap_base: GridField | None = None
+    zone_w: list | None = None        # shared zoned model: one indicator GridField per zone; S_init, T_init per zone
 
     def base_m(self, x_m, y_m) -> np.ndarray:
         """Terrain base at points as a numpy array (zeros without one)."""
@@ -93,7 +94,7 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
     qcfg.setdefault("lu_mean", float(lu_vals.mean()))
     qcfg.setdefault("lu_std", float(lu_vals.std()) or 1.0)
     model = ZonePINN({**cfg, "q_net": qcfg}, norm, zone.landuse, zone.S_init, zone.T_init,
-                     zone.base, zone.lap_base).to(device)
+                     zone.base, zone.lap_base, zone.zone_w).to(device)
 
     def tens(a):
         return torch.as_tensor(np.asarray(a, dtype=np.float32), device=device)
@@ -128,6 +129,8 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
     sampler = CollocationSampler(tcfg["n_colloc"], device, zone.mask, gen)
 
     net_params = list(model.h_net.parameters()) + list(model.q_net.parameters())
+    if model.q_trend_z is not None:
+        net_params.append(model.q_trend_z)
     if use_offsets:
         net_params.append(model.well_offset)
     opt = torch.optim.Adam([{"params": net_params, "lr": tcfg["lr"]},
@@ -221,14 +224,17 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
 
     history = pd.DataFrame(rows)
     result = TrainResult(model, history, time.time() - t0,
-                         {"S": float(model.S.detach()), "T": float(model.T.detach()), "device": str(device), "seed": seed})
+                         {"S": float(model.S.detach().mean()), "T": float(model.T.detach().mean()), "device": str(device),
+                          "seed": seed, "S_zones": model.S.detach().reshape(-1).tolist(),
+                          "T_zones": model.T.detach().reshape(-1).tolist()})
     if run_dir is not None:
         save_model(result, run_dir)
     return result
 
 
 def _log_row(step, stage, L, lam, model, norm, seconds) -> dict:
-    row = {"step": step, "stage": stage, "lambda": lam, "S": float(model.S.detach()), "T": float(model.T.detach()),
+    # S, T: the value, or the plain mean over zones for a shared zoned model
+    row = {"step": step, "stage": stage, "lambda": lam, "S": float(model.S.detach().mean()), "T": float(model.T.detach().mean()),
            "seconds": seconds, "data_rmse_m": math.sqrt(float(L["data"].detach())) * norm.h.std}
     for k, v in L.items():
         row[k] = float(v.detach()) if torch.is_tensor(v) else float(v)

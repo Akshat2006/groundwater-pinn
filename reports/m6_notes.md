@@ -66,3 +66,35 @@ Means over the 3 layouts. This raises the bar for the PINN.
   - S range widened to 0.02–0.25 (`tbw`)
   - no terrain (`sr`)
   - weaker well corrections (`tb_off1`)
+
+## Batch 2 (2026-10-25, `notebooks/colab_real_batch2.ipynb`)
+
+All 8 runs finished. Validation, layout 0, seed 0. Score = A / 1.90 + B / 7.94 (each task relative to its best baseline: persistence, LightGBM).
+
+| Run | S | val A | val B | val C | Score |
+|---|---|---|---|---|---|
+| regional `tb_off1` (terrain, S range, weak corrections) | 0.072 | 2.03 | 9.51 | 11.31 | **2.27** |
+| regional `tb` (terrain, S range) | 0.072 | 2.85 | 10.46 | 10.78 | 2.82 |
+| regional `sr` (S range, no terrain) | 0.072 | 3.30 | 9.08 | 10.86 | 2.88 |
+| regional `tbw` (S range 0.02–0.25) | 0.020 | 3.95 | 10.69 | 9.92 | 3.42 |
+| zoned `tb` (4 zone networks) | 0.072 ×4 | 2.73 | 19.18 | 12.47 | 3.85 |
+| *best earlier: regional `off1`* | 0.075 | 2.41 | 12.16 | 13.54 | 2.80 |
+
+**1. Keeping S in the report range fixes the forecasts.** Every run with the range sits at its lower edge (0.072), and the widened run sits at its lower edge (0.020). So the data still push S below the CGWB range; report it that way. But forecasts are much better with the range: Task A 2.85 m (`tb`) against 3.95 m (`tbw`) and 4.08 m (batch 1 default).
+
+**2. Pre-set rule picks `tb_off1`** (score 2.27). Its Task A (2.03 m) is level with the seasonal-trend baseline (2.04 m) but behind persistence (1.90 m). Task B is 9.51 m against 7.94 m for LightGBM and 8.08 m for depth kriging. Its per-well corrections spread 7.0 m. It is now the default in `configs/pinn_real.yaml`.
+
+**3. Terrain helped Task A but not Task B in the PINN** (B: `tb` 10.46 m vs `sr` 9.08 m), unlike the Gaussian-process stand-in. Not explained yet.
+
+**4. One network per zone fails at places with no well.**
+- Task A: zoned 2.73 m vs regional `tb` 2.85 m; zoned better on 53–71% of wells per zone.
+- Task B: zoned 19.18 m vs regional `tb` 10.46 m. Zones 3 and 4 are 15 m too low on average (zone 3: 26 validation wells, errors up to 39 m). Their per-well corrections are small (0.3–1.6 m), so the network surface itself is wrong. The regional network is wrong in the same places, but by about half as much: a zone network sees 73–269 wells and extrapolates further.
+- This is risk 7 in PLAN.md §2.8 ("one network per zone splits the data thinly"). The planned fix is E20.
+
+## Batch 3 (`notebooks/colab_real_batch3.ipynb`)
+
+- **E20, "shared" zoned model** (`run_real.py --shared`): one water-level network for the whole region (all 648 training wells); S, T and pumping per zone (zone weights enter the pumping network; each zone has its own pumping trend; T fixed per zone from the reports as before).
+- Zones 1–4 re-run with `tb_off1`, so per-zone and shared use the chosen setting.
+- Final regional `tb_off1` runs: seeds 1–4 on layout 0, seeds 0–4 on layouts 1 and 2.
+
+**Rule fixed before batch 3 results:** per-zone (E7) vs shared (E20), both `tb_off1`, layout 0, seed 0: the lower score A / 1.90 + B / 7.94 becomes "ours" and gets the final runs (5 seeds × 3 layouts). The other design is reported on validation as a design comparison. The primary result (zoned vs regional PINN, Task B, test, 3 layouts) is unchanged.
