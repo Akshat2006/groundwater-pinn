@@ -9,8 +9,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SKIP_DIRS = {".venv", ".git", "__pycache__", ".pytest_cache", ".ipynb_checkpoints"}   # anywhere
-SKIP_PREFIXES = [("data", "raw"), ("data", "interim"), ("data", "synthetic"), ("reports", "runs")]
-SKIP_SUFFIXES = {".pyc", ".pt", ".ckpt", ".log", ".zip", ".docx", ".pdf"}   # .docx/.pdf: personal documents in the repo root
+SKIP_PREFIXES = [("data", "raw"), ("data", "interim"), ("data", "synthetic"), ("reports", "runs"), ("exports",)]
+SKIP_SUFFIXES = {".pyc", ".pt", ".ckpt", ".log", ".zip", ".docx", ".pdf", ".pptx"}   # office/pdf: personal documents in the repo root
 
 
 def main() -> None:
@@ -19,9 +19,9 @@ def main() -> None:
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
         for p in ROOT.rglob("*"):
             rel = p.relative_to(ROOT)
-            if p.is_dir() or SKIP_DIRS & set(rel.parts[:-1]) or p.suffix in SKIP_SUFFIXES:
+            if p.is_dir() or SKIP_DIRS & set(rel.parts[:-1]) or p.suffix in SKIP_SUFFIXES or p.name.startswith("~$"):
                 continue
-            if any(rel.parts[:2] == pre for pre in SKIP_PREFIXES) or "egg-info" in str(rel):
+            if any(rel.parts[:len(pre)] == pre for pre in SKIP_PREFIXES) or "egg-info" in str(rel):
                 continue
             z.write(p, rel)
             n += 1

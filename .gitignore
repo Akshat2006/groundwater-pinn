@@ -23,3 +23,6 @@ __pycache__/
 build/
 dist/
 pinn_code.zip
+
+# Map exports for the website (shipped as a release zip)
+exports/
