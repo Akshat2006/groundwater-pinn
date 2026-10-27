@@ -41,6 +41,8 @@ DISCLAIMERS = [
     "Years after 2018 are a hindcast: the model was trained on 2005-2018 readings and driven by observed rainfall.",
     "Shallow water table only, inside the 16-district Punjab-Haryana study area.",
     "Pumping and aquifer values behind the map are inferred by the model, not measured.",
+    "The uncertainty layer shows how much 5 versions of the model disagree (about 1 m). The real error is larger "
+    "(see the accuracy line), so treat it as a relative guide to where the model is less sure, not as an error bar.",
 ]
 
 
@@ -75,6 +77,10 @@ def accuracy_from_table(stage: str, model_prefix: str) -> dict:
         out["stage"] = stage
         out["meaning"] = "RMSE = typical error in metres on wells the model never saw (" + (
             "final test set" if stage == "test" else "validation set; final numbers follow") + ")."
+        if "no_well_rmse_m" in out and "no_well_later_years_rmse_m" in out:
+            # the map has no per-well corrections, so the no-well errors are the ones that apply to it
+            out["text"] = (f"Typical error: about {out['no_well_rmse_m']:.0f} m at places without a monitoring well "
+                           f"(2005-2018) and about {out['no_well_later_years_rmse_m']:.0f} m in 2019-2024.")
     return out
 
 
@@ -193,7 +199,7 @@ def main() -> None:
                       "layer": "not_shown.geojson"},
         "dates": [f"{d:%Y-%m}" for d in dates], "date_day": 15,
         "variables": {"depth": "depth to water below ground [m] (bigger = deeper water)",
-                      "spread": "uncertainty [m]: spread over the seeds (0 with one seed)",
+                      "spread": "uncertainty [m]: spread over the seeds (0 with one seed); smaller than the real error, a relative guide only",
                       "head_m (NetCDF only)": "water-table elevation [m above sea level]"},
         "accuracy": accuracy_from_table(args.stage, "PINN kmeansk5 shared tbc"),
         "disclaimers": DISCLAIMERS,

@@ -109,7 +109,9 @@ def main() -> None:
             if common is None or common.empty:
                 continue
             ref_pre = "PINN regional" if args.ref_tag is None else f"PINN regional {args.ref_tag} ("
-            ref_name = next((n for n in frames if n.startswith(ref_pre)), None)
+            # the regional seed ensemble is the reference when there is one, else its first seed
+            ref_name = next((n for n in frames if n.startswith(ref_pre) and "mean of" in n),
+                            next((n for n in frames if n.startswith(ref_pre)), None))
             ref_pw = None
             for name, f in frames.items():
                 f = f.merge(common).drop_duplicates(["well_id", "date"])

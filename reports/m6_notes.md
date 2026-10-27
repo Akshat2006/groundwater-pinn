@@ -177,9 +177,11 @@ Sharing one water-level network fixed the per-zone failure at unseen places (B 1
 
 | Layout | A zoned / regional | B zoned / regional | C zoned / regional | B: wells improved, p |
 |---|---|---|---|---|
-| 0 | 2.01 / 1.97 | **8.13 / 9.15** (−11%) | 9.99 / 10.80 | 73%, p < 0.001 |
-| 1 | 2.11 / 2.13 | **6.98 / 7.41** (−6%) | 7.12 / 7.30 | 61%, p = 0.003 |
-| 2 | 2.04 / 2.00 | 8.31 / 8.34 (−0.4%) | 5.62 / 5.43 | 45%, p = 0.13 |
+| 0 | 2.01 / 1.97 | **8.13 / 9.15** (−11%) | 9.99 / 10.80 | 78%, p < 0.001 |
+| 1 | 2.11 / 2.13 | **6.98 / 7.41** (−6%) | 7.12 / 7.30 | 59%, p = 0.010 |
+| 2 | 2.04 / 2.00 | 8.31 / 8.34 (−0.4%) | 5.62 / 5.43 | 45%, p = 0.27 |
+
+*Correction made after the commit above:* the "wells improved" column first compared the zoned ensemble with the regional **seed 0** run (73% / 61% / 45%). `check_m6.py` now uses the regional **5-seed ensemble** as the reference whenever one exists; the column above is the corrected version. RMSE values were unaffected.
 
 The zoned advantage at no-well places (B) holds in layouts 0 and 1 and vanishes in layout 2. This is the expected size of the effect on test: smaller than the single-seed batch 3 figure (−12%).
 
@@ -189,3 +191,38 @@ The zoned advantage at no-well places (B) holds in layouts 0 and 1 and vanishes 
 - Target from CLAUDE.md: 5–10% lower RMSE than the regional PINN on held-out blocks (task B), ≥ 67% of wells improved. It is reported as met or not met either way.
 - Baselines (persistence, seasonal trend, kriging, depth kriging, LightGBM, trend + kriging) are reported alongside, on the same readings.
 - The website maps (`export_maps.py --version model-v1.0`) use the layout-0 shared `tbc` 5-seed ensemble, chosen now regardless of the test result.
+
+## Test results (2020–24 and held-out blocks; scored once, 2026-10-27)
+
+Produced by `predict_real.py --stage test --match "_tbc$"` then `check_m6.py --stage test --ref-tag tbc` (`reports/m6_real_pinn_test.md`). Nothing was changed after the test was scored. The only edit after scoring was the reference fix described above, which changes the "wells improved" column and none of the predictions.
+
+**Headline (pre-set rule: mean over the 3 layouts of the 5-seed-ensemble RMSE, in metres):**
+
+| Task | Zoned PINN (shared) | Regional PINN | Difference | Best baseline |
+|---|---|---|---|---|
+| A: monitored wells, 2020–24 | 4.85 | 4.87 | −0.4% | persistence **2.98** |
+| **B: places with no well, 2005–18** | **9.42** | 10.25 | **−8.1%** | LightGBM **8.63**, depth kriging 8.75 |
+| C: places with no well, 2020–24 | **10.32** | 10.46 | −1.3% | LightGBM 10.76 |
+
+**Zoned vs regional, per layout (wells improved = share of wells whose own error is lower with zoning; p = Wilcoxon):**
+
+| Layout | B RMSE zoned / regional | B wells improved, p | C wells improved, p | A wells improved, p |
+|---|---|---|---|---|
+| 0 | 7.75 / 8.41 | 60%, p < 0.001 | 53%, p = 0.25 | 48%, p = 0.20 |
+| 1 | 11.69 / 13.29 | 58%, p = 0.001 | 49%, p = 0.95 | 53%, p = 0.016 |
+| 2 | 8.81 / 9.05 | 58%, p = 0.010 | 58%, p = 0.034 | 49%, p = 0.39 |
+
+**Against the targets in CLAUDE.md:**
+- 5–10% lower RMSE than the regional PINN on held-out blocks: **met** (−8.1% on task B; lower in all 3 layouts, each with p ≤ 0.01).
+- Improvement on ≥ 67% of wells: **not met** (58–60%).
+- On held-out blocks in later years (C), zoning makes almost no difference (−1.3%).
+
+**Against the baselines (zoned PINN; per well, `test_extra.py` in the session scratchpad, numbers copied here):**
+- B: LightGBM is better on average (8.63 vs 9.42 m). Per layout: PINN better at 54% / 47% / 37% of wells (p = 0.64 / 0.16 / 0.001). Versus depth kriging the PINN is better at 65% / 59% / 51% of wells (p < 0.001 / 0.04 / 0.76).
+- C: the PINN has the lowest average error of all models (10.32 vs LightGBM 10.76, depth trend + kriging 11.09). Per well it is level with LightGBM (51% / 53% / 50%, p > 0.3), so the honest claim is "as good as the best baseline", not "better".
+- A: persistence (last 2018 reading carried forward) beats both PINNs clearly (2.98 vs 4.85 m; PINN better at only 40–44% of wells, p < 0.001). The PINN's error grows with lead time: 2020 ≈ 3.6–4.0 m, 2022 ≈ 5.0 m, 2023–24 ≈ 9–10 m, while persistence stays at 2.2–4.1 m. The average error is small (−0.1 to +0.8 m), and the typical (median) error is 2–3.5 m: a tail of about 30 wells drifts 15 m or more. The PINN is not a good multi-year forecaster at monitored wells. Its use is estimating levels at places without wells.
+
+**What can be said honestly:**
+- Zoning helps where it was meant to help. At places with no well, one shared water-level network with per-zone storage, transmissivity and pumping is 8% more accurate than one regional PINN, in all three block layouts, with a consistent per-well improvement.
+- The PINN does not beat a strong machine-learning baseline (LightGBM) at no-well places in 2005–18. It matches it in 2020–24.
+- Pumping estimates (0.20–0.23 m/yr over 2005–18) remain inferences with no ground truth.

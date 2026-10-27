@@ -6,12 +6,12 @@ An interactive map website that shows our model's **groundwater depth maps** for
 The model is already trained. Its results are exported as ordinary map files, so **you don't need any AI, Python or PyTorch code.** You only display files.
 
 ## What you get
-A zip from the project lead (first a **draft** made from an early model, later the **final** one, `model-v1.0`, with **the same file names**, so your site keeps working when you swap them).
+One zip from the project lead: `map_files_model-v1.0.zip`, the final model's maps (the same one attached to the project's GitHub Release `model-v1.0`).
 
 | File | What it is |
 |---|---|
 | `geotiff/depth_YYYY-MM.tif` | Depth to water below ground [m] for that month (240 files, 2005-01 … 2024-12). 1 km cells. Blank (NaN) outside the shown area. CRS EPSG:32643 (UTM 43N) |
-| `geotiff/spread_YYYY-MM.tif` | Uncertainty [m] for that month (how much the model's 5 versions disagree). Zero in the draft (one version only) |
+| `geotiff/spread_YYYY-MM.tif` | Uncertainty [m] for that month: how much the model's 5 versions disagree (about 1 m). The real error is bigger, so label this layer "model disagreement (relative)", not "error" |
 | `study_area.geojson` | Outline of the study area (WGS84) |
 | `districts.geojson` | The 16 districts, with names |
 | `zones.geojson` | The model's 4 zones (areas that behave alike) |
@@ -32,7 +32,7 @@ A zip from the project lead (first a **draft** made from an early model, later t
 7. Toggle for **wells** (dots) and **zones** (outlines).
 
 **Honesty rules (required, examiners will check these)**
-- Show the **accuracy line** from `metadata.json` → `accuracy` on the page, e.g. "Typical error: about 2 m near monitoring wells, about 8 m far from them."
+- Show the **accuracy line** `metadata.json` → `accuracy` → `text` on the page, word for word (in the final files: "Typical error: about 9 m at places without a monitoring well (2005-2018) and about 10 m in 2019-2024.").
 - Show the texts in `metadata.json` → `disclaimers` (e.g. in an "About this map" box). Key points: model estimate, not live data; about 1 km detail; years after 2018 are a hindcast.
 - Wells are visible by default, so it's clear the colours between them are estimated.
 - `not_shown` areas are grey with the label "not shown: outside the model's reliable range".
@@ -43,14 +43,13 @@ A zip from the project lead (first a **draft** made from an early model, later t
 - Plain HTML/JS, or React if you prefer.
 - Host free on **GitHub Pages** or **Netlify**.
 - Put the site in **your own GitHub repo** (e.g. `groundwater-map`). Don't push to the main project repo.
-- Size: about 50 MB for all months. Fine for GitHub Pages. Load each month's file only when the slider reaches it.
+- Size: about 80 MB for all months (the `.nc` file isn't needed on the site). Fine for GitHub Pages. Load each month's file only when the slider reaches it.
 
 ## Steps
-1. Unzip the draft into your site's `data/` folder.
+1. Unzip the zip into your site's `data/` folder.
 2. Get one month (e.g. `depth_2018-11.tif`) showing on a Leaflet map with a legend.
 3. Add the slider, hover values, area drawing, toggles and the About box.
-4. When the final zip `model-v1.0` arrives: replace the `data/` folder. Nothing else changes.
-5. Send the project lead the live link.
+4. Send the project lead the live link.
 
 ## Questions
 Ask the project lead. Don't change the numbers or the colours' meaning: the map must show exactly what the model produced.
