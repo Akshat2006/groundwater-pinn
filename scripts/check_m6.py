@@ -80,6 +80,8 @@ def main() -> None:
             g = g.sort_values("dir").drop_duplicates("zone", keep="last")
         p = stitched(g)
         p = p[p.stage == args.stage]
+        if p.empty:  # e.g. runs that were never predicted for the test stage
+            continue
         models[(layout, model, tag, seed)] = (p, g)
 
     rows, pw_rows = [], []

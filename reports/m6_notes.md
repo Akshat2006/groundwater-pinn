@@ -168,3 +168,24 @@ Sharing one water-level network fixed the per-zone failure at unseen places (B 1
 **Caveats:** one seed, one layout, 60 validation wells in task B. Double canal seepage scored best of all on B (7.56), which suggests the GEC-norm assumptions may be on the low side; it is reported as sensitivity, not adopted.
 
 **Next:** batch 4 (`notebooks/colab_real_batch4.ipynb`): regional and shared `tbc`, 5 seeds × 3 layouts; then the test set is scored once (`predict_real.py --stage test`, `check_m6.py --stage test --ref-tag tbc`).
+
+## Batch 4: final runs, validation, and the test rules (written before the test set was scored)
+
+28 runs on three people's Colab accounts (`real4_L{0,1,2}_results.zip`), plus layout 0 / seed 0 from batch 3. Every run completed all 48,000 steps. Final models: **shared zoned `tbc`** and **regional `tbc`**, 5 seeds × 3 block layouts each. No test predictions existed before this section was committed.
+
+**Validation (2019), mean of 5 seeds, RMSE in metres** (`reports/m6_real_pinn_val.md`):
+
+| Layout | A zoned / regional | B zoned / regional | C zoned / regional | B: wells improved, p |
+|---|---|---|---|---|
+| 0 | 2.01 / 1.97 | **8.13 / 9.15** (−11%) | 9.99 / 10.80 | 73%, p < 0.001 |
+| 1 | 2.11 / 2.13 | **6.98 / 7.41** (−6%) | 7.12 / 7.30 | 61%, p = 0.003 |
+| 2 | 2.04 / 2.00 | 8.31 / 8.34 (−0.4%) | 5.62 / 5.43 | 45%, p = 0.13 |
+
+The zoned advantage at no-well places (B) holds in layouts 0 and 1 and vanishes in layout 2. This is the expected size of the effect on test: smaller than the single-seed batch 3 figure (−12%).
+
+**Test rules (fixed now, applied once):**
+- The test period (2020–24) is predicted once for the 30 `tbc` runs (`predict_real.py --stage test --match "_tbc$"`) and scored with `check_m6.py --stage test --ref-tag tbc`. Nothing is retrained or re-tuned afterwards.
+- Headline per task: the **mean over the 3 layouts** of the 5-seed-ensemble RMSE, for zoned and regional; the % difference is computed from those means. Wells improved and Wilcoxon p are reported per layout, not pooled (the same wells recur across layouts).
+- Target from CLAUDE.md: 5–10% lower RMSE than the regional PINN on held-out blocks (task B), ≥ 67% of wells improved. It is reported as met or not met either way.
+- Baselines (persistence, seasonal trend, kriging, depth kriging, LightGBM, trend + kriging) are reported alongside, on the same readings.
+- The website maps (`export_maps.py --version model-v1.0`) use the layout-0 shared `tbc` 5-seed ensemble, chosen now regardless of the test result.

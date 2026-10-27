@@ -2,12 +2,14 @@
 
     python scripts/predict_real.py --stage test                # every run in reports/runs/*_real_*
     python scripts/predict_real.py --stage test --match w10    # only runs whose folder name contains "w10"
+    python scripts/predict_real.py --stage test --match "_tbc$"   # --match is a regular expression
 
 Training runs score validation only (run_real.py --stage-only val), so the test wells stay unseen while
 settings are chosen. Once the settings are final, this adds the test predictions to each run's
 predictions.parquet (replacing any earlier rows of that stage); then run scripts/check_m6.py --stage test.
 """
 import argparse
+import re
 import sys
 from pathlib import Path
 
@@ -34,7 +36,7 @@ def main() -> None:
     assign = pd.read_parquet(proc / "zone_assign.parquet")
 
     for d in sorted(runs_dir().glob("*_real_*")):
-        if args.match not in d.name or not (d / "model.pt").exists():
+        if not re.search(args.match, d.name) or not (d / "model.pt").exists():
             continue
         model, cfg = load_real_run(d, static)
         df = with_layout(levels, splits, cfg["layout"])
