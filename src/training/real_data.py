@@ -11,7 +11,10 @@ Inputs per zone:
 - recharge: 0.22 × IMD daily rain (0.25°, ~25 km), regridded to `rain_res_m` (10 km: no detail lost, little memory)
   and smoothed over `smooth_days`;
 - land use: cropland fraction on the 1 km grid (input to the pumping network);
-- T: fixed at the CGWB report value for the zone (configs/priors.yaml); S starts at the GEC norm 0.12;
+- paddy share (q_net.paddy_input): district rice area / district area (data/reference/paddy_share_district.csv),
+  a second pumping input: cropland is 80-90% almost everywhere, so alone it cannot tell districts apart;
+- T: fixed at the CGWB report value for the zone (configs/priors.yaml); S starts at the GEC norm 0.12
+  (and stays there with training.fix_S);
 - terrain base (h_net.terrain_sigma_km): the network models head minus smoothed elevation (see ZonePINN);
 - canal seepage (canal_seepage.strength > 0): extra recharge along canals, from the GEC-2015 norm (canal_recharge).
 """
@@ -74,6 +77,24 @@ def terrain_base(static: xr.Dataset, sigma_km: float, device="cpu") -> tuple[Gri
     lap = (P[1:-1, 2:] + P[1:-1, :-2] + P[2:, 1:-1] + P[:-2, 1:-1] - 4 * B) / res**2
     x, y = static.x.values, static.y.values
     return GridField(B, x, y, device=device), GridField(lap, x, y, device=device)
+
+
+def paddy_field(static: xr.Dataset, sigma_km: float, device="cpu") -> GridField:
+    """District paddy share on the 1 km grid. Cells outside the districts take the nearest district's value;
+    a Gaussian of `sigma_km` softens the steps at district borders."""
+    from pathlib import Path
+
+    from scipy.ndimage import distance_transform_edt, gaussian_filter
+
+    table = pd.read_csv(Path(__file__).resolve().parents[2] / "data" / "reference" / "paddy_share_district.csv")
+    share = dict(zip(table.district_id, table.paddy_share))
+    ids = static.district_id.values
+    _, (ri, ci) = distance_transform_edt(ids <= 0, return_indices=True)
+    P = np.vectorize(lambda i: share.get(int(i), np.nan))(ids[ri, ci]).astype(float)
+    res = float(static.attrs.get("res_m", static.x.values[1] - static.x.values[0]))
+    if sigma_km:
+        P = gaussian_filter(P, sigma_km * 1000.0 / res, mode="nearest")
+    return GridField(P, static.x.values, static.y.values, device=device)
 
 
 def zone_weight_fields(zmap: np.ndarray, mask: np.ndarray, static: xr.Dataset, device="cpu"
@@ -158,6 +179,7 @@ def zone_inputs(train: pd.DataFrame, zone_cells: np.ndarray, static: xr.Dataset,
         mask=torch.as_tensor(zone_cells[r0:r1, c0:c1], device=device),
         well_index=wells.get_indexer(ok.well_id), n_wells=len(wells), base=base, lap_base=lap, zone_w=zone_w,
         canal=canal_recharge(static, cfg["canal_seepage"], device) if cfg.get("canal_seepage", {}).get("strength") else None,
+        paddy=paddy_field(static, cfg["q_net"].get("paddy_sigma_km", 3), device) if cfg["q_net"].get("paddy_input") else None,
     )
 
 
@@ -216,6 +238,9 @@ def load_real_run(run_dir, static: xr.Dataset, device="cpu"):
     landuse = GridField(static.lc_cropland_frac.fillna(0).values, static.x.values, static.y.values, device=device)
     state = torch.load(run_dir / "model.pt", map_location=device)
     qcfg = {**cfg["q_net"], "lu_mean": float(landuse.values.mean()), "lu_std": float(landuse.values.std()) or 1.0}
+    paddy = paddy_field(static, cfg["q_net"].get("paddy_sigma_km", 3), device) if cfg["q_net"].get("paddy_input") else None
+    if paddy is not None:
+        qcfg.update(pd_mean=float(paddy.values.mean()), pd_std=float(paddy.values.std()) or 1.0)
     sigma = cfg["h_net"].get("terrain_sigma_km")
     base, lap = terrain_base(static, sigma, device) if sigma else (None, None)
     S0, T0, zone_w = 0.1, 1000.0, None
@@ -225,7 +250,7 @@ def load_real_run(run_dir, static: xr.Dataset, device="cpu"):
         zmap = zones.zone.sel({"method": cfg["method"], "layout": cfg["layout"], "k": cfg["k"]}).values
         _, zone_w = zone_weight_fields(zmap, zones["mask"].values.astype(bool), static, device)
         S0, T0 = [S0] * len(zone_w), [T0] * len(zone_w)
-    model = ZonePINN({**cfg, "q_net": qcfg}, norm, landuse, S0, T0, base, lap, zone_w).to(device)
+    model = ZonePINN({**cfg, "q_net": qcfg}, norm, landuse, S0, T0, base, lap, zone_w, paddy).to(device)
     if "well_offset" in state:
         model.well_offset = torch.nn.Parameter(torch.zeros_like(state["well_offset"]))
     model.load_state_dict(state)

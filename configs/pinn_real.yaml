@@ -29,3 +29,8 @@ canal_seepage:                # extra recharge along canals (CLAUDE.md §6.4 ite
   sigma_km: 2
 q_net:
   doy_at_t0: 0                # t = 0 is 1 January 2005
+  paddy_input: false          # batch 5 (pumping v2): district paddy share as a second pumping input
+                              # (data/reference/paddy_share_district.csv, scripts/build_paddy.py). Cropland is 80-90%
+                              # almost everywhere, so the v1.0 pumping was flat across districts (M7 report §4)
+  paddy_sigma_km: 3           # softens the steps at district borders
+# training.fix_S (batch 5): true holds S at the GEC-2015 norm 0.12 (priors.yaml belt.S), like T from the reports

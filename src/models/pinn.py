@@ -65,13 +65,15 @@ class ZonePINN(nn.Module):
       water-level surface, while S, T and pumping are set per zone: log_S and log_T become one value per zone,
       the zone weights join the pumping inputs, and each zone has its own pumping trend. With T changing
       across a border the ∇T·∇h term is left out (the constant-T-per-zone form of the brief).
+    - `paddy`: district paddy share, a second land-use input to the pumping network (q_net.paddy_input).
+    - q_net.off (ablation): no pumping at all, Q = 0.
     """
 
     def __init__(self, cfg: dict, norm: Normaliser, landuse: GridField, S_init, T_init,
                  base: GridField | None = None, lap_base: GridField | None = None,
-                 zone_w: list[GridField] | None = None):
+                 zone_w: list[GridField] | None = None, paddy: GridField | None = None):
         super().__init__()
-        self.norm, self.sc, self.landuse = norm, norm.phys_scales(), landuse
+        self.norm, self.sc, self.landuse, self.paddy = norm, norm.phys_scales(), landuse, paddy
         self.base, self.lap_base = base, lap_base
         self.zone_w = zone_w
         n_z = len(zone_w) if zone_w else 0
@@ -82,11 +84,13 @@ class ZonePINN(nn.Module):
         self.season_features = q_cfg.get("season_features", "harmonics")
         self.doy_at_t0 = float(q_cfg.get("doy_at_t0", 0.0))      # day of year (0 = 1 Jan) at t = 0
         self.lu_mean, self.lu_std = q_cfg.get("lu_mean", 0.0), q_cfg.get("lu_std", 1.0)
+        self.pd_mean, self.pd_std = q_cfg.get("pd_mean", 0.0), q_cfg.get("pd_std", 1.0)
+        self.q_off = bool(q_cfg.get("off", False))
         self.h_net = HNet(3, h_cfg["width"], h_cfg["depth"], h_cfg.get("act", "tanh"),
                           norm.t.centre, norm.t.half, h_cfg.get("n_harmonics", 2))
         self.q_mode = q_cfg.get("mode", "restricted")
         n_season = 12 if self.season_features == "month" else 2 * self.n_harm_q
-        n_feat = 1 + n_season + (3 if self.q_mode == "full" else 0) + n_z
+        n_feat = 1 + (paddy is not None) + n_season + (3 if self.q_mode == "full" else 0) + n_z
         self.q_net = QNet(n_feat, q_cfg["width"], q_cfg["depth"], q_cfg.get("q_scale_m_day", norm.flux_scale_m_per_day),
                           self.q_mode, q_cfg.get("act", "tanh"))
         self.q_trend_z = nn.Parameter(torch.zeros(n_z)) if n_z and self.q_mode == "restricted" else None
@@ -147,6 +151,8 @@ class ZonePINN(nn.Module):
 
     def pumping(self, xyt_n: Tensor) -> Tensor:
         """Q [m/day] at the points."""
+        if self.q_off:
+            return torch.zeros(len(xyt_n), 1, device=xyt_n.device, dtype=xyt_n.dtype)
         x_m, y_m, _ = self.norm.to_phys(xyt_n)
         lu = (self.landuse(x_m, y_m) - self.lu_mean) / self.lu_std
         if self.season_features == "month":
@@ -155,6 +161,8 @@ class ZonePINN(nn.Module):
         else:
             season = annual_harmonics(xyt_n[:, 2:3], self.norm.t.centre, self.norm.t.half, self.n_harm_q)
         feats = [lu, season]
+        if self.paddy is not None:
+            feats.insert(1, (self.paddy(x_m, y_m) - self.pd_mean) / self.pd_std)
         if self.q_mode == "full":
             feats.insert(0, xyt_n)
         if self.zone_w is None:

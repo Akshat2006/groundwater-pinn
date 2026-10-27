@@ -59,6 +59,7 @@ class ZoneData:
     lap_base: GridField | None = None
     zone_w: list | None = None        # shared zoned model: one indicator GridField per zone; S_init, T_init per zone
     canal: GridField | None = None    # optional canal seepage recharge [m/day], static, added to `recharge`
+    paddy: GridField | None = None    # optional district paddy share, a second pumping input
 
     def base_m(self, x_m, y_m) -> np.ndarray:
         """Terrain base at points as a numpy array (zeros without one)."""
@@ -94,8 +95,11 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
     lu_vals = zone.landuse.values
     qcfg.setdefault("lu_mean", float(lu_vals.mean()))
     qcfg.setdefault("lu_std", float(lu_vals.std()) or 1.0)
+    if zone.paddy is not None:
+        qcfg.setdefault("pd_mean", float(zone.paddy.values.mean()))
+        qcfg.setdefault("pd_std", float(zone.paddy.values.std()) or 1.0)
     model = ZonePINN({**cfg, "q_net": qcfg}, norm, zone.landuse, zone.S_init, zone.T_init,
-                     zone.base, zone.lap_base, zone.zone_w).to(device)
+                     zone.base, zone.lap_base, zone.zone_w, zone.paddy).to(device)
 
     def tens(a):
         return torch.as_tensor(np.asarray(a, dtype=np.float32), device=device)
@@ -142,6 +146,7 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
     pcfg = tcfg.get("prior", {"weight": 0.0})
     use_prior = pcfg.get("weight", 0.0) > 0 and zone.S_prior is not None
     fix_T = bool(tcfg.get("fix_T", False))     # PLAN.md §10 fallback: T held at its starting (report) value
+    fix_S = bool(tcfg.get("fix_S", False))     # S held at its starting (report) value as well
     stages = tcfg["stages"]
     batch = tcfg.get("batch_data", 0)
 
@@ -172,7 +177,7 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
             ("physics_frozen", stages.get("physics_frozen", 0), True, False),
             ("joint", stages.get("joint", 0), True, True)]
     for name, n_steps, physics, learn_params in plan:
-        model.log_S.requires_grad_(learn_params)
+        model.log_S.requires_grad_(learn_params and not fix_S)
         model.log_T.requires_grad_(learn_params and not fix_T)
         decay = (tcfg.get("lr_final_factor", 1.0) ** (1 / max(n_steps, 1))) if name == "joint" else 1.0
         base_lrs = [g["lr"] for g in opt.param_groups]
@@ -205,7 +210,7 @@ def train_zone(cfg: dict, zone: ZoneData, seed: int = 0, run_dir: Path | None = 
 
     n_lbfgs = stages.get("lbfgs", 0)
     if n_lbfgs:
-        model.log_S.requires_grad_(True)
+        model.log_S.requires_grad_(not fix_S)
         model.log_T.requires_grad_(not fix_T)
         fixed_pts = CollocationSampler(tcfg.get("lbfgs_colloc", tcfg["n_colloc"]), device, zone.mask, gen).sample()
         R_fixed = R_at(fixed_pts)
