@@ -175,6 +175,20 @@ def predict_heads(model, x_m, y_m, dates, chunk: int = 100_000) -> np.ndarray:
     return out
 
 
+@torch.no_grad()
+def predict_pumping(model, x_m, y_m, dates, chunk: int = 100_000) -> np.ndarray:
+    """Model pumping Q (m/day) at points and dates: an inferred quantity, not a measurement."""
+    dev = next(model.parameters()).device
+    t = t_days(dates)
+    out = np.empty(len(t), dtype=np.float64)
+    for a in range(0, len(t), chunk):
+        b = slice(a, a + chunk)
+        xyt = model.norm.to_norm(*(torch.as_tensor(np.asarray(v[b], dtype=np.float32), device=dev)
+                                   for v in (np.asarray(x_m), np.asarray(y_m), t)))
+        out[b] = model.pumping(xyt).squeeze(-1).cpu().numpy()
+    return out
+
+
 def well_offsets_m(model, wells: pd.Index) -> pd.Series:
     """Learned per-well offsets in metres (empty if offsets were off)."""
     off = getattr(model, "well_offset", None)
