@@ -1,0 +1,4 @@
+run,what,layouts,runs,val A,val B,val C,score,vs v1.0,S (mean),pumping m/yr,rank corr. CGWB,p,Punjab/Haryana
+v1.0 (tbc),"v1.0 zoned, every seed (reference)",3,15,2.25,7.86,7.62,2.172,+0.0%,0.073,0.221,0.27,0.311,1.01
+pq,paddy share as pumping input,3,3,2.3,7.68,7.67,2.176,+0.2%,0.072,0.225,0.27,0.305,1.02
+pqs,paddy input + S fixed at 0.12,3,3,2.25,7.85,7.77,2.171,-0.0%,0.12,0.264,0.26,0.333,1.06

@@ -152,6 +152,7 @@ def main() -> None:
           *md_table(cg[dist_cols].round(3).sort_values("cgwb_m_per_yr", ascending=False)), ""]
     path = ROOT / "reports" / "batch5_results.md"
     path.write_text("\n".join(md), encoding="utf-8")
+    sys.stdout.reconfigure(encoding="utf-8")              # the Windows console cannot print the ≤ / ≥ signs
     print("\n".join(md))
     print("wrote", path)
 
