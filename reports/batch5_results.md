@@ -9,6 +9,10 @@ Typical error (RMSE, metres) on the validation set, mean over the 3 block layout
 | v1.0 (tbc) | v1.0 zoned, every seed (reference) | 3 | 15 | 2.25 | 7.86 | 7.62 | 2.172 | +0.0% | 0.073 | 0.221 | 0.27 | 0.311 | 1.01 |
 | pq | paddy share as pumping input | 3 | 3 | 2.3 | 7.68 | 7.67 | 2.176 | +0.2% | 0.072 | 0.225 | 0.27 | 0.305 | 1.02 |
 | pqs | paddy input + S fixed at 0.12 | 3 | 3 | 2.25 | 7.85 | 7.77 | 2.171 | -0.0% | 0.12 | 0.264 | 0.26 | 0.333 | 1.06 |
+| nophys | no physics (data only) | 3 | 3 | 3.62 | 8.53 | 7.03 | 2.977 | +37.1% | 0.12 |  |  |  |  |
+| noq | no pumping (Q = 0) | 3 | 3 | 3.35 | 13.96 | 7.52 | 3.521 | +62.1% | 0.08 |  |  |  |  |
+| k3 | 3 zones | 3 | 3 | 2.34 | 8.27 | 8.17 | 2.27 | +4.5% | 0.072 |  |  |  |  |
+| k8 | 8 zones (k-means k = 8) | 3 | 3 | 2.35 | 7.59 | 7.52 | 2.19 | +0.8% | 0.074 |  |  |  |  |
 
 Reference score (v1.0, mean single run): 2.172.
 

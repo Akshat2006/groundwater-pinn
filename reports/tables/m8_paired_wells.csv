@@ -1,0 +1,5 @@
+model,A: wells better than v1.0,B: wells better than v1.0,C: wells better than v1.0
+no physics,34% of 890 (p 0.000),51% of 196 (p 0.601),58% of 91 (p 0.460)
+no pumping,39% of 890 (p 0.000),38% of 196 (p 0.001),46% of 91 (p 0.567)
+k = 3,51% of 890 (p 0.547),41% of 196 (p 0.000),37% of 91 (p 0.001)
+k = 8,48% of 890 (p 0.780),53% of 196 (p 0.240),60% of 91 (p 0.114)

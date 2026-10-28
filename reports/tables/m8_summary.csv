@@ -1,0 +1,7 @@
+model,what,runs,zones (after merging),val A (m),val B (m),val C (m),score,vs v1.0,layouts worse than v1.0
+v1.0 zoned,"v1.0: physics + pumping, k-means k = 5",15,4/5/5,2.25,7.86,7.62,2.172,+0.0%,
+no physics,flow equation switched off (data only),3,4/5/5,3.62,8.53,7.03,2.977,+37.1%,3 of 3
+no pumping,pumping switched off (Q = 0),3,4/5/5,3.35,13.96,7.52,3.521,+62.1%,3 of 3
+k = 1 (regional),one zone: the regional PINN,15,1/1/1,2.22,8.35,7.89,2.219,+2.1%,2 of 3
+k = 3,k-means k = 3,3,3/3/3,2.34,8.27,8.17,2.27,+4.5%,3 of 3
+k = 8,k-means k = 8,3,6/7/5,2.35,7.59,7.52,2.19,+0.8%,3 of 3
