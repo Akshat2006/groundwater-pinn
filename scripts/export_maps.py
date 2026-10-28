@@ -2,6 +2,7 @@
 
     python scripts/export_maps.py --version draft-batch3 --stage val     # draft from the batch 3 model
     python scripts/export_maps.py --version model-v1.0 --stage test      # final, after the test set is scored
+    python scripts/export_maps.py --version forecast-v1 --stage test --runs "*_real_L0_kmeansk5_shared_s*_fc"         --end 2027-12 --data-until 2024-01                                # forecast model (run_real.py --forecast-end)
 
 Default model: the shared zoned PINN with canals (tag tbc) on layout 0, every seed found (an ensemble).
 Each month 2005-01 .. 2024-12 is predicted on the 1 km study-area grid (data/processed/static_1km.nc) on the 15th.
@@ -39,21 +40,30 @@ CRS = "EPSG:32643"
 DISCLAIMERS = [
     "Model estimate (physics-informed neural network), not measured data and not a live feed.",
     "Detail is about 1 km: inputs (land use, canals) are on a 1 km grid; the map is smooth below that.",
-    "Years after 2018 are a hindcast: the model was trained on 2005-2018 readings and driven by observed rainfall.",
     "Shallow water table only, inside the 16-district Punjab-Haryana study area.",
     "Pumping and aquifer values behind the map are inferred by the model, not measured.",
     "The 90% range layer (± metres) is calibrated on the 2019 validation readings: on the untouched test set it held "
-    "the true depth about 84% of the time for 2005-2018 and about 70% of the time for 2019-2024.",
+    "the true depth about 84% of the time in the years with training readings and about 70% in the years after.",
 ]
 Z90 = 1.645
 
 
-def range90(spread: np.ndarray, dates: pd.DatetimeIndex, runs: list[Path]) -> np.ndarray:
+def time_note(data_until: str, end: pd.Timestamp, rain_until: str | None) -> str:
+    """Disclaimer for the months after the last well reading the model was trained on."""
+    if rain_until is None:
+        return (f"Months after {data_until} are a hindcast: the model was trained on readings up to {data_until} "
+                "and driven by observed rainfall after that.")
+    return (f"Months after {data_until} (the last CGWB reading used) are a forecast, driven by observed IMD rainfall "
+            f"up to {rain_until} and by average rainfall after that. Real rain in those months will differ.")
+
+
+def range90(spread: np.ndarray, dates: pd.DatetimeIndex, runs: list[Path], data_until: str) -> np.ndarray:
     """Calibrated 90% half-width [m] per (time, cell), as in scripts/check_m7.py:
     1.645 * c * sqrt(spread^2 + noise^2), noise = mean training-fit RMSE of the runs, c = the zoned model's factor
-    fitted on validation for places without a well (Task B for 2005-2018, Task C for 2019 onwards)."""
+    fitted on validation for places without a well (Task B up to the last training month, Task C after it)."""
     cal = pd.read_csv(ROOT / "reports" / "tables" / "m7_calibration.csv").query("model == 'zoned'").set_index("task")
-    c = np.where(dates.year <= 2018, cal.loc["B", "factor c (from val)"], cal.loc["C", "factor c (from val)"])
+    later = dates > pd.Timestamp(data_until) + pd.offsets.MonthEnd(0)
+    c = np.where(later, cal.loc["C", "factor c (from val)"], cal.loc["B", "factor c (from val)"])
     noise = float(np.mean([json.loads((d / "metrics.json").read_text())["train_rmse_m"] for d in runs]))
     return Z90 * c[:, None] * np.sqrt(spread ** 2 + noise ** 2)
 
@@ -71,7 +81,7 @@ def shapes_to_gdf(values: np.ndarray, transform, name: str, labels: dict | None 
     return gpd.GeoDataFrame(rows, crs=CRS).to_crs("EPSG:4326")
 
 
-def accuracy_from_table(stage: str, model_prefix: str) -> dict:
+def accuracy_from_table(stage: str, model_prefix: str, forecast: bool = False) -> dict:
     """Typical errors of the exported model from reports/tables/m6_real_pinn_<stage>.csv (ensemble row if present)."""
     path = ROOT / "reports" / "tables" / f"m6_real_pinn_{stage}.csv"
     if not path.exists():
@@ -93,6 +103,10 @@ def accuracy_from_table(stage: str, model_prefix: str) -> dict:
             # the map has no per-well corrections, so the no-well errors are the ones that apply to it
             out["text"] = (f"Typical error: about {out['no_well_rmse_m']:.0f} m at places without a monitoring well "
                            f"(2005-2018) and about {out['no_well_later_years_rmse_m']:.0f} m in 2019-2024.")
+            if forecast:   # same recipe retrained on all readings; the test numbers are its tested accuracy
+                out["text"] = (f"Typical error: about {out['no_well_rmse_m']:.0f} m at places without a monitoring "
+                               f"well in years with readings, and about {out['no_well_later_years_rmse_m']:.0f} m "
+                               "for 1-5 years ahead (measured on the 2020-2024 test of the same model recipe).")
     return out
 
 
@@ -103,6 +117,7 @@ def main() -> None:
     ap.add_argument("--stage", default="val", choices=["val", "test"], help="which accuracy table to quote")
     ap.add_argument("--start", default="2005-01")
     ap.add_argument("--end", default="2024-12")
+    ap.add_argument("--data-until", default="2018-12", help="last month of the well readings the runs trained on")
     args = ap.parse_args()
 
     import rasterio
@@ -137,7 +152,7 @@ def main() -> None:
         m2 += delta * (h - mean)
         print(f"  {d.name}: done ({time.time() - t0:.0f} s)")
     spread = np.sqrt(m2 / (len(runs) - 1)) if len(runs) > 1 else np.zeros_like(mean)
-    rng = range90(spread, dates, runs)
+    rng = range90(spread, dates, runs, args.data_until)
     elev = static.elev_m.values[mask]
     depth = elev[None, :] - mean
 
@@ -187,9 +202,13 @@ def main() -> None:
     shapes_to_gdf(flip(static.district_id.values), transform, "district_id",
                   {int(k): v for k, v in names.items()}).to_file(out / "districts.geojson", driver="GeoJSON")
     c = cfgs[0]
+    rain_until = None
+    if c.get("forecast_end"):
+        with xr.open_dataset(proc / "rain_daily_forecast.nc") as f:
+            rain_until = f.rain_mm.attrs["observed_until"]
     if c.get("shared"):
         zones = xr.open_dataset(proc / "zones.nc").load()
-        zmap = zones.zone.sel({"method": c["method"], "layout": c["layout"], "k": c["k"]}).values * mask
+        zmap = zones.zone.sel({"method": c["method"], "layout": c["layout"], "k": int(c["k"])}).values * mask
         shapes_to_gdf(flip(zmap), transform, "zone").to_file(out / "zones.geojson", driver="GeoJSON")
     if blank.any():
         shapes_to_gdf(flip((mask & ~shown).astype(np.int16)), transform, "not_shown").to_file(
@@ -214,11 +233,14 @@ def main() -> None:
         "dates": [f"{d:%Y-%m}" for d in dates], "date_day": 15,
         "variables": {"depth": "depth to water below ground [m] (bigger = deeper water)",
                       "range90": "calibrated 90% range [m]: the true depth is likely within depth +- range90 "
-                                 "(test coverage about 84% for 2005-2018, about 70% for 2019-2024)",
+                                 "(test coverage about 84% in the training years, about 70% in later years)",
                       "spread": "model disagreement [m]: spread over the seeds (0 with one seed); a relative guide only",
                       "head_m (NetCDF only)": "water-table elevation [m above sea level]"},
-        "accuracy": accuracy_from_table(args.stage, "PINN kmeansk5 shared tbc"),
-        "disclaimers": DISCLAIMERS,
+        "accuracy": accuracy_from_table(args.stage, "PINN kmeansk5 shared tbc", forecast=rain_until is not None),
+        "time": {"trained_on_readings_until": args.data_until, "rain_observed_until": rain_until,
+                 "kind": {f"{d:%Y-%m}": ("estimate" if d <= pd.Timestamp(args.data_until) + pd.offsets.MonthEnd(0)
+                                         else "forecast" if rain_until else "hindcast") for d in dates}},
+        "disclaimers": DISCLAIMERS[:2] + [time_note(args.data_until, dates[-1], rain_until)] + DISCLAIMERS[2:],
         "summary": {"depth_m_min": round(float(np.nanmin(depth)), 1), "depth_m_median": round(float(np.nanmedian(depth)), 1),
                     "depth_m_max": round(float(np.nanmax(depth)), 1)},
     }

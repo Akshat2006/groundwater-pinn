@@ -6,6 +6,11 @@
     python scripts/run_real.py --zone 2 --steps 500 --tag smoke    # quick check
     options: --layout 0  --method kmeans --k 5  --set training.weighting.init=1  --stage-only val
 
+Forecast model (after the single test; same settings as model-v1.0, nothing re-tuned):
+    python scripts/run_real.py --shared --seed 0 --tag fc --forecast-end 2027-12-31
+trains on every shallow well and every reading from 2005 on (no held-out blocks or years: the evaluation is done),
+with the physics and rain (data/processed/rain_daily_forecast.nc) running to --forecast-end. No predictions.
+
 Each run folder (reports/runs/<stamp>_real_<...>/) holds config, history, model, predictions.parquet
 (every validation and test reading of the zone: tasks A, B, C), pumping_yearly.csv and metrics.json.
 Task A predictions include the well's learned offset (it is a monitored well); B and C do not.
@@ -67,13 +72,14 @@ def yearly_pumping(model, cells: np.ndarray, static: xr.Dataset, years: range) -
 def run_zone(zone_id, zone_cells, df, static, rain, priors, cfg, args, label, zone_maps=None):
     """zone_maps: the zone map over the region, for a shared zoned model (zone_id None, zone_cells = whole area)."""
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    train = training_rows(df)
+    train = df[df.split_time.isin(["train", "val", "test"])] if args.forecast_end else training_rows(df)
     if zone_id is not None:
         train = train[train.zone_map == zone_id]
-    zone = zone_inputs(train, zone_cells, static, rain, priors, cfg, device=device, zone_maps=zone_maps)
+    zone = zone_inputs(train, zone_cells, static, rain, priors, cfg, device=device, zone_maps=zone_maps,
+                       **({"t_end": args.forecast_end} if args.forecast_end else {}))
     log = start_run(f"real_{label}" + (f"_{args.tag}" if args.tag else ""),
                     {"label": label, "zone": zone_id, "layout": args.layout, "method": args.method, "k": args.k,
-                     "shared": zone_maps is not None, "seed": args.seed, "n_readings": int(len(zone.head_m)),
+                     "shared": zone_maps is not None, "seed": args.seed, "forecast_end": args.forecast_end, "n_readings": int(len(zone.head_m)),
                      "n_wells": int(zone.n_wells), "T_fixed": zone.T_init, "S_init": zone.S_init, **cfg})
     T_txt = ", ".join(f"{v:.0f}" for v in np.atleast_1d(zone.T_init))
     print(f"=== {label}: {zone.n_wells} wells, {len(zone.head_m)} readings, T fixed at {T_txt} m2/day "
@@ -84,7 +90,8 @@ def run_zone(zone_id, zone_cells, df, static, rain, priors, cfg, args, label, zo
     wells = pd.Index(train[train.head_m.notna()].well_id.unique())
     offsets = well_offsets_m(model, wells)
     preds = []
-    for stage in ([args.stage_only] if args.stage_only else ["val", "test"]):
+    stages = [] if args.forecast_end else [args.stage_only] if args.stage_only else ["val", "test"]
+    for stage in stages:
         for task in ("A", "B", "C"):
             tgt = target_rows(df, task, stage)
             if zone_id is not None:
@@ -98,11 +105,12 @@ def run_zone(zone_id, zone_cells, df, static, rain, priors, cfg, args, label, zo
                 task=task, stage=stage, pred=p, zone=tgt.zone_map if zone_maps is not None else (zone_id or 1)))
     preds = pd.concat(preds, ignore_index=True) if preds else pd.DataFrame()
     preds.to_parquet(log.dir / "predictions.parquet")
-    pump = yearly_pumping(model, zone_cells, static, range(2005, 2025))
+    years = range(2005, (pd.Timestamp(args.forecast_end).year if args.forecast_end else 2024) + 1)
+    pump = yearly_pumping(model, zone_cells, static, years)
     pump.to_csv(log.dir / "pumping_yearly.csv", index=False)
     if zone_maps is not None:                 # each zone's own pumping estimate
         ids = sorted(int(z) for z in np.unique(zone_maps[zone_cells]) if z > 0)
-        pd.concat([yearly_pumping(model, (zone_maps == z) & zone_cells, static, range(2005, 2025)).assign(zone=z)
+        pd.concat([yearly_pumping(model, (zone_maps == z) & zone_cells, static, years).assign(zone=z)
                    for z in ids]).to_csv(log.dir / "pumping_yearly_zones.csv", index=False)
     if len(offsets):
         offsets.rename("offset_m").to_csv(log.dir / "well_offsets.csv")
@@ -136,6 +144,7 @@ def main() -> None:
     ap.add_argument("--set", action="append", default=[])
     ap.add_argument("--tag", default="")
     ap.add_argument("--stage-only", choices=["val", "test"])
+    ap.add_argument("--forecast-end", help="forecast model: train on all wells and years, physics to this date")
     args = ap.parse_args()
 
     proc = data_dir() / "processed"
@@ -148,7 +157,10 @@ def main() -> None:
     priors = load_config(ROOT / "configs" / "priors.yaml")
     priors["rif"] = load_config(ROOT / "configs" / "study_area.yaml")["recharge"]["rif"]
     static = xr.open_dataset(proc / "static_1km.nc").load()
-    rain = xr.open_dataset(proc / "rain_daily.nc").rain_mm.load()
+    rain_file = "rain_daily_forecast.nc" if args.forecast_end else "rain_daily.nc"
+    rain = xr.open_dataset(proc / rain_file).rain_mm.load()
+    if args.forecast_end and pd.Timestamp(rain.time.values[-1]) < pd.Timestamp(args.forecast_end):
+        sys.exit(f"{rain_file} ends before {args.forecast_end}: run scripts/build_forecast_rain.py --end {args.forecast_end}")
     zones = xr.open_dataset(proc / "zones.nc").load()
     mask = zones["mask"].values.astype(bool)
     master = pd.read_parquet(proc / "master.parquet")

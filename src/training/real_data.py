@@ -247,7 +247,7 @@ def load_real_run(run_dir, static: xr.Dataset, device="cpu"):
     if cfg.get("shared"):                       # shared zoned model: rebuild the zone weights from the zone map
         from src.utils.config import data_dir
         zones = xr.open_dataset(data_dir() / "processed" / "zones.nc").load()
-        zmap = zones.zone.sel({"method": cfg["method"], "layout": cfg["layout"], "k": cfg["k"]}).values
+        zmap = zones.zone.sel({"method": cfg["method"], "layout": cfg["layout"], "k": int(cfg["k"])}).values
         _, zone_w = zone_weight_fields(zmap, zones["mask"].values.astype(bool), static, device)
         S0, T0 = [S0] * len(zone_w), [T0] * len(zone_w)
     model = ZonePINN({**cfg, "q_net": qcfg}, norm, landuse, S0, T0, base, lap, zone_w, paddy).to(device)
