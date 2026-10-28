@@ -10,9 +10,10 @@ Depth to water = ground elevation (same 1 km grid) - head. Per-well offsets are 
 as a place with no well, so the map's accuracy is the "no well" accuracy away from wells.
 
 Output (exports/<version>/, gitignored; ship it as a zip):
-- water_level_monthly.nc        head_m, depth_m, spread_m on (time, y, x), UTM 43N (EPSG:32643)
+- water_level_monthly.nc        head_m, depth_m, spread_m, range90_m on (time, y, x), UTM 43N (EPSG:32643)
 - geotiff/depth_YYYY-MM.tif     depth to water [m], north-up, EPSG:32643, NaN outside the study area
-- geotiff/spread_YYYY-MM.tif    uncertainty [m]
+- geotiff/range90_YYYY-MM.tif   calibrated 90% range [m]: depth +- this (factors fitted on validation, check_m7.py)
+- geotiff/spread_YYYY-MM.tif    model disagreement [m] (spread over seeds; a relative guide, much smaller than the error)
 - study_area.geojson, districts.geojson, zones.geojson, wells.geojson   (WGS84, for web maps)
 - not_shown.geojson             cells left blank (foothills above the wells' range, or water above ground)
 - metadata.json                 grid, dates, units, model, accuracy, disclaimers
@@ -41,9 +42,20 @@ DISCLAIMERS = [
     "Years after 2018 are a hindcast: the model was trained on 2005-2018 readings and driven by observed rainfall.",
     "Shallow water table only, inside the 16-district Punjab-Haryana study area.",
     "Pumping and aquifer values behind the map are inferred by the model, not measured.",
-    "The uncertainty layer shows how much 5 versions of the model disagree (about 1 m). The real error is larger "
-    "(see the accuracy line), so treat it as a relative guide to where the model is less sure, not as an error bar.",
+    "The 90% range layer (± metres) is calibrated on the 2019 validation readings: on the untouched test set it held "
+    "the true depth about 84% of the time for 2005-2018 and about 70% of the time for 2019-2024.",
 ]
+Z90 = 1.645
+
+
+def range90(spread: np.ndarray, dates: pd.DatetimeIndex, runs: list[Path]) -> np.ndarray:
+    """Calibrated 90% half-width [m] per (time, cell), as in scripts/check_m7.py:
+    1.645 * c * sqrt(spread^2 + noise^2), noise = mean training-fit RMSE of the runs, c = the zoned model's factor
+    fitted on validation for places without a well (Task B for 2005-2018, Task C for 2019 onwards)."""
+    cal = pd.read_csv(ROOT / "reports" / "tables" / "m7_calibration.csv").query("model == 'zoned'").set_index("task")
+    c = np.where(dates.year <= 2018, cal.loc["B", "factor c (from val)"], cal.loc["C", "factor c (from val)"])
+    noise = float(np.mean([json.loads((d / "metrics.json").read_text())["train_rmse_m"] for d in runs]))
+    return Z90 * c[:, None] * np.sqrt(spread ** 2 + noise ** 2)
 
 
 def shapes_to_gdf(values: np.ndarray, transform, name: str, labels: dict | None = None):
@@ -125,6 +137,7 @@ def main() -> None:
         m2 += delta * (h - mean)
         print(f"  {d.name}: done ({time.time() - t0:.0f} s)")
     spread = np.sqrt(m2 / (len(runs) - 1)) if len(runs) > 1 else np.zeros_like(mean)
+    rng = range90(spread, dates, runs)
     elev = static.elev_m.values[mask]
     depth = elev[None, :] - mean
 
@@ -136,7 +149,7 @@ def main() -> None:
     elev_lim = float(np.percentile(w.ground_elev_m.dropna(), 99))
     high, above = elev > elev_lim, (depth < 0).any(axis=0)
     blank = high | above
-    for a in (mean, depth, spread):
+    for a in (mean, depth, spread, rng):
         a[:, blank] = np.nan
     shown = mask.copy()
     shown[mask] = ~blank
@@ -150,7 +163,8 @@ def main() -> None:
     ds = xr.Dataset(
         {"head_m": (("time", "y", "x"), grid(mean), {"long_name": "water-table elevation (hydraulic head)", "units": "m above sea level"}),
          "depth_m": (("time", "y", "x"), grid(depth), {"long_name": "depth to water below ground", "units": "m"}),
-         "spread_m": (("time", "y", "x"), grid(spread), {"long_name": "uncertainty: spread over the ensemble seeds", "units": "m"})},
+         "spread_m": (("time", "y", "x"), grid(spread), {"long_name": "uncertainty: spread over the ensemble seeds", "units": "m"}),
+         "range90_m": (("time", "y", "x"), grid(rng), {"long_name": "calibrated 90% range half-width (depth +- this)", "units": "m"})},
         coords={"time": dates, "y": static.y.values, "x": static.x.values},
         attrs={"crs": CRS, "res_m": 1000.0, "model_version": args.version, "n_seeds": len(runs)})
     ds.to_netcdf(out / "water_level_monthly.nc", encoding={v: enc for v in ds.data_vars})
@@ -162,7 +176,7 @@ def main() -> None:
     flip = (lambda a: a[::-1]) if y_ascending else (lambda a: a)
     prof = {"driver": "GTiff", "height": mask.shape[0], "width": mask.shape[1], "count": 1, "dtype": "float32",
             "crs": CRS, "transform": transform, "nodata": np.nan, "compress": "deflate", "predictor": 3}
-    for var, data in (("depth", ds.depth_m.values), ("spread", ds.spread_m.values)):
+    for var, data in (("depth", ds.depth_m.values), ("spread", ds.spread_m.values), ("range90", ds.range90_m.values)):
         for k, dt in enumerate(dates):
             with rasterio.open(out / "geotiff" / f"{var}_{dt:%Y-%m}.tif", "w", **prof) as f:
                 f.write(flip(data[k]).astype(np.float32), 1)
@@ -199,7 +213,9 @@ def main() -> None:
                       "layer": "not_shown.geojson"},
         "dates": [f"{d:%Y-%m}" for d in dates], "date_day": 15,
         "variables": {"depth": "depth to water below ground [m] (bigger = deeper water)",
-                      "spread": "uncertainty [m]: spread over the seeds (0 with one seed); smaller than the real error, a relative guide only",
+                      "range90": "calibrated 90% range [m]: the true depth is likely within depth +- range90 "
+                                 "(test coverage about 84% for 2005-2018, about 70% for 2019-2024)",
+                      "spread": "model disagreement [m]: spread over the seeds (0 with one seed); a relative guide only",
                       "head_m (NetCDF only)": "water-table elevation [m above sea level]"},
         "accuracy": accuracy_from_table(args.stage, "PINN kmeansk5 shared tbc"),
         "disclaimers": DISCLAIMERS,
