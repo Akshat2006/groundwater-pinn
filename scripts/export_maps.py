@@ -250,11 +250,14 @@ def main() -> None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     pick = [k for k, d in enumerate(dates) if f"{d:%Y-%m}" in ("2005-11", "2018-11")] or [0, len(dates) - 1]
+    if rain_until:                                   # forecast export: also show the last November
+        pick.append(max(k for k, d in enumerate(dates) if d.month == 11))
+    kind = meta["time"]["kind"]
     vmin, vmax = np.nanpercentile(depth, [2, 98])
     fig, axs = plt.subplots(1, len(pick), figsize=(6 * len(pick), 6))
     for ax, k in zip(np.atleast_1d(axs), pick):
         im = ax.imshow(flip(ds.depth_m.values[k]), cmap="viridis_r", vmin=vmin, vmax=vmax)
-        ax.set_title(f"Depth to water, {dates[k]:%b %Y} (model estimate)")
+        ax.set_title(f"Depth to water, {dates[k]:%b %Y} (model {kind[f'{dates[k]:%Y-%m}']})")
         ax.axis("off")
     fig.colorbar(im, ax=axs, shrink=0.7, label="m below ground")
     fig.savefig(out / "preview.png", dpi=110, bbox_inches="tight")
